@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\StayHub.Application\StayHub.Application.csproj" />
+    <ProjectReference Include="..\StayHub.Infrastructure\StayHub.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
