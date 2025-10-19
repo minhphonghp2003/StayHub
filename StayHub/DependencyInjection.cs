@@ -1,9 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using MediatR;
+using MediatR.NotificationPublishers;
+using Microsoft.Extensions.DependencyInjection;
 using StayHub.Application;
 using StayHub.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,8 +16,8 @@ namespace StayHub
     {
     public static IServiceCollection AddAppDI(this IServiceCollection service,IConfiguration configuration)
         {
-            service.AddInfrastructureDI(configuration).AddApplicationDI(configuration);
-            return service;
+            service.AddApplicationDI(configuration).AddInfrastructureDI(configuration);
+                    return service;
         }
     }
 }

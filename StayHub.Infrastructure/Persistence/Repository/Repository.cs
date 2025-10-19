@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using StayHub.Application.DTO.RBAC;
 using StayHub.Application.Interfaces.Repository;
 using StayHub.Domain.Entity;
 using System;
@@ -21,11 +22,13 @@ namespace StayHub.Infrastructure.Persistence.Repository
         public async Task AddAsync(T entity)
         {
             await _dbSet.AddAsync(entity);
+            await SaveAsync();
         }
 
-        public void Delete(T entity)
+        public async Task Delete(T entity)
         {
             _dbSet.Remove(entity);
+            await _appDbContext.SaveChangesAsync();
         }
 
         public async Task<bool> ExistsAsync(int id)
@@ -34,9 +37,10 @@ namespace StayHub.Infrastructure.Persistence.Repository
             return entity != null;
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IEnumerable<TResult>> GetAllAsync<TResult>(Func<T,int,TResult>? selector)
         {
-            return await _dbSet.AsNoTracking().ToListAsync();
+            var result =  _dbSet.AsNoTracking();
+            return  result.Select(selector);
         }
 
         public async Task<T?> GetByIdAsync(int id)

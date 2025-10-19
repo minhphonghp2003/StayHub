@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StayHub.Application.Interfaces.Repository;
 using StayHub.Application.Interfaces.Repository.RBAC;
 using StayHub.Infrastructure.Persistence;
+using StayHub.Infrastructure.Persistence.Repository;
 using StayHub.Infrastructure.Persistence.Repository.RBAC;
 using System;
 using System.Collections.Generic;

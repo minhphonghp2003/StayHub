@@ -9,11 +9,11 @@ namespace StayHub.Application.Interfaces.Repository
 {
     public interface IRepository<T> where T: BaseEntity
     {
-        Task<IEnumerable<T>> GetAllAsync();
+        Task<IEnumerable<TResult>> GetAllAsync<TResult>(Func<T,int,TResult> selector);
         Task<T?> GetByIdAsync(int id);
         Task AddAsync(T entity);
         void Update(T entity);
-        void Delete(T entity);
+        Task Delete(T entity);
         Task<bool> ExistsAsync(int id);
         Task SaveAsync();
     }
