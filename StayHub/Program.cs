@@ -1,4 +1,5 @@
 using StayHub;
+using StayHub.Application.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +19,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseMiddleware<LoggingMiddleware>();
 app.UseAuthorization();
 app.MapControllerRoute(
     name: "area",
