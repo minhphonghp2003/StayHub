@@ -1,6 +1,7 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Response;
+using System.Net;
 
 namespace StayHub.API.Controllers
 {
@@ -10,5 +11,19 @@ namespace StayHub.API.Controllers
     {
         private IMediator _mediatorInstance;
         protected IMediator Mediator => _mediatorInstance ??= HttpContext.RequestServices.GetService<IMediator>();
+        public IActionResult GenerateResponse<T>(BaseResponse<T> response)
+        {
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    return Ok(response);
+                case HttpStatusCode.NotFound:
+                    return NotFound();
+                case HttpStatusCode.Created:
+                    return CreatedAtAction(null,response);
+                default:
+                    return NotFound();
+            }
         }
+    }
 }

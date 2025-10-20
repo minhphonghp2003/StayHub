@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Shared.Common
+﻿namespace Shared.Common
 {
-   public enum HttpVerb 
+    public enum HttpVerb
     {
         GET,
-        POST,   
+        POST,
         PUT,
         DELETE,
-    } 
+    }
 }

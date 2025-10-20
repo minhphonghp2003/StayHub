@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace StayHub.Domain.Entity.RBAC
+﻿namespace StayHub.Domain.Entity.RBAC
 {
-    public class Menu:BaseEntity
+    public class Menu : BaseEntity
     {
         public string Path { get; set; }
         public string? Description { get; set; }

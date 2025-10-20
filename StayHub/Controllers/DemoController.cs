@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StayHub.Application.CQRS.RBAC.Command.Action;
 using StayHub.Application.CQRS.RBAC.Query.Action;

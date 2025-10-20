@@ -1,17 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StayHub.Domain.Entity;
-using StayHub.Domain.Entity.RBAC;
-using StayHub.Infrastructure.Persistence.EntityConfiguration.RBAC;
 using StayHub.Infrastructure.Persistence.EntityConfigurationDI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StayHub.Infrastructure.Persistence
 {
-    public class AppDbContext:DbContext
+    public class AppDbContext : DbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

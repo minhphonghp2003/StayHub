@@ -1,5 +1,4 @@
 using StayHub;
-using StayHub.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
