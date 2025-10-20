@@ -4,21 +4,20 @@ using Microsoft.AspNetCore.Mvc;
 using StayHub.Application.CQRS.RBAC.Command.Action;
 using StayHub.Application.CQRS.RBAC.Query.Action;
 
-namespace StayHub.API.Controllers
+namespace StayHub.API.Controllers.RBAC
 {
-    public class DemoController(IMediator mediator) : BaseController
+       public class ActionController :BaseController 
     {
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {
-            return Ok(await mediator.Send(new GetAllActionQuery()));
+            return Ok(await Mediator.Send(new GetAllActionQuery()));
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateAction(AddActionCommand request)
         {
-            return Ok(await mediator.Send(request));
+            return Ok(await Mediator.Send(request));
         }
-
     }
 }

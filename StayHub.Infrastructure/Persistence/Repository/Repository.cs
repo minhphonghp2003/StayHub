@@ -5,6 +5,7 @@ using StayHub.Domain.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -36,6 +37,20 @@ namespace StayHub.Infrastructure.Persistence.Repository
             var entity = await GetByIdAsync(id);
             return entity != null;
         }
+        public async Task<IEnumerable<TResult>> GetManyAsync<TResult>(Expression<Func<T, bool>>? filter, Expression<Func<T, T>>? include, Func<T,int,TResult>? selector,bool? tracking)
+        {
+            var result = tracking ==true ? _dbSet.AsNoTracking():_dbSet;
+            if (filter != null)
+            {
+                result = result.Where(filter);
+            }
+            if(include != null)
+            {
+                result = result.Include(include);
+            }
+            return  result.Select(selector);
+        }
+
 
         public async Task<IEnumerable<TResult>> GetAllAsync<TResult>(Func<T,int,TResult>? selector)
         {
