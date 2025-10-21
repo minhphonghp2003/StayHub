@@ -18,6 +18,7 @@ namespace StayHub.Infrastructure
             service.AddScoped<IRoleRepository, RoleRepository>();
             service.AddScoped<IMenuRepository, MenuRepository>();
             service.AddScoped<IActionRepository, ActionRepository>();
+            service.AddScoped<ISigningKeyRepository, SigningKeyRepository>();
             return service;
         }
     }

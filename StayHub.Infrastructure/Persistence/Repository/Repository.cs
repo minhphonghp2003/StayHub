@@ -66,5 +66,10 @@ namespace StayHub.Infrastructure.Persistence.Repository
         {
             _dbSet.Update(entity);
         }
+
+        public Task<T?> FindOne(Expression<Func<T, bool>>? filter)
+        {
+            return _dbSet.FirstOrDefaultAsync(filter);
+        }
     }
 }
