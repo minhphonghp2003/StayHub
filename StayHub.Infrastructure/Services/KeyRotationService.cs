@@ -37,8 +37,8 @@ namespace StayHub.Infrastructure.Services
             using var scope = _serviceProvider.CreateScope();
             // Retrieve the database context from the service provider.
             var signingKeyRepo = scope.ServiceProvider.GetRequiredService<ISigningKeyRepository>();
-            var validKey = await signingKeyRepo.FindOne((e) => e.IsActive);
-            if (validKey == null || validKey.ExpiresAt <= DateTime.UtcNow.AddDays(10))
+            var validKey = await signingKeyRepo.FindOneAsync((e) => e.IsActive);
+            if (validKey == null || validKey.ExpiresAt <= DateTime.UtcNow.AddDays(1))
             {
                 if (validKey != null)
                 {

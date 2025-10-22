@@ -20,13 +20,11 @@
 
   <ItemGroup>
     <Folder Include="CQRS\RBAC\Command\User\" />
-    <Folder Include="CQRS\RBAC\Command\Token\" />
     <Folder Include="CQRS\RBAC\Command\Role\" />
     <Folder Include="CQRS\RBAC\Command\Menu\" />
     <Folder Include="CQRS\RBAC\Query\Menu\" />
     <Folder Include="CQRS\RBAC\Query\Role\" />
     <Folder Include="CQRS\RBAC\Query\Token\" />
-    <Folder Include="CQRS\RBAC\Query\User\" />
     <Folder Include="Interfaces\Services\" />
   </ItemGroup>
 

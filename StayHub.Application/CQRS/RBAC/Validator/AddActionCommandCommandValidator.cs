@@ -7,7 +7,10 @@ namespace StayHub.Application.CQRS.RBAC.Validator
     {
         public AddActionCommandCommandValidator()
         {
-            // Add validation rules here
+            RuleFor(x => x.Path)
+           .NotEmpty().WithMessage("Path is required.");
+            RuleFor(x => x.Method)
+                      .NotEmpty().WithMessage("Path is required.");
         }
     }
 }
