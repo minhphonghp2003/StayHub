@@ -11,7 +11,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StayHub.Infrastructure.Services
+namespace StayHub.Infrastructure.BackgroundJob
 {
     public class KeyRotationService : BackgroundService
     {

@@ -1,6 +1,6 @@
 using StayHub;
 using StayHub.Application.Middlewares;
-using StayHub.Infrastructure.Services;
+using StayHub.Infrastructure.BackgroundJob;
 
 var builder = WebApplication.CreateBuilder(args);
 

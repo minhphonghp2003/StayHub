@@ -8,5 +8,9 @@ namespace StayHub.Application.DTO.RBAC
 {
     public class TokenDTO
     {
+        public string Username { get; set; }
+        public int Id { get; set; }
+        public string Token { get; set; }
+        public DateTime ExpiresDate { get; set; }
     }
 }

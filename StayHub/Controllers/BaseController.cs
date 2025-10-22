@@ -22,7 +22,7 @@ namespace StayHub.API.Controllers
                 case HttpStatusCode.Created:
                     return CreatedAtAction(null,response);
                 default:
-                    return NotFound();
+                    return Ok(response);
             }
         }
     }

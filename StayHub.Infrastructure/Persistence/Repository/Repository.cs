@@ -12,8 +12,8 @@ namespace StayHub.Infrastructure.Persistence.Repository
             _appDbContext = context;
             _dbSet = context.Set<T>();
         }
-        private readonly DbSet<T> _dbSet;
-        private readonly AppDbContext _appDbContext;
+        protected readonly DbSet<T> _dbSet;
+        protected readonly AppDbContext _appDbContext;
         public async Task AddAsync(T entity)
         {
             await _dbSet.AddAsync(entity);
