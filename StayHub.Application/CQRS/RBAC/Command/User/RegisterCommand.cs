@@ -11,7 +11,7 @@ namespace StayHub.Application.CQRS.RBAC.Command.Token
 {
     // Include properties to be used as input for the command
     public record RegisterCommand(String Username, String Password,String Email) : IRequest<BaseResponse<TokenDTO>>;
-    public sealed class RegisterCommandHandler (IUserRepository userRepository,IJwtService tokenService ) :BaseResponseHandler, IRequestHandler<RegisterCommand, BaseResponse<TokenDTO>>
+    public sealed class RegisterCommandHandler (IUserRepository userRepository,IJwtService tokenService, ITokenRepository tokenRepository) :BaseResponseHandler, IRequestHandler<RegisterCommand, BaseResponse<TokenDTO>>
     {
         public async Task<BaseResponse<TokenDTO>> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
@@ -29,11 +29,19 @@ namespace StayHub.Application.CQRS.RBAC.Command.Token
             };
             await userRepository.AddAsync(newUser);
             var token = await tokenService.GenerateJwtToken(newUser, new List<string>());
+            var refreshToken = await tokenService.GenerateRefreshToken();
+            await tokenRepository.AddAsync(new Domain.Entity.RBAC.Token
+            {
+                UserId = newUser.Id,
+                RefreshToken = refreshToken,
+                ExpireDate = DateTime.UtcNow.AddDays(7),
+            });
             return Success<TokenDTO>(new TokenDTO
             {
                 Username = newUser.Username,
                 Id = newUser.Id,
                 Token = token.Item1,
+                RefreshToken = refreshToken,
                 ExpiresDate = token.Item2
             }, "User registered successfully");
         }

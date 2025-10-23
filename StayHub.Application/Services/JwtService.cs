@@ -61,9 +61,21 @@ namespace StayHub.Application.Services
             return (token,expires);
         }
 
-        public Task<(string, DateTime)> GenerateRefreshToken(User user)
+        public async Task<string> GenerateRefreshToken()
         {
-            throw new NotImplementedException();
+            var randomNumber = new byte[64];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                return HashToken( Convert.ToBase64String(randomNumber));
+            }
+        }
+        public string HashToken(string token)
+        {
+            //The refresh token is hashed using SHA256 before storing it in the database to prevent token theft from compromising security.
+            using var sha256 = SHA256.Create();
+            var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(token));
+            return Convert.ToBase64String(hashedBytes);
         }
     }
 }

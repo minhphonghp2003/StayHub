@@ -9,7 +9,7 @@ namespace StayHub.Application.CQRS.RBAC.Command.Token
 {
     // Include properties to be used as input for the command
     public record LoginCommand(string Username, string Password) : IRequest<BaseResponse<TokenDTO>>;
-    public sealed class LoginCommandHandler(IUserRepository userRepository,IJwtService tokenService) : BaseResponseHandler, IRequestHandler<LoginCommand, BaseResponse<TokenDTO>>
+    public sealed class LoginCommandHandler(IUserRepository userRepository,IJwtService tokenService,ITokenRepository  tokenRepository) : BaseResponseHandler, IRequestHandler<LoginCommand, BaseResponse<TokenDTO>>
     {
         public async Task<BaseResponse<TokenDTO>> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
@@ -25,12 +25,20 @@ namespace StayHub.Application.CQRS.RBAC.Command.Token
                 return Failure<TokenDTO>("Invalid username or password", HttpStatusCode.Unauthorized);
             }
             var token = await tokenService.GenerateJwtToken(user, new List<string>());
+            var refreshToken = await tokenService.GenerateRefreshToken();
+            await  tokenRepository.AddAsync(new  Domain.Entity.RBAC.Token
+            {
+                UserId = user.Id,
+                RefreshToken = refreshToken,
+                ExpireDate = DateTime.UtcNow.AddDays(7),
+            });
             return Success<TokenDTO>(new TokenDTO
             {
                 Username = user.Username,
                 Id = user.Id,
                 Token = token.Item1,
-                ExpiresDate = token.Item2
+                ExpiresDate = token.Item2,
+                RefreshToken = refreshToken
             }, "User registered successfully");
 
         }

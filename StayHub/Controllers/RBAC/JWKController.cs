@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StayHub.Application.CQRS.RBAC.Query.Token;
+using StayHub.Application.CQRS.RBAC.Query.User;
 
 namespace StayHub.API.Controllers.RBAC
 {

@@ -10,6 +10,6 @@ namespace StayHub.Application.Interfaces.Services
     public interface IJwtService
     {
         Task<(string, DateTime)> GenerateJwtToken(User user, List<string> roles);
-        Task<(string, DateTime)> GenerateRefreshToken(User user);
+        Task<string> GenerateRefreshToken();
     }
 }
