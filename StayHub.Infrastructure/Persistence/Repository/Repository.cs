@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace StayHub.Infrastructure.Persistence.Repository
 {
-    public class Repository<T> : IRepository<T> where T : BaseEntity
+    public class Repository<T> : IRepository<T> where T :BaseEntity 
     {
         public Repository(AppDbContext context)
         {
@@ -31,7 +31,7 @@ namespace StayHub.Infrastructure.Persistence.Repository
             var entity = await GetByIdAsync(id);
             return entity != null;
         }
-        public async Task<IEnumerable<TResult>> GetManyAsync<TResult>(Expression<Func<T, bool>>? filter, Expression<Func<T, T>>? include, Func<T, int, TResult>? selector, bool? tracking)
+        public async Task<IEnumerable<TResult>> GetManyAsync<TResult>(Expression<Func<T, bool>>? filter, Func<IQueryable<T>, IQueryable<T>>? include, Func<T, int, TResult>? selector, bool? tracking)
         {
             var result = tracking == true ? _dbSet.AsNoTracking() : _dbSet;
             if (filter != null)
@@ -40,7 +40,7 @@ namespace StayHub.Infrastructure.Persistence.Repository
             }
             if (include != null)
             {
-                result = result.Include(include);
+                result = include(result);
             }
             return result.Select(selector);
         }
@@ -67,9 +67,14 @@ namespace StayHub.Infrastructure.Persistence.Repository
             _dbSet.Update(entity);
         }
 
-        public Task<T?> FindOneAsync(Expression<Func<T, bool>>? filter)
+        public Task<T?> FindOneAsync(Expression<Func<T, bool>>? filter,  Func<IQueryable<T>, IQueryable<T>>? include = null,bool trackChange = false)
         {
-            return _dbSet.FirstOrDefaultAsync(filter);
+            var query =trackChange? _dbSet.Where(filter):_dbSet.Where(filter).AsNoTracking();
+            if(include != null)
+            {
+                query = include(query);
+            }
+            return query.FirstOrDefaultAsync();
         }
     }
 }
