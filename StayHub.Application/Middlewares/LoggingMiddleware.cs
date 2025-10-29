@@ -23,11 +23,7 @@ namespace StayHub.Application.Middlewares
         public async Task InvokeAsync(HttpContext context, IActionRepository actionRepository)
         {
             _logger.LogInformation("Incoming request: {Method} {Path}", context.Request.Method, context.Request.Path);
-            var actionResults = await actionRepository.GetAllAsync((m,i) => new { Id = m.Id, Path = m.Path });
-            _logger.LogInformation($"actions {actionResults.ToList()}");
-
             await _next(context); // Call the next middleware in the pipeline
-
             _logger.LogInformation("Outgoing response status: {StatusCode}", context.Response.StatusCode);
 
         }

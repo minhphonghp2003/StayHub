@@ -6,5 +6,7 @@
         public string? Email { get; set; }
         public string Password { get; set; }
         public List<Token>? RefreshTokens { get; set; }
+        public List<Role>? Roles { get; set; }
+
     }
 }
