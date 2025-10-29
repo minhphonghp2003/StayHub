@@ -1,5 +1,4 @@
-﻿using StayHub.Domain.Entity.RBAC;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace StayHub.Application.Interfaces.Services
 {
-    public interface IJwtService
+    public interface IAuthService
     {
-        Task<(string, DateTime)> GenerateJwtToken(User user, List<string> roles);
+        public Task<string> GenerateRefreshToken(int userId);
     }
 }

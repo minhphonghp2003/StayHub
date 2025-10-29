@@ -8,7 +8,7 @@ namespace StayHub.Application.CQRS.RBAC.Command.Token
 {
     // Include properties to be used as input for the command
     public record RefreshTokenCommand(string Token) : IRequest<BaseResponse<TokenDTO>>;
-    public sealed class RefreshTokenCommandHandler(ITokenRepository tokenRepository, IJwtService jwtService) : BaseResponseHandler, IRequestHandler<RefreshTokenCommand, BaseResponse<TokenDTO>>
+    public sealed class RefreshTokenCommandHandler(ITokenRepository tokenRepository, IJwtService jwtService, IAuthService authService) : BaseResponseHandler, IRequestHandler<RefreshTokenCommand, BaseResponse<TokenDTO>>
     {
         public async Task<BaseResponse<TokenDTO>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
         {
@@ -28,14 +28,8 @@ namespace StayHub.Application.CQRS.RBAC.Command.Token
             }
 
             token.RevokedAt = DateTime.UtcNow;
-            var newToken = await jwtService.GenerateRefreshToken();
-            await tokenRepository.AddAsync(new Domain.Entity.RBAC.Token
-            {
-                UserId = token.UserId,
-                RefreshToken = newToken,
-                ExpireDate = DateTime.UtcNow.AddDays(7),
-            });
-            var (accessToken,expires) = await jwtService.GenerateJwtToken(token.User, new List<string>());
+            var newToken = await authService.GenerateRefreshToken(userId: token.UserId);
+            var (accessToken, expires) = await jwtService.GenerateJwtToken(token.User, new List<string>());
             tokenRepository.Update(token);
             return Success<TokenDTO>(new TokenDTO
             {

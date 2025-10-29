@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using StayHub.Application.Interfaces.Repository.RBAC;
 using StayHub.Application.Interfaces.Services;
 using StayHub.Domain.Entity.RBAC;
+using StayHub.Infrastructure.Services;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -19,10 +20,12 @@ namespace StayHub.Application.Services
     {
         private readonly IConfiguration _configuration;
         private readonly ISigningKeyRepository signingKeyRepository;
-        public JwtService(ISigningKeyRepository signingKeyRepo, IConfiguration configuration)
+        private readonly HashService _hashService;
+        public JwtService(ISigningKeyRepository signingKeyRepo, IConfiguration configuration,HashService hashService)
         {
             _configuration = configuration;
             signingKeyRepository = signingKeyRepo;
+            _hashService = hashService;
 
         }
         public async Task<(string, DateTime)> GenerateJwtToken(User user, List<string> roles)
@@ -32,14 +35,7 @@ namespace StayHub.Application.Services
             {
                 throw new Exception("No active signing key available.");
             }
-            var privateKeyBytes = Convert.FromBase64String(signingKey.PrivateKey);
-            var rsa = RSA.Create();
-            rsa.ImportRSAPrivateKey(privateKeyBytes, out _);
-            var rsaSecurityKey = new RsaSecurityKey(rsa)
-            {
-                KeyId = signingKey.Id.ToString()
-            };
-            var creds = new SigningCredentials(rsaSecurityKey, SecurityAlgorithms.RsaSha256);
+            var creds = _hashService.SigningKey(privateKey:signingKey.PrivateKey,id:signingKey.Id.ToString());
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Username),
@@ -58,24 +54,9 @@ namespace StayHub.Application.Services
                 signingCredentials: creds);
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.WriteToken(tokenDescriptor);
-            return (token,expires);
+            return (token, expires);
         }
 
-        public async Task<string> GenerateRefreshToken()
-        {
-            var randomNumber = new byte[64];
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(randomNumber);
-                return HashToken( Convert.ToBase64String(randomNumber));
-            }
-        }
-        public string HashToken(string token)
-        {
-            //The refresh token is hashed using SHA256 before storing it in the database to prevent token theft from compromising security.
-            using var sha256 = SHA256.Create();
-            var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(token));
-            return Convert.ToBase64String(hashedBytes);
-        }
+       
     }
 }
