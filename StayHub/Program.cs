@@ -58,8 +58,9 @@ builder.Services.AddAuthentication(options =>
                   ValidateIssuer = true, // Ensure the token was issued by a trusted issuer
                   ValidIssuer = builder.Configuration["Jwt:Issuer"], // The expected issuer value from configuration
                   ValidateAudience = false, // Disable audience validation (can be enabled as needed)
-                  ValidateLifetime = true, // Ensure the token has not expired
+                  ValidateLifetime = true, // Ensure the token has not expiredAuthService
                   ValidateIssuerSigningKey = true, // Ensure the token's signing key is valid
+                  ClockSkew = TimeSpan.Zero,
                   IssuerSigningKeyResolver = (token, securityToken, kid, parameters) =>
                   {
                       var httpClient = new HttpClient();
