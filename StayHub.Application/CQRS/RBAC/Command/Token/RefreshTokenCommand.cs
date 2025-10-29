@@ -27,14 +27,22 @@ namespace StayHub.Application.CQRS.RBAC.Command.Token
                 return Failure<TokenDTO>("Refresh token has expired", System.Net.HttpStatusCode.Unauthorized);
             }
 
+            token.RevokedAt = DateTime.UtcNow;
             var newToken = await jwtService.GenerateRefreshToken();
-            var accessToken = await jwtService.GenerateJwtToken(token.User, new List<string>());
+            await tokenRepository.AddAsync(new Domain.Entity.RBAC.Token
+            {
+                UserId = token.UserId,
+                RefreshToken = newToken,
+                ExpireDate = DateTime.UtcNow.AddDays(7),
+            });
+            var (accessToken,expires) = await jwtService.GenerateJwtToken(token.User, new List<string>());
+            tokenRepository.Update(token);
             return Success<TokenDTO>(new TokenDTO
             {
                 Username = token.User.Username,
                 Id = token.User.Id,
-                Token = accessToken.Item1,
-                ExpiresDate = accessToken.Item2,
+                Token = accessToken,
+                ExpiresDate = expires,
                 RefreshToken = newToken,
             });
         }

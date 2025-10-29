@@ -65,6 +65,7 @@ namespace StayHub.Infrastructure.Persistence.Repository
         public void Update(T entity)
         {
             _dbSet.Update(entity);
+            _appDbContext.SaveChanges();
         }
 
         public Task<T?> FindOneAsync(Expression<Func<T, bool>>? filter,  Func<IQueryable<T>, IQueryable<T>>? include = null,bool trackChange = false)
