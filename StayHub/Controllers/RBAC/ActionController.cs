@@ -12,6 +12,12 @@ namespace StayHub.API.Controllers.RBAC
             return Ok(await Mediator.Send(new GetAllActionQuery()));
         }
 
+        [HttpPost("generate")]
+        public async Task<IActionResult> GenerateAllAction()
+        {
+            return GenerateResponse(await Mediator.Send(new GenerateAllActionCommand()));
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateAction(AddActionCommand request)
         {
