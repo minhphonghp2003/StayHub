@@ -14,6 +14,7 @@ namespace StayHub.Application.Interfaces.Repository
         void Update(T entity);
         Task Delete(T entity);
         Task<bool> ExistsAsync(int id);
+        Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate);
         Task SaveAsync();
     }
 }

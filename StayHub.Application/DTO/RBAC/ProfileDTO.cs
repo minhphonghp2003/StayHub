@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace StayHub.Application.DTO.RBAC
 {
-    public class ProfileDTO
+    public class ProfileDTO:BaseDTO
     {
-        public int Id { get; set; }
         public string Username { get; set; }
         public string Email { get; set; }
     }

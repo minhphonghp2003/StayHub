@@ -42,6 +42,11 @@ namespace StayHub.Infrastructure.Persistence.Repository
             var entity = await GetByIdAsync(id);
             return entity != null;
         }
+
+        public async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.Where(predicate).AsNoTracking().AnyAsync();
+        }
         public async Task<IEnumerable<TResult>> GetManyAsync<TResult>(Expression<Func<T, bool>>? filter, Func<IQueryable<T>, IQueryable<T>>? include, Func<T, int, TResult>? selector, bool? tracking)
         {
             var result = tracking == true ? _dbSet.AsNoTracking() : _dbSet;

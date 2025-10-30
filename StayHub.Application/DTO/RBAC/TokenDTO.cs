@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace StayHub.Application.DTO.RBAC
 {
-    public class TokenDTO
+    public class TokenDTO :BaseDTO
     {
         public string Username { get; set; }
         public int Id { get; set; }

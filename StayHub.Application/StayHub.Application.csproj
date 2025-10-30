@@ -22,8 +22,6 @@
 
 	<ItemGroup>
 		<Folder Include="CQRS\RBAC\Command\Role\" />
-		<Folder Include="CQRS\RBAC\Command\Menu\" />
-		<Folder Include="CQRS\RBAC\Query\Menu\" />
 		<Folder Include="CQRS\RBAC\Query\Role\" />
 		<Folder Include="Atrtributes\" />
 		<Folder Include="CQRS\RBAC\Query\Token\" />
