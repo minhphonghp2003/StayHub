@@ -5,6 +5,12 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="CQRS\RBAC\Query\Token\**" />
+	  <EmbeddedResource Remove="CQRS\RBAC\Query\Token\**" />
+	  <None Remove="CQRS\RBAC\Query\Token\**" />
+	</ItemGroup>
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 		<PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
@@ -22,9 +28,7 @@
 
 	<ItemGroup>
 		<Folder Include="CQRS\RBAC\Command\Role\" />
-		<Folder Include="CQRS\RBAC\Query\Role\" />
 		<Folder Include="Atrtributes\" />
-		<Folder Include="CQRS\RBAC\Query\Token\" />
 	</ItemGroup>
 
 </Project>
