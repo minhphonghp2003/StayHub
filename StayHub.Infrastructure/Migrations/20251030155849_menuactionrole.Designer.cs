@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using StayHub.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using StayHub.Infrastructure.Persistence;
 namespace StayHub.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251030155849_menuactionrole")]
+    partial class menuactionrole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,6 +27,36 @@ namespace StayHub.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("ActionMenu", b =>
+                {
+                    b.Property<int>("ActionsId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("MenusId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ActionsId", "MenusId");
+
+                    b.HasIndex("MenusId");
+
+                    b.ToTable("ActionMenu");
+                });
+
+            modelBuilder.Entity("ActionRole", b =>
+                {
+                    b.Property<int>("ActionsId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("RolesId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ActionsId", "RolesId");
+
+                    b.HasIndex("RolesId");
+
+                    b.ToTable("ActionRole");
+                });
 
             modelBuilder.Entity("StayHub.Domain.Entity.RBAC.Action", b =>
                 {
@@ -112,7 +145,7 @@ namespace StayHub.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("MenuId")
+                    b.Property<int>("RoleId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -122,7 +155,7 @@ namespace StayHub.Infrastructure.Migrations
 
                     b.HasIndex("ActionId");
 
-                    b.HasIndex("MenuId");
+                    b.HasIndex("RoleId");
 
                     b.ToTable("MenuAction");
                 });
@@ -312,6 +345,36 @@ namespace StayHub.Infrastructure.Migrations
                     b.ToTable("UserRole");
                 });
 
+            modelBuilder.Entity("ActionMenu", b =>
+                {
+                    b.HasOne("StayHub.Domain.Entity.RBAC.Action", null)
+                        .WithMany()
+                        .HasForeignKey("ActionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StayHub.Domain.Entity.RBAC.Menu", null)
+                        .WithMany()
+                        .HasForeignKey("MenusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ActionRole", b =>
+                {
+                    b.HasOne("StayHub.Domain.Entity.RBAC.Action", null)
+                        .WithMany()
+                        .HasForeignKey("ActionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StayHub.Domain.Entity.RBAC.Role", null)
+                        .WithMany()
+                        .HasForeignKey("RolesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("StayHub.Domain.Entity.RBAC.Menu", b =>
                 {
                     b.HasOne("StayHub.Domain.Entity.RBAC.Menu", null)
@@ -322,32 +385,32 @@ namespace StayHub.Infrastructure.Migrations
             modelBuilder.Entity("StayHub.Domain.Entity.RBAC.MenuAction", b =>
                 {
                     b.HasOne("StayHub.Domain.Entity.RBAC.Action", "Action")
-                        .WithMany("MenuActions")
-                        .HasForeignKey("ActionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("StayHub.Domain.Entity.RBAC.Menu", "Menu")
-                        .WithMany("MenuActions")
-                        .HasForeignKey("MenuId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Action");
-
-                    b.Navigation("Menu");
-                });
-
-            modelBuilder.Entity("StayHub.Domain.Entity.RBAC.RoleAction", b =>
-                {
-                    b.HasOne("StayHub.Domain.Entity.RBAC.Action", "Action")
-                        .WithMany("RoleActions")
+                        .WithMany()
                         .HasForeignKey("ActionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("StayHub.Domain.Entity.RBAC.Role", "Role")
-                        .WithMany("RoleActions")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Action");
+
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("StayHub.Domain.Entity.RBAC.RoleAction", b =>
+                {
+                    b.HasOne("StayHub.Domain.Entity.RBAC.Action", "Action")
+                        .WithMany()
+                        .HasForeignKey("ActionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StayHub.Domain.Entity.RBAC.Role", "Role")
+                        .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -387,24 +450,13 @@ namespace StayHub.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("StayHub.Domain.Entity.RBAC.Action", b =>
-                {
-                    b.Navigation("MenuActions");
-
-                    b.Navigation("RoleActions");
-                });
-
             modelBuilder.Entity("StayHub.Domain.Entity.RBAC.Menu", b =>
                 {
-                    b.Navigation("MenuActions");
-
                     b.Navigation("SubMenus");
                 });
 
             modelBuilder.Entity("StayHub.Domain.Entity.RBAC.Role", b =>
                 {
-                    b.Navigation("RoleActions");
-
                     b.Navigation("UserRoles");
                 });
 
