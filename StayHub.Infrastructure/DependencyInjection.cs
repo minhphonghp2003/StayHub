@@ -12,13 +12,15 @@ namespace StayHub.Infrastructure
         public static IServiceCollection AddInfrastructureDI(this IServiceCollection service, IConfiguration configuration)
         {
             service.AddDbContext<AppDbContext>(options =>
-                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+            options.UseLazyLoadingProxies()
+                .UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
             service.AddScoped<IUserRepository, UserRepository>();
             service.AddScoped<ITokenRepository, TokenRepository>();
             service.AddScoped<IRoleRepository, RoleRepository>();
             service.AddScoped<IMenuRepository, MenuRepository>();
             service.AddScoped<IActionRepository, ActionRepository>();
             service.AddScoped<ISigningKeyRepository, SigningKeyRepository>();
+            service.AddScoped<IUserRoleRepository, UserRoleRepository>();
             return service;
         }
     }

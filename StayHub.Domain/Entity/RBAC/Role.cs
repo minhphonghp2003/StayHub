@@ -5,7 +5,7 @@
         public string Code { get; set; }
         public string Name { get; set; }
         public string? Description { get; set; }
-        public List<Action>? Actions { get; set; }
-        public List<User>? Users { get; set; }
+        public virtual List<Action>? Actions { get; set; }
+        public virtual List<UserRole>? UserRoles { get; set; }
     }
 }

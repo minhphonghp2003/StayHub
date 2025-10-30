@@ -9,7 +9,7 @@
         public int? ParentId { get; set; }
         public bool? IsActive { get; set; }
 
-        public List<Menu>? SubMenus { get; set; }
-        public List<Action>? Actions { get; set; }
+        public virtual List<Menu>? SubMenus { get; set; }
+        public virtual List<Action>? Actions { get; set; }
     }
 }

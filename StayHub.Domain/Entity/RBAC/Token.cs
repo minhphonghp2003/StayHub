@@ -6,6 +6,6 @@
         public DateTime ExpireDate { get; set; }
         public DateTime? RevokedAt { get; set; }
         public int UserId { get; set; }
-        public User User { get; set; }
+        public virtual User User { get; set; }
     }
 }

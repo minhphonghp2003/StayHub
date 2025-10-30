@@ -2,8 +2,9 @@
 
 namespace StayHub.Infrastructure.Persistence.EntityConfiguration.RBAC
 {
-     public class UserConfiguration : BaseEntityConfiguration<User>
+    public class UserRoleConfiguration : BaseEntityConfiguration<UserRole>
     {
 
     }
+
 }
