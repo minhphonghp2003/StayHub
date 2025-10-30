@@ -10,5 +10,6 @@ namespace StayHub.Application.DTO.RBAC
     {
         public string Username { get; set; }
         public string Email { get; set; }
+        public List<RoleDTO>? Roles { get; set; }
     }
 }

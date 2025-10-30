@@ -84,14 +84,24 @@ namespace StayHub.Infrastructure.Persistence.Repository
             _appDbContext.SaveChanges();
         }
 
-        public Task<T?> FindOneAsync(Expression<Func<T, bool>>? filter, Func<IQueryable<T>, IQueryable<T>>? include = null, bool trackChange = false)
+        public async Task<T?> FindOneAsync(Expression<Func<T, bool>>? filter, Func<IQueryable<T>, IQueryable<T>>? include = null, bool trackChange = false)
         {
             var query = trackChange ? _dbSet.Where(filter) : _dbSet.Where(filter).AsNoTracking();
             if (include != null)
             {
                 query = include(query);
             }
-            return query.FirstOrDefaultAsync();
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<TResult> FindOneAsync<TResult>(Expression<Func<T, bool>>? filter, Func<IQueryable<T>, IQueryable<T>>? include = null, Expression<Func<T, TResult>> selector = null, bool trackChange = false)
+        {
+            var query = trackChange ? _dbSet.Where(filter) : _dbSet.Where(filter).AsNoTracking();
+            if (include != null)
+            {
+                query = include(query);
+            }
+            return await query.Select(selector).FirstOrDefaultAsync();
         }
     }
 }
