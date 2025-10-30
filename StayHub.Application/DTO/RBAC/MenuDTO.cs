@@ -14,5 +14,6 @@ namespace StayHub.Application.DTO.RBAC
         public string? Icon { get; set; }
         public int? ParentId { get; set; }
         public bool? IsActive { get; set; }
+        public List<MenuDTO> Children { get; set; }
     }
 }
