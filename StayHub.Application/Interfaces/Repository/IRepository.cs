@@ -10,6 +10,7 @@ namespace StayHub.Application.Interfaces.Repository
         Task<T?> GetByIdAsync(int id);
         Task<T?> FindOneAsync(Expression<Func<T, bool>>? filter, Func<IQueryable<T>, IQueryable<T>>? include = null,bool trackChange = false);
         Task AddAsync(T entity);
+        Task<List<T>> AddRangeIfNotExitsAsync(List<T> entities, Func<T, List<T>, bool> existFilter);
         void Update(T entity);
         Task Delete(T entity);
         Task<bool> ExistsAsync(int id);

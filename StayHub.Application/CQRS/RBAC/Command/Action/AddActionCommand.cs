@@ -34,7 +34,7 @@ namespace StayHub.Application.CQRS.RBAC.Command.Action
                 Id = action.Id,
                 CreatedAt = action.CreatedAt,
                 UpdatedAt = action.UpdatedAt,
-                Method = request.Method
+                Method = request.Method.ToString()
             }, null, HttpStatusCode.Created);
 
 

@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace StayHub.Infrastructure.Persistence.Repository
 {
-    public class Repository<T> : IRepository<T> where T :BaseEntity 
+    public class Repository<T> : IRepository<T> where T : BaseEntity
     {
         public Repository(AppDbContext context)
         {
@@ -18,6 +18,17 @@ namespace StayHub.Infrastructure.Persistence.Repository
         {
             await _dbSet.AddAsync(entity);
             await SaveAsync();
+        }
+        public async Task<List<T>> AddRangeIfNotExitsAsync(List<T> entities, Func<T, List<T>, bool> existFilter)
+        {
+            var existingEntities = await _dbSet.ToListAsync();
+            var newEntities = entities.Where(e => existFilter(e, existingEntities)).ToList();
+            if (newEntities.Any())
+            {
+                _dbSet.AddRange(newEntities);
+                await SaveAsync();
+            }
+            return newEntities;
         }
 
         public async Task Delete(T entity)
@@ -68,10 +79,10 @@ namespace StayHub.Infrastructure.Persistence.Repository
             _appDbContext.SaveChanges();
         }
 
-        public Task<T?> FindOneAsync(Expression<Func<T, bool>>? filter,  Func<IQueryable<T>, IQueryable<T>>? include = null,bool trackChange = false)
+        public Task<T?> FindOneAsync(Expression<Func<T, bool>>? filter, Func<IQueryable<T>, IQueryable<T>>? include = null, bool trackChange = false)
         {
-            var query =trackChange? _dbSet.Where(filter):_dbSet.Where(filter).AsNoTracking();
-            if(include != null)
+            var query = trackChange ? _dbSet.Where(filter) : _dbSet.Where(filter).AsNoTracking();
+            if (include != null)
             {
                 query = include(query);
             }

@@ -21,7 +21,7 @@ namespace StayHub.Application.CQRS.RBAC.Query.Action
             {
                 Id = entity.Id,
                 Path = entity.Path,
-                Method = entity.Method,
+                Method = entity.Method.ToString(),
                 AllowAnonymous = entity.AllowAnonymous,
                 CreatedAt = entity.CreatedAt,
                 UpdatedAt = entity.UpdatedAt,
