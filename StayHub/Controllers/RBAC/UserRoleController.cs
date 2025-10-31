@@ -7,7 +7,7 @@ namespace StayHub.API.Controllers.RBAC
     public class UserRoleController: BaseController
     {
         [HttpPost("user/assignRole")]
-        public async Task<IActionResult> RefreshToken(AssignRoleToUserCommand request)
+        public async Task<IActionResult> AssignRoleToUser(AssignRoleToUserCommand request)
         {
             return GenerateResponse(await Mediator.Send(request));
         }
