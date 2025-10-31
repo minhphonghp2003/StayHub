@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
+using StayHub.Application.Interfaces.Repository.RBAC;
+using StayHub.Domain.Entity.RBAC;
 using System.Reflection.Metadata;
 using System.Security.Claims;
 
@@ -10,7 +12,7 @@ namespace StayHub.Application.Middlewares
 {
     public class AuthorizationMiddleware(RequestDelegate _next, ILogger<AuthorizationMiddleware> _logger)
     {
-        public async Task InvokeAsync(HttpContext context)
+        public async Task InvokeAsync(HttpContext context, IRoleRepository roleRepository)
         {
             var endpoint = context.GetEndpoint();
             var allowAnon = endpoint?.Metadata.GetMetadata<AllowAnonymousAttribute>();
@@ -29,11 +31,16 @@ namespace StayHub.Application.Middlewares
                 await _next(context);
                 return;
             }
-            var method = context.Request.Method; 
+            var method = context.Request.Method;
             var currentUser = context.User;
             int.TryParse(currentUser.FindFirst(ClaimTypes.NameIdentifier).Value, out int userId);
-            var roles = currentUser.FindAll(ClaimTypes.Role).Select(r => r.Value).ToList();
-            // Check user permissions against required permissions for the endpoint
+            if (!await roleRepository.HasAccessToAction(userId, routePattern, method))
+            {
+
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                await context.Response.WriteAsync("Unauthorized access.");
+                return; // Short-circuits the pipeline
+            }
             await _next(context); // Call the next middleware in the pipeline
         }
     }

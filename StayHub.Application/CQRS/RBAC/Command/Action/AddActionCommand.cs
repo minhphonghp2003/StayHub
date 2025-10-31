@@ -8,7 +8,7 @@ using System.Net;
 namespace StayHub.Application.CQRS.RBAC.Command.Action
 {
     // Include properties to be used as input for the command
-    public record AddActionCommand(string Path, HttpVerb Method, bool AllowAnon) : IRequest<BaseResponse<ActionDTO>>;
+    public record AddActionCommand(string Path, string Method, bool AllowAnon) : IRequest<BaseResponse<ActionDTO>>;
     public class AddActionCommandHandler : BaseResponseHandler, IRequestHandler<AddActionCommand, BaseResponse<ActionDTO>>
     {
         private readonly IActionRepository _actionRepository;

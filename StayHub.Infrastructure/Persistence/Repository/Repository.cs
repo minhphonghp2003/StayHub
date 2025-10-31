@@ -61,6 +61,20 @@ namespace StayHub.Infrastructure.Persistence.Repository
             return result.Select(selector);
         }
 
+        public async Task<IEnumerable<T>> GetManyEntityAsync(Expression<Func<T, bool>>? filter, Func<IQueryable<T>, IQueryable<T>>? include, bool? tracking = false)
+        {
+            var result = tracking == true ? _dbSet.AsNoTracking() : _dbSet;
+            if (filter != null)
+            {
+                result = result.Where(filter);
+            }
+            if (include != null)
+            {
+                result = include(result);
+            }
+            return await result.ToListAsync();
+        }
+
 
         public async Task<IEnumerable<TResult>> GetAllAsync<TResult>(Func<T, int, TResult>? selector)
         {

@@ -21,10 +21,9 @@ namespace StayHub.Application.CQRS.RBAC.Command.Action
            {
                Path = e.RoutePattern.RawText,
                AllowAnonymous = e.Metadata.GetMetadata<AllowAnonymousAttribute>() != null,
-               Method = (HttpVerb)Enum.Parse(typeof(HttpVerb), e.Metadata
+               Method = e.Metadata
                     .OfType<HttpMethodMetadata>()
                     .FirstOrDefault()?.HttpMethods.FirstOrDefault().ToUpper() ?? "GET"
-)
            });
             var result = await actionRepository.AddRangeIfNotExitsAsync(endpoints.ToList(), (newAction, existingActions) =>
                 !existingActions.Any(e => e.Path == newAction.Path && e.Method == newAction.Method)
