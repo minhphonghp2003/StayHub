@@ -47,7 +47,7 @@ namespace StayHub.Infrastructure.Persistence.Repository
         {
             return await _dbSet.Where(predicate).AsNoTracking().AnyAsync();
         }
-        public async Task<IEnumerable<TResult>> GetManyAsync<TResult>(Expression<Func<T, bool>>? filter, Func<IQueryable<T>, IQueryable<T>>? include, Func<T, int, TResult>? selector, bool? tracking)
+        public async Task<IEnumerable<TResult>> GetManyAsync<TResult>(Expression<Func<T, bool>>? filter, Func<T, int, TResult>? selector, Func<IQueryable<T>, IQueryable<T>>? include, bool? tracking)
         {
             var result = tracking == true ? _dbSet.AsNoTracking() : _dbSet;
             if (filter != null)
@@ -98,7 +98,7 @@ namespace StayHub.Infrastructure.Persistence.Repository
             _appDbContext.SaveChanges();
         }
 
-        public async Task<T?> FindOneAsync(Expression<Func<T, bool>>? filter, Func<IQueryable<T>, IQueryable<T>>? include = null, bool trackChange = false)
+        public async Task<T?> FindOneEntityAsync(Expression<Func<T, bool>>? filter, Func<IQueryable<T>, IQueryable<T>>? include, bool trackChange = false)
         {
             var query = trackChange ? _dbSet.Where(filter) : _dbSet.Where(filter).AsNoTracking();
             if (include != null)
@@ -108,7 +108,7 @@ namespace StayHub.Infrastructure.Persistence.Repository
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<TResult> FindOneAsync<TResult>(Expression<Func<T, bool>>? filter, Func<IQueryable<T>, IQueryable<T>>? include = null, Expression<Func<T, TResult>> selector = null, bool trackChange = false)
+        public async Task<TResult> FindOneAsync<TResult>(Expression<Func<T, bool>>? filter, Expression<Func<T, TResult>> selector, Func<IQueryable<T>, IQueryable<T>>? include, bool trackChange = false)
         {
             var query = trackChange ? _dbSet.Where(filter) : _dbSet.Where(filter).AsNoTracking();
             if (include != null)

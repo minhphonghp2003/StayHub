@@ -13,7 +13,7 @@ namespace StayHub.Application.CQRS.RBAC.Query.User
     {
         public async Task<JWKSetDTO> Handle(GetJWKQuery request, CancellationToken cancellationToken)
         {
-            var keys = await signingKeyRepository.GetManyAsync(e => e.IsActive == true, null, (e, i) => new JWKDTO()
+            var keys = await signingKeyRepository.GetManyAsync(e => e.IsActive == true, (e, i) => new JWKDTO()
             {
                 kty = "RSA",    // Key type (RSA)
                 use = "sig",    // Usage (sig for signature)
@@ -21,7 +21,7 @@ namespace StayHub.Application.CQRS.RBAC.Query.User
                 alg = "RS256",  // Algorithm (RS256 for RSA SHA-256)
                 n = Base64UrlEncoder.Encode(GetModulus(e.PublicKey)), // Modulus (Base64URL-encoded)
                 e = Base64UrlEncoder.Encode(GetExponent(e.PublicKey)) // Exponent (Base64URL-encoded)
-            }, false);
+            },null, false);
             return new JWKSetDTO()
             {
                 keys = keys.ToList()

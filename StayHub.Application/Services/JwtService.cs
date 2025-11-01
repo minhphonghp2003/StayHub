@@ -30,7 +30,7 @@ namespace StayHub.Application.Services
         }
         public async Task<(string, DateTime)> GenerateJwtToken(User user, List<string> roles)
         {
-            var signingKey = await signingKeyRepository.FindOneAsync(k => k.IsActive);
+            var signingKey = await signingKeyRepository.FindOneEntityAsync(k => k.IsActive);
             if (signingKey == null)
             {
                 throw new Exception("No active signing key available.");

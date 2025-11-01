@@ -13,7 +13,7 @@ namespace StayHub.Application.CQRS.RBAC.Command.Token
     {
         public async Task<BaseResponse<TokenDTO>> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
-            var user = await userRepository.FindOneAsync(e => e.Username == request.Username);
+            var user = await userRepository.FindOneEntityAsync(e => e.Username == request.Username);
             if (user == null)
             {
                 return Failure<TokenDTO>("Invalid username or password", HttpStatusCode.Unauthorized);
