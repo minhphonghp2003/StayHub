@@ -27,5 +27,6 @@ namespace StayHub.API.Controllers
                     return Ok(response);
             }
         }
+
     }
 }

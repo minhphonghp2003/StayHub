@@ -6,7 +6,7 @@ using StayHub.Application.CQRS.RBAC.Query.Menu;
 
 namespace StayHub.API.Controllers.RBAC
 {
-    public class MenuController:BaseController
+    public class MenuController : BaseController
     {
         [HttpPost]
         public async Task<IActionResult> CreateMenu(AddMenuCommand request)
