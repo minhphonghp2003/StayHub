@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using StayHub.Application.CQRS.RBAC.Command.Action;
 using StayHub.Application.CQRS.RBAC.Command.Token;
+using StayHub.Application.CQRS.RBAC.Command.User;
 using StayHub.Application.CQRS.RBAC.Query.User;
 using StayHub.Application.Extension;
 
@@ -26,6 +28,20 @@ namespace StayHub.API.Controllers.RBAC
             return GenerateResponse(await Mediator.Send(new GetUserByIdQuery((int)id)
            ));
         }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UdpateUser(int id, UpdateUserCommand request)
+        {
+            request.Id = id;
+            return GenerateResponse(await Mediator.Send(request));
+        }
+
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            return GenerateResponse(await Mediator.Send(new DeleteUserCommand(id)));
+        }
+
 
     }
 }

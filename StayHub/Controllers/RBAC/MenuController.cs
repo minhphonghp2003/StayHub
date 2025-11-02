@@ -28,6 +28,20 @@ namespace StayHub.API.Controllers.RBAC
         {
             return Ok(await Mediator.Send(new GetMenuByIdQuery(Id)));
         }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UdpateMenu(int id, UpdateMenuCommand request)
+        {
+            request.Id = id;
+            return GenerateResponse(await Mediator.Send(request));
+        }
+
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteMenu(int id)
+        {
+            return GenerateResponse(await Mediator.Send(new DeleteMenuCommand(id)));
+        }
+
 
     }
 }

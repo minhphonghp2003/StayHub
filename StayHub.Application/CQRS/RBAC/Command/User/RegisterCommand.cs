@@ -21,7 +21,7 @@ namespace StayHub.Application.CQRS.RBAC.Command.Token
                 return Failure<TokenDTO>("Username already exists", HttpStatusCode.Conflict);
             }
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.Password);
-            var newUser = new User()
+            var newUser = new Domain.Entity.RBAC.User
             {
                 Username = request.Username,
                 Password = hashedPassword,

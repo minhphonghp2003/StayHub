@@ -27,7 +27,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="CQRS\RBAC\Command\Role\" />
 		<Folder Include="Atrtributes\" />
 	</ItemGroup>
 

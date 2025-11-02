@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using StayHub.Application.CQRS.RBAC.Command.Action;
 using StayHub.Application.CQRS.RBAC.Command.Menu;
 using StayHub.Application.CQRS.RBAC.Command.Role;
 using StayHub.Application.CQRS.RBAC.Query.Action;
@@ -26,6 +27,19 @@ namespace StayHub.API.Controllers.RBAC
             return Ok(await Mediator.Send(new GetRoleByIdQuery(Id)));
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UdpateRole(int id, UpdateRoleCommand request)
+        {
+            request.Id = id;
+            return GenerateResponse(await Mediator.Send(request));
+        }
+
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteRole(int id)
+        {
+            return GenerateResponse(await Mediator.Send(new DeleteRoleCommand(id)));
+        }
 
     }
 }
