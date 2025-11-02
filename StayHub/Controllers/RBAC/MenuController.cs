@@ -34,6 +34,12 @@ namespace StayHub.API.Controllers.RBAC
             request.Id = id;
             return GenerateResponse(await Mediator.Send(request));
         }
+        [HttpPatch("set-activated/{id}")]
+        public async Task<IActionResult> SetActivate(int id, [FromQuery] bool activated)
+        {
+
+            return GenerateResponse(await Mediator.Send(new SetActivateMenuCommand(id, activated)));
+        }
 
 
         [HttpDelete("{id}")]

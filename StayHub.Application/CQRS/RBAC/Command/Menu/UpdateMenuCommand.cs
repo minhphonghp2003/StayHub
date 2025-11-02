@@ -34,7 +34,7 @@ namespace StayHub.Application.CQRS.RBAC.Command.Menu
             ParentId = parentId;
         }
     }
-    public sealed class UpdateMenuCommandCommandHandler(IMenuRepository actionRepository) : BaseResponseHandler, IRequestHandler<UpdateMenuCommand, BaseResponse<MenuDTO>>
+    public sealed class UpdateMenuCommandCommandHandler(IMenuRepository menuRepository) : BaseResponseHandler, IRequestHandler<UpdateMenuCommand, BaseResponse<MenuDTO>>
     {
         public async Task<BaseResponse<MenuDTO>> Handle(UpdateMenuCommand request, CancellationToken cancellationToken)
         {
@@ -48,7 +48,7 @@ namespace StayHub.Application.CQRS.RBAC.Command.Menu
                 ParentId = request.ParentId,
 
             };
-            actionRepository.Update(menu);
+            menuRepository.Update(menu);
             return Success<MenuDTO>(new MenuDTO
             {
                 Id = menu.Id,

@@ -2,6 +2,7 @@
 using StayHub.Application.DTO.RBAC;
 using StayHub.Application.Interfaces.Repository.RBAC;
 using StayHub.Domain.Entity.RBAC;
+using StayHub.Infrastructure.Migrations;
 
 namespace StayHub.Infrastructure.Persistence.Repository.RBAC
 {
@@ -18,6 +19,19 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
                 ParentId = e.ParentId,
             });
             return menus.ToList();
+        }
+
+        public async Task<bool> SetActivated(int id, bool activated)
+        {
+            var menu = new Menu
+            {
+                Id = id,
+                IsActive = activated
+            };
+            context.Attach(menu);
+            context.Entry(menu).Property(x => x.IsActive).IsModified = true;
+            await SaveAsync();
+            return activated;
         }
     }
 }

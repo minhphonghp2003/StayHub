@@ -11,18 +11,11 @@ using System.Threading.Tasks;
 namespace StayHub.Application.CQRS.RBAC.Command.Menu
 {
     public record SetActivateMenuCommand(int Id, bool Activated) : IRequest<BaseResponse<bool>>;
-    public sealed class SetActivateMenuCommandHandler(IMenuRepository actionRepository) : BaseResponseHandler, IRequestHandler<SetActivateMenuCommand, BaseResponse<bool>>
+    public sealed class SetActivateMenuCommandHandler(IMenuRepository menuRepository) : BaseResponseHandler, IRequestHandler<SetActivateMenuCommand, BaseResponse<bool>>
     {
         public async Task<BaseResponse<bool>> Handle(SetActivateMenuCommand request, CancellationToken cancellationToken)
         {
-            var menu = new StayHub.Domain.Entity.RBAC.Menu
-            {
-                Id = request.Id,
-                IsActive = request.Activated
-            };
-            actionRepository.Update(menu);
-            return Success<bool>(request.Activated
-         );
+            return Success<bool>(await menuRepository.SetActivated(request.Id, request.Activated));
 
         }
     }

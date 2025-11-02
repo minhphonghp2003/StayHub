@@ -26,7 +26,7 @@ namespace StayHub.Application.CQRS.RBAC.Command.User
         // Parameterless constructor for model binding / deserialization
         public UpdateUserCommand() { }
     }
-    public sealed class UpdateUserCommandCommandHandler(IUserRepository actionRepository) : BaseResponseHandler, IRequestHandler<UpdateUserCommand, BaseResponse<ProfileDTO>>
+    public sealed class UpdateUserCommandCommandHandler(IUserRepository menuRepository) : BaseResponseHandler, IRequestHandler<UpdateUserCommand, BaseResponse<ProfileDTO>>
     {
         public async Task<BaseResponse<ProfileDTO>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
@@ -36,7 +36,7 @@ namespace StayHub.Application.CQRS.RBAC.Command.User
 
                 Email = request.Email
             };
-            actionRepository.Update(user);
+            menuRepository.Update(user);
             return Success<ProfileDTO>(new ProfileDTO
             {
                 Id = user.Id,

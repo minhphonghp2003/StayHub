@@ -28,7 +28,7 @@ namespace StayHub.Application.CQRS.RBAC.Command.Role
         // Parameterless constructor for model binding or deserialization
         public UpdateRoleCommand() { }
     }
-    public sealed class UpdateRoleCommandCommandHandler(IRoleRepository actionRepository) : BaseResponseHandler, IRequestHandler<UpdateRoleCommand, BaseResponse<RoleDTO>>
+    public sealed class UpdateRoleCommandCommandHandler(IRoleRepository menuRepository) : BaseResponseHandler, IRequestHandler<UpdateRoleCommand, BaseResponse<RoleDTO>>
     {
         public async Task<BaseResponse<RoleDTO>> Handle(UpdateRoleCommand request, CancellationToken cancellationToken)
         {
@@ -39,7 +39,7 @@ namespace StayHub.Application.CQRS.RBAC.Command.Role
                 Name = request.Name,
                 Description = request.Description
             };
-            actionRepository.Update(role);
+            menuRepository.Update(role);
             return Success<RoleDTO>(new RoleDTO
             {
                 Id = role.Id,
