@@ -16,7 +16,7 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
         {
             return await GetManyAsync(filter: e => e.RoleId == roleId, selector: (e, i) => new ActionDTO
             {
-                Id = e.Id,
+                Id = e.ActionId,
                 Path = e.Action.Path,
                 Method = e.Action.Method,
                 AllowAnonymous = e.Action.AllowAnonymous,

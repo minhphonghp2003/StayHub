@@ -34,7 +34,7 @@ namespace StayHub.Application.Middlewares
             var method = context.Request.Method;
             var currentUser = context.User;
             int.TryParse(currentUser.FindFirst(ClaimTypes.NameIdentifier).Value, out int userId);
-            if (!await roleRepository.HasAccessToAction(userId, routePattern, method))
+            if (!(await roleRepository.HasAccessToAction(userId, routePattern, method)))
             {
 
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;

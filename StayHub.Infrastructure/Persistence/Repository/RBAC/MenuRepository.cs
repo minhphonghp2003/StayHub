@@ -1,12 +1,23 @@
-﻿using StayHub.Application.Interfaces.Repository.RBAC;
+﻿using Microsoft.EntityFrameworkCore;
+using StayHub.Application.DTO.RBAC;
+using StayHub.Application.Interfaces.Repository.RBAC;
 using StayHub.Domain.Entity.RBAC;
 
 namespace StayHub.Infrastructure.Persistence.Repository.RBAC
 {
-    public class MenuRepository : Repository<Menu>, IMenuRepository
+    public class MenuRepository(AppDbContext context, IRoleRepository roleRepository) : Repository<Menu>(context), IMenuRepository
     {
-        public MenuRepository(AppDbContext context) : base(context)
+        public async Task<List<MenuDTO>> GetUserMenu(int userId)
         {
+            var menus = await GetManyAsync(filter: e => e.IsActive == true && e.MenuActions.Any() && e.MenuActions.All(ma => ma.Action.RoleActions.Any(e => e.Role.UserRoles.Any(e => e.UserId == userId))), selector: (e, i) => new MenuDTO
+            {
+                Id = e.Id,
+                Name = e.Name,
+                Path = e.Path,
+                Icon = e.Icon,
+                ParentId = e.ParentId,
+            });
+            return menus.ToList();
         }
     }
 }

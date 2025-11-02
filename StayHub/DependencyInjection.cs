@@ -8,6 +8,8 @@ namespace StayHub
         public static IServiceCollection AddAppDI(this IServiceCollection service, IConfiguration configuration)
         {
             service.AddApplicationDI(configuration).AddInfrastructureDI(configuration);
+            service.AddHttpContextAccessor();
+
             return service;
         }
     }

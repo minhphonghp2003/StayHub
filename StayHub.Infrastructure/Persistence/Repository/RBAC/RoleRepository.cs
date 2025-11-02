@@ -16,7 +16,9 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
             {
                 return await Task.FromResult(true);
             }
-            return await _dbSet.AnyAsync(r => r.UserRoles.Any(u => u.Id == userId) && r.RoleActions.Any(ra => ra.Action.Path == action && ra.Action.Method == method));
+            var result = await _dbSet.AnyAsync(r => r.UserRoles.Any(u => u.UserId == userId) && r.RoleActions.Any(ra => ra.Action.Path == action && ra.Action.Method == method));
+
+            return result;
         }
     }
 }
