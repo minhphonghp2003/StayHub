@@ -6,6 +6,12 @@ namespace StayHub.API.Controllers.RBAC
 {
     public class ActionController : BaseController
     {
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int Id)
+        {
+            return Ok(await Mediator.Send(new GetActionByIdQuery(Id)));
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {

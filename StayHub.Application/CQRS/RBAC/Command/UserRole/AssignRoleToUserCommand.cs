@@ -11,7 +11,7 @@ namespace StayHub.Application.CQRS.RBAC.Command.UserRole
     {
         public async Task<BaseResponse<bool>> Handle(AssignRoleToUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await userRepository.GetByIdAsync(request.UserId);
+            var user = await userRepository.GetEntityByIdAsync(request.UserId);
             if (user == null)
             {
                 return Failure<bool>(message: "No user found", code: System.Net.HttpStatusCode.BadRequest);

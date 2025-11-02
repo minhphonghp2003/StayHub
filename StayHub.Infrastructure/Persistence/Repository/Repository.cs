@@ -40,7 +40,7 @@ namespace StayHub.Infrastructure.Persistence.Repository
 
         public async Task<bool> ExistsAsync(int id)
         {
-            var entity = await GetByIdAsync(id);
+            var entity = await GetEntityByIdAsync(id);
             return entity != null;
         }
 
@@ -83,7 +83,7 @@ namespace StayHub.Infrastructure.Persistence.Repository
             return result.Select(selector);
         }
 
-        public async Task<T?> GetByIdAsync(int id)
+        public async Task<T?> GetEntityByIdAsync(int id)
         {
             return await _dbSet.FindAsync(id);
         }
@@ -119,5 +119,5 @@ namespace StayHub.Infrastructure.Persistence.Repository
             return await query.Select(selector).FirstOrDefaultAsync();
         }
 
-    }
+        }
 }

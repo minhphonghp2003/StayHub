@@ -8,7 +8,7 @@ namespace StayHub.Application.Interfaces.Repository
         Task<IEnumerable<TResult>> GetAllAsync<TResult>(Func<T, int, TResult> selector);
         Task<IEnumerable<TResult>> GetManyAsync<TResult>(Expression<Func<T, bool>> filter, Func<T, int, TResult> selector, Func<IQueryable<T>, IQueryable<T>>? include = null, bool? tracking = false);
         Task<IEnumerable<T>> GetManyEntityAsync(Expression<Func<T, bool>> filter, Func<IQueryable<T>, IQueryable<T>>? include = null, bool? tracking = false);
-        Task<T?> GetByIdAsync(int id);
+        Task<T?> GetEntityByIdAsync(int id);
         Task<T?> FindOneEntityAsync(Expression<Func<T, bool>>? filter, Func<IQueryable<T>, IQueryable<T>>? include = null, bool trackChange = false);
         Task<TResult?> FindOneAsync<TResult>(Expression<Func<T, bool>> filter, Expression<Func<T, TResult>> selector, Func<IQueryable<T>, IQueryable<T>>? include = null, bool trackChange = false);
         Task AddAsync(T entity);

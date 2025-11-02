@@ -23,5 +23,11 @@ namespace StayHub.API.Controllers.RBAC
         {
             return Ok(await Mediator.Send(new GetMyMenuQuery()));
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int Id)
+        {
+            return Ok(await Mediator.Send(new GetMenuByIdQuery(Id)));
+        }
+
     }
 }

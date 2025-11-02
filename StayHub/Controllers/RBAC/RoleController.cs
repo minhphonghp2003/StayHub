@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StayHub.Application.CQRS.RBAC.Command.Menu;
 using StayHub.Application.CQRS.RBAC.Command.Role;
+using StayHub.Application.CQRS.RBAC.Query.Action;
 using StayHub.Application.CQRS.RBAC.Query.Menu;
 using StayHub.Application.CQRS.RBAC.Query.Role;
 
@@ -19,6 +20,11 @@ namespace StayHub.API.Controllers.RBAC
             return Ok(await Mediator.Send(new GetAllRoleQuery()));
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int Id)
+        {
+            return Ok(await Mediator.Send(new GetRoleByIdQuery(Id)));
+        }
 
 
     }
