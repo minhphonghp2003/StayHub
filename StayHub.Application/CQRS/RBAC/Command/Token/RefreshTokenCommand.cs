@@ -33,7 +33,7 @@ namespace StayHub.Application.CQRS.RBAC.Command.Token
             tokenRepository.Update(token);
             return Success<TokenDTO>(new TokenDTO
             {
-                Username = token.User.Username,
+                Email = token.User.Email,
                 Id = token.User.Id,
                 Token = accessToken,
                 ExpiresDate = expires,

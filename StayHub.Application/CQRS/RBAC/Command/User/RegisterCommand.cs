@@ -32,7 +32,7 @@ namespace StayHub.Application.CQRS.RBAC.Command.Token
             var refreshToken = await authService.GenerateRefreshToken(userId:newUser.Id);
             return Success<TokenDTO>(new TokenDTO
             {
-                Username = newUser.Username,
+                Email = newUser.Email,
                 Id = newUser.Id,
                 Token = token.Item1,
                 RefreshToken = refreshToken,

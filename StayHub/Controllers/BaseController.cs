@@ -19,10 +19,12 @@ namespace StayHub.API.Controllers
             {
                 case HttpStatusCode.OK:
                     return Ok(response);
+                case HttpStatusCode.Unauthorized:
+                    return Unauthorized(response);
                 case HttpStatusCode.NotFound:
                     return NotFound();
                 case HttpStatusCode.Created:
-                    return CreatedAtAction(null,response);
+                    return CreatedAtAction(null, response);
                 default:
                     return Ok(response);
             }
