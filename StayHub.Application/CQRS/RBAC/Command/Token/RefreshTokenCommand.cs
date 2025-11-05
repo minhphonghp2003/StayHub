@@ -16,15 +16,15 @@ namespace StayHub.Application.CQRS.RBAC.Command.Token
 
             if (token == null)
             {
-                return Failure<TokenDTO>("Invalid refresh token", System.Net.HttpStatusCode.Unauthorized);
+                return Failure<TokenDTO>("Invalid refresh token", System.Net.HttpStatusCode.BadRequest);
             }
             if (token.RevokedAt != null)
             {
-                return Failure<TokenDTO>("Refresh token has been revoked", System.Net.HttpStatusCode.Unauthorized);
+                return Failure<TokenDTO>("Refresh token has been revoked", System.Net.HttpStatusCode.BadRequest);
             }
             if (token.ExpireDate < DateTime.UtcNow)
             {
-                return Failure<TokenDTO>("Refresh token has expired", System.Net.HttpStatusCode.Unauthorized);
+                return Failure<TokenDTO>("Refresh token has expired", System.Net.HttpStatusCode.BadRequest);
             }
 
             token.RevokedAt = DateTime.UtcNow;
