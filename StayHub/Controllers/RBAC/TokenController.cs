@@ -2,16 +2,24 @@
 using Microsoft.AspNetCore.Mvc;
 using StayHub.Application.CQRS.RBAC.Command.Action;
 using StayHub.Application.CQRS.RBAC.Command.Token;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace StayHub.API.Controllers.RBAC
 {
     [AllowAnonymous]
-    public class TokenController :BaseController
+    public class TokenController : BaseController
     {
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken(RefreshTokenCommand request)
         {
-            return GenerateResponse(await Mediator.Send(request));
+            var result = await Mediator.Send(request);
+            if (result.Success)
+            {
+
+                SetCookie("refresh", result.Data.RefreshToken);
+                SetCookie("access_token", result.Data.Token, result.Data.ExpiresDate);
+            }
+            return GenerateResponse(result);
         }
     }
 }

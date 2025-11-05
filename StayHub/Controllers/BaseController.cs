@@ -29,6 +29,30 @@ namespace StayHub.API.Controllers
                     return Ok(response);
             }
         }
+        private bool IsHttps => Request.Headers["X-Forwarded-Proto"].ToString().Equals("https", StringComparison.OrdinalIgnoreCase)
+            || Request.Headers["Origin"].ToString().StartsWith("https", StringComparison.OrdinalIgnoreCase);
+        protected void SetCookie(string cookieKey, string cookieValue, DateTime? expires = null, string? cookieDomain = null)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                IsEssential = true,
+                Expires = expires,
+                Secure = IsHttps,
+                SameSite = SameSiteMode.Lax,
+            };
+
+            if (!string.IsNullOrEmpty(cookieDomain))
+            {
+                cookieOptions.Domain = cookieDomain;
+            }
+            if (!IsHttps || Request.Headers.Origin.ToString().Contains("localhost"))
+            {
+                cookieOptions.Secure = true;
+                cookieOptions.SameSite = SameSiteMode.None;
+            }
+            Response.Cookies.Append(cookieKey, cookieValue, cookieOptions);
+        }
 
     }
 }

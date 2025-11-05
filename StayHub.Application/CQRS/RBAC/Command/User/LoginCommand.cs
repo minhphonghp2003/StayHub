@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Shared.Response;
 using StayHub.Application.DTO.RBAC;
 using StayHub.Application.Interfaces.Repository.RBAC;
@@ -13,7 +14,7 @@ namespace StayHub.Application.CQRS.RBAC.Command.Token
     {
         public async Task<BaseResponse<TokenDTO>> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
-            var user = await userRepository.FindOneEntityAsync(e => e.Username == request.Username);
+            var user = await userRepository.FindOneEntityAsync(e => e.Username == request.Username, include: e => e.Include(u => u.Profile));
             if (user == null)
             {
                 return Failure<TokenDTO>("Invalid username or password", HttpStatusCode.BadRequest);
@@ -28,9 +29,9 @@ namespace StayHub.Application.CQRS.RBAC.Command.Token
             var refreshToken = await authService.GenerateRefreshToken(userId: user.Id);
             return Success<TokenDTO>(new TokenDTO
             {
-                Email = user.Profile.Email,
-                Fullname = user.Profile.Fullname,
-                Image = user.Profile.Image,
+                Email = user?.Profile?.Email,
+                Fullname = user?.Profile?.Fullname,
+                Image = user?.Profile?.Image,
                 Id = user.Id,
                 Token = token.Item1,
                 ExpiresDate = token.Item2,

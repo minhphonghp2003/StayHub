@@ -10,12 +10,26 @@ namespace StayHub.API.Controllers.RBAC
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginCommand command)
         {
-            return GenerateResponse(await Mediator.Send(command));
+            var result = await Mediator.Send(command);
+            if (result.Success)
+            {
+
+                SetCookie("refresh", result.Data.RefreshToken);
+                SetCookie("access_token", result.Data.Token, result.Data.ExpiresDate);
+            }
+            return GenerateResponse(result);
         }
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterCommand command)
         {
-            return GenerateResponse(await Mediator.Send(command));
+            var result = await Mediator.Send(command);
+            if (result.Success)
+            {
+
+                SetCookie("refresh", result.Data.RefreshToken);
+                SetCookie("access_token", result.Data.Token, result.Data.ExpiresDate);
+            }
+            return GenerateResponse(result);
         }
         [HttpPost("logout")]
         public async Task<IActionResult> Logout(RevokeTokenCommand command)

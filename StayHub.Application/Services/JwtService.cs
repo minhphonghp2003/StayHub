@@ -21,7 +21,7 @@ namespace StayHub.Application.Services
         private readonly IConfiguration _configuration;
         private readonly ISigningKeyRepository signingKeyRepository;
         private readonly HashService _hashService;
-        public JwtService(ISigningKeyRepository signingKeyRepo, IConfiguration configuration,HashService hashService)
+        public JwtService(ISigningKeyRepository signingKeyRepo, IConfiguration configuration, HashService hashService)
         {
             _configuration = configuration;
             signingKeyRepository = signingKeyRepo;
@@ -35,12 +35,11 @@ namespace StayHub.Application.Services
             {
                 throw new Exception("No active signing key available.");
             }
-            var creds = _hashService.SigningKey(privateKey:signingKey.PrivateKey,id:signingKey.Id.ToString());
+            var creds = _hashService.SigningKey(privateKey: signingKey.PrivateKey, id: signingKey.Id.ToString());
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Username),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Profile.Email)
             };
             foreach (var userRole in roles)
             {
@@ -57,6 +56,6 @@ namespace StayHub.Application.Services
             return (token, expires);
         }
 
-       
+
     }
 }
