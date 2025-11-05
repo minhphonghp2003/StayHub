@@ -34,7 +34,7 @@ namespace StayHub.Application.CQRS.RBAC.Command.Token
             newUser.Profile = profile;
             await userRepository.AddAsync(newUser);
             var token = await tokenService.GenerateJwtToken(newUser, new List<string>());
-            var refreshToken = await authService.GenerateRefreshToken(userId: newUser.Id);
+            var (refreshToken, expires) = await authService.GenerateRefreshToken(userId: newUser.Id);
             return Success<TokenDTO>(new TokenDTO
             {
                 Id = newUser.Id,
@@ -42,7 +42,7 @@ namespace StayHub.Application.CQRS.RBAC.Command.Token
                 Email = profile.Email,
                 Token = token.Item1,
                 RefreshToken = refreshToken,
-                ExpiresDate = token.Item2
+                ExpiresDate = expires
             }, "User registered successfully");
         }
     }

@@ -8,6 +8,6 @@ namespace StayHub.Application.Interfaces.Services
 {
     public interface IAuthService
     {
-        public Task<string> GenerateRefreshToken(int userId);
+        public Task<(string,DateTime)> GenerateRefreshToken(int userId);
     }
 }

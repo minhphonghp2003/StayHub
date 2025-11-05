@@ -16,8 +16,8 @@ namespace StayHub.API.Controllers.RBAC
             if (result.Success)
             {
 
-                SetCookie("refresh", result.Data.RefreshToken);
-                SetCookie("access_token", result.Data.Token, result.Data.ExpiresDate);
+                SetCookie("refresh", result.Data.RefreshToken, result.Data.ExpiresDate);
+                SetCookie("access_token", result.Data.Token);
             }
             return GenerateResponse(result);
         }

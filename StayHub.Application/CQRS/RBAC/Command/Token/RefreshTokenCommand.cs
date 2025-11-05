@@ -28,8 +28,8 @@ namespace StayHub.Application.CQRS.RBAC.Command.Token
             }
 
             token.RevokedAt = DateTime.UtcNow;
-            var newToken = await authService.GenerateRefreshToken(userId: token.UserId);
-            var (accessToken, expires) = await jwtService.GenerateJwtToken(token.User, new List<string>());
+            var (newToken, expires) = await authService.GenerateRefreshToken(userId: token.UserId);
+            var (accessToken, _) = await jwtService.GenerateJwtToken(token.User, new List<string>());
             tokenRepository.Update(token);
             return Success<TokenDTO>(new TokenDTO
             {

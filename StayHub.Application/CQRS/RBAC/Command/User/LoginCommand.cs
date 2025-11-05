@@ -26,7 +26,7 @@ namespace StayHub.Application.CQRS.RBAC.Command.Token
                 return Failure<TokenDTO>("Invalid username or password", HttpStatusCode.BadRequest);
             }
             var token = await tokenService.GenerateJwtToken(user, new List<string>());
-            var refreshToken = await authService.GenerateRefreshToken(userId: user.Id);
+            var (refreshToken, expires) = await authService.GenerateRefreshToken(userId: user.Id);
             return Success<TokenDTO>(new TokenDTO
             {
                 Email = user?.Profile?.Email,
@@ -34,9 +34,9 @@ namespace StayHub.Application.CQRS.RBAC.Command.Token
                 Image = user?.Profile?.Image,
                 Id = user.Id,
                 Token = token.Item1,
-                ExpiresDate = token.Item2,
+                ExpiresDate = expires,
                 RefreshToken = refreshToken
-            }, "User registered successfully");
+            }, "Login successfully");
 
         }
     }

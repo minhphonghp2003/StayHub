@@ -14,9 +14,10 @@ namespace StayHub.Application.Services
     public class AuthService(ITokenRepository tokenRepository, IJwtService jwtService, HashService hashService) : IAuthService
     {
 
-        public async Task<string> GenerateRefreshToken(int userId)
+        public async Task<(string, DateTime)> GenerateRefreshToken(int userId)
         {
             string newToken;
+            DateTime expires = DateTime.UtcNow.AddDays(7);
             var randomNumber = new byte[64];
             using (var rng = RandomNumberGenerator.Create())
             {
@@ -28,9 +29,9 @@ namespace StayHub.Application.Services
             {
                 UserId = userId,
                 RefreshToken = newToken,
-                ExpireDate = DateTime.UtcNow.AddDays(7),
+                ExpireDate = expires,
             });
-            return newToken;
+            return (newToken, expires);
         }
     }
 }
