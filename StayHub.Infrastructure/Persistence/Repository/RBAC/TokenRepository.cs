@@ -12,7 +12,7 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
 
         public async Task<Token?> GetTokenInfo(string refreshToken)
         {
-            return await FindOneEntityAsync(e => e.RefreshToken == refreshToken,include: m=>m.Include(n=>n.User));
+            return await FindOneEntityAsync(e => e.RefreshToken == refreshToken,include: m=>m.Include(n=>n.User).ThenInclude(u=>u.Profile));
         }
     }
 }

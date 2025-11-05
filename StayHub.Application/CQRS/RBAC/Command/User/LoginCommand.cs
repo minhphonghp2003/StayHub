@@ -28,7 +28,9 @@ namespace StayHub.Application.CQRS.RBAC.Command.Token
             var refreshToken = await authService.GenerateRefreshToken(userId: user.Id);
             return Success<TokenDTO>(new TokenDTO
             {
-                Email = user.Email,
+                Email = user.Profile.Email,
+                Fullname = user.Profile.Fullname,
+                Image = user.Profile.Image,
                 Id = user.Id,
                 Token = token.Item1,
                 ExpiresDate = token.Item2,

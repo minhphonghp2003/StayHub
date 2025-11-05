@@ -33,14 +33,11 @@ namespace StayHub.Application.CQRS.RBAC.Command.User
             var user = new StayHub.Domain.Entity.RBAC.User
             {
                 Id = request.Id,
-
-                Email = request.Email
             };
             menuRepository.Update(user);
             return Success<ProfileDTO>(new ProfileDTO
             {
                 Id = user.Id,
-                Email = user.Email,
                 CreatedAt = user.CreatedAt,
                 UpdatedAt = user.UpdatedAt
             });

@@ -15,7 +15,6 @@ namespace StayHub.Application.CQRS.RBAC.Query.User
             {
                 Id = e.Id,
                 Username = e.Username,
-                Email = e.Email,
                 Roles = e.UserRoles.Select(ur => new RoleDTO
                 {
                     Id = ur.Role.Id,

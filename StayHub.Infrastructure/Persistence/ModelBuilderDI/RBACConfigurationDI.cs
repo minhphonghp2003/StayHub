@@ -16,6 +16,7 @@ namespace StayHub.Infrastructure.Persistence.EntityConfigurationDI
             modelbuilder.ApplyConfiguration(new UserRoleConfiguration());
             modelbuilder.ApplyConfiguration(new RoleActionConfiguration());
             modelbuilder.ApplyConfiguration(new MenuActionConfiguration());
+            modelbuilder.ApplyConfiguration(new ProfileConfiguration());
             return modelbuilder;
         }
     }

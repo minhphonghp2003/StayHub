@@ -10,13 +10,13 @@ using System.Net;
 namespace StayHub.Application.CQRS.RBAC.Command.Token
 {
     // Include properties to be used as input for the command
-    public record RegisterCommand(String Username, String Password,String Email) : IRequest<BaseResponse<TokenDTO>>;
-    public sealed class RegisterCommandHandler (IUserRepository userRepository,IJwtService tokenService, ITokenRepository tokenRepository,IAuthService authService) :BaseResponseHandler, IRequestHandler<RegisterCommand, BaseResponse<TokenDTO>>
+    public record RegisterCommand(String Fullname, String Username, String Password, String Email) : IRequest<BaseResponse<TokenDTO>>;
+    public sealed class RegisterCommandHandler(IUserRepository userRepository, IJwtService tokenService, ITokenRepository tokenRepository, IAuthService authService) : BaseResponseHandler, IRequestHandler<RegisterCommand, BaseResponse<TokenDTO>>
     {
         public async Task<BaseResponse<TokenDTO>> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
             bool userExists = await userRepository.ExistsByUsernameAsync(request.Username);
-            if(userExists)
+            if (userExists)
             {
                 return Failure<TokenDTO>("Username already exists", HttpStatusCode.Conflict);
             }
@@ -25,15 +25,21 @@ namespace StayHub.Application.CQRS.RBAC.Command.Token
             {
                 Username = request.Username,
                 Password = hashedPassword,
-                Email = request.Email
             };
+            var profile = new Profile
+            {
+                Fullname = request.Fullname,
+                Email = request.Email,
+            };
+            newUser.Profile = profile;
             await userRepository.AddAsync(newUser);
             var token = await tokenService.GenerateJwtToken(newUser, new List<string>());
-            var refreshToken = await authService.GenerateRefreshToken(userId:newUser.Id);
+            var refreshToken = await authService.GenerateRefreshToken(userId: newUser.Id);
             return Success<TokenDTO>(new TokenDTO
             {
-                Email = newUser.Email,
                 Id = newUser.Id,
+                Fullname = profile.Fullname,
+                Email = profile.Email,
                 Token = token.Item1,
                 RefreshToken = refreshToken,
                 ExpiresDate = token.Item2
