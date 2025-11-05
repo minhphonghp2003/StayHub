@@ -34,7 +34,14 @@ namespace StayHub.API.Controllers.RBAC
         [HttpPost("logout")]
         public async Task<IActionResult> Logout(RevokeTokenCommand command)
         {
-            return GenerateResponse(await Mediator.Send(command));
+            var result = await Mediator.Send(command);
+            if (result.Success)
+            {
+                DeleteCookie("refresh");
+                DeleteCookie("access_token");
+            }
+            return GenerateResponse(result);
+
         }
 
 

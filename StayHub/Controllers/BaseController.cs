@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Response;
 using System.Net;
@@ -52,6 +53,26 @@ namespace StayHub.API.Controllers
                 cookieOptions.SameSite = SameSiteMode.None;
             }
             Response.Cookies.Append(cookieKey, cookieValue, cookieOptions);
+        }
+        protected void DeleteCookie(string cookieKey, string? cookieDomain =null)
+        {
+            var options = new CookieOptions
+            {
+                Expires = DateTimeOffset.UtcNow.AddDays(-1), // Set expiration to a past date
+                SameSite = SameSiteMode.None, // Required for cross-site cookies
+                Secure = IsHttps, // Required when SameSite is None
+            };
+            if (!string.IsNullOrEmpty(cookieDomain))
+            {
+                options.Domain = cookieDomain;
+            }
+            if (!IsHttps || Request.Headers.Origin.ToString().Contains("localhost"))
+            {
+                options.Secure = true;
+                options.SameSite = SameSiteMode.None;
+            }
+            Response.Cookies.Delete(cookieKey, options);
+
         }
 
     }
