@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StayHub.Application.Interfaces.Repository.Catalog;
 using StayHub.Application.Interfaces.Repository.RBAC;
 using StayHub.Infrastructure.Persistence;
+using StayHub.Infrastructure.Persistence.Repository.Catalog;
 using StayHub.Infrastructure.Persistence.Repository.RBAC;
 
 namespace StayHub.Infrastructure
@@ -23,6 +25,8 @@ namespace StayHub.Infrastructure
             service.AddScoped<IUserRoleRepository, UserRoleRepository>();
             service.AddScoped<IRoleActionRepository, RoleActionRepository>();
             service.AddScoped<IMenuActionRepository, MenuActionRepository>();
+            service.AddScoped<ICategoryRepository, CategoryRepository>();
+            service.AddScoped<ICategoryItemRepository, CategoryItemRepository>();
             return service;
         }
     }

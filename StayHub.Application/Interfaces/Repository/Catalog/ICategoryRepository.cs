@@ -1,0 +1,13 @@
+﻿using StayHub.Domain.Entity.Catalog;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace StayHub.Application.Interfaces.Repository.Catalog
+{
+    public interface ICategoryRepository : IRepository<Category>
+    {
+    }
+}

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StayHub.Domain.Entity;
 using StayHub.Infrastructure.Persistence.EntityConfigurationDI;
+using StayHub.Infrastructure.Persistence.ModelBuilderDI;
 
 namespace StayHub.Infrastructure.Persistence
 {
@@ -11,6 +12,7 @@ namespace StayHub.Infrastructure.Persistence
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyRBACConfiguration();
+            modelBuilder.ApplyCatalogConfiguration();
         }
         public override int SaveChanges()
         {

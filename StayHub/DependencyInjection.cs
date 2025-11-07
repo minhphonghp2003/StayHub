@@ -13,7 +13,7 @@ namespace StayHub
                 options.AddPolicy("AllowAllOrigin",
                 builder =>
                 {
-                    builder.WithOrigins("http://localhost:3000") // Allow all Origins
+                    builder.WithOrigins(["http://localhost:3000", "http://192.168.88.188:3000"]) // Allow all Origins
                             .AllowAnyHeader()  // Allow all headers (like Content-Type)
                             .AllowAnyMethod().AllowCredentials(); // Allow all HTTP methods (GET, POST, etc.)
                 });

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StayHub.Domain.Entity.Catalog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,12 @@ namespace StayHub.Application.DTO.RBAC
         public string? Icon { get; set; }
         public int? ParentId { get; set; }
         public bool? IsActive { get; set; }
+        public int? GroupId { get; set; }
         public List<MenuDTO> Children { get; set; }
+    }
+    public class MenuGroupDTO
+    {
+        public string Name { get; set; }
+        public List<MenuDTO> Items { get; set; }
     }
 }

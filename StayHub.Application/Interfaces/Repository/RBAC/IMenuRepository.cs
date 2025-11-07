@@ -5,7 +5,7 @@ namespace StayHub.Application.Interfaces.Repository.RBAC
 {
     public interface IMenuRepository : IRepository<Menu>
     {
-        Task<List<MenuDTO>> GetUserMenu(int userId);
+        Task<List<MenuGroupDTO>> GetUserMenu(int userId);
         Task<bool> SetActivated(int id, bool activated);
     }
 }

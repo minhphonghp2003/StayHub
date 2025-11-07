@@ -8,17 +8,21 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
 {
     public class MenuRepository(AppDbContext context, IRoleRepository roleRepository) : Repository<Menu>(context), IMenuRepository
     {
-        public async Task<List<MenuDTO>> GetUserMenu(int userId)
+        public async Task<List<MenuGroupDTO>> GetUserMenu(int userId)
         {
-            var menus = await GetManyAsync(filter: e => e.IsActive == true && e.MenuActions.Any() && e.MenuActions.All(ma => ma.Action.RoleActions.Any(e => e.Role.UserRoles.Any(e => e.UserId == userId))), selector: (e, i) => new MenuDTO
+            return await _dbSet.Where(e => e.IsActive == true && e.MenuActions.Any() && e.MenuActions.All(ma => ma.Action.RoleActions.Any(e => e.Role.UserRoles.Any(e => e.UserId == userId)))).GroupBy(e => new { GroupId = e.MenuGroupId, GroupName = e.MenuGroup.Name }).Select(g => new MenuGroupDTO
             {
-                Id = e.Id,
-                Name = e.Name,
-                Path = e.Path,
-                Icon = e.Icon,
-                ParentId = e.ParentId,
-            });
-            return menus.ToList();
+                Name = g.Key.GroupName,
+                Items = g.Select(e => new MenuDTO
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    Path = e.Path,
+                    Icon = e.Icon,
+                    GroupId = e.MenuGroupId,
+                    ParentId = e.ParentId
+                }).ToList()
+            }).ToListAsync();
         }
 
         public async Task<bool> SetActivated(int id, bool activated)

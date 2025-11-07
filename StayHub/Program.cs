@@ -79,7 +79,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseCors("AllowAllOrigin");
 app.UseRouting();
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<LoggingMiddleware>();
