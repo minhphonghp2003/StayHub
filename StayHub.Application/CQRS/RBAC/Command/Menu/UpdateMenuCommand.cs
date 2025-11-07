@@ -5,6 +5,7 @@ using StayHub.Application.Interfaces.Repository.RBAC;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -18,14 +19,14 @@ namespace StayHub.Application.CQRS.RBAC.Command.Menu
 
         public string Path { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
-        public string Icon { get; set; } = string.Empty;
-        public int ParentId { get; set; }
-        public int GroupId { get; set; }
+        public string? Description { get; set; } = string.Empty;
+        public string? Icon { get; set; } = string.Empty;
+        public int? ParentId { get; set; }
+        public int? GroupId { get; set; }
 
         public UpdateMenuCommand() { }
 
-        public UpdateMenuCommand(int id, string path,int groupId, string name, string description, string icon, int parentId)
+        public UpdateMenuCommand(int id, string path, int? groupId, string name, string? description, string? icon, int? parentId)
         {
             Id = id;
             Path = path;
@@ -40,17 +41,18 @@ namespace StayHub.Application.CQRS.RBAC.Command.Menu
     {
         public async Task<BaseResponse<MenuDTO>> Handle(UpdateMenuCommand request, CancellationToken cancellationToken)
         {
-            var menu = new StayHub.Domain.Entity.RBAC.Menu
+            var menu = await menuRepository.FindOneEntityAsync(filter: e => e.Id == request.Id);
+            if (menu == null)
             {
-                Id = request.Id,
-                Path = request.Path,
-                Name = request.Name,
-                Description = request.Description,
-                Icon = request.Icon,
-                ParentId = request.ParentId,
-                MenuGroupId = request.GroupId
+                return Failure<MenuDTO>(message: "No menu found", code: HttpStatusCode.BadRequest);
 
-            };
+            }
+            menu.Path = request.Path;
+            menu.Name = request.Name;
+            menu.Description = request.Description;
+            menu.Icon = request.Icon;
+            menu.ParentId = request.ParentId;
+            menu.MenuGroupId = request.GroupId;
             menuRepository.Update(menu);
             return Success<MenuDTO>(new MenuDTO
             {

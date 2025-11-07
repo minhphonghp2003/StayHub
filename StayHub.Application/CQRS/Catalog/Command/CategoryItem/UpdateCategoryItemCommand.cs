@@ -40,17 +40,16 @@ namespace StayHub.Application.CQRS.Catalog.Command.CategoryItem
             {
                 return Failure<CategoryItemDTO>(message: "Duplicate CODE", code: HttpStatusCode.BadRequest);
             }
-            var item = new Domain.Entity.Catalog.CategoryItem
-            {
-                Id = request.Id,
-                Name = request.Name,
-                Code = request.Code,
-                Value = request.Value,
-                Icon = request.Icon,
-                CategoryId = request.CategoryId
-            };
+            var item = await categoryItemRepository.FindOneEntityAsync(e => e.Id == request.Id);
+            if (item == null)
+                return Failure<CategoryItemDTO>(message: "No category item found", code: HttpStatusCode.BadRequest);
 
-            categoryItemRepository.Update(item);
+            item.Name = request.Name;
+            item.Code = request.Code;
+            item.Value = request.Value;
+            item.Icon = request.Icon;
+            item.CategoryId = request.CategoryId;
+
 
             return Success(new CategoryItemDTO
             {

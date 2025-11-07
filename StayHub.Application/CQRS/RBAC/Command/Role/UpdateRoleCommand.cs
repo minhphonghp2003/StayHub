@@ -2,9 +2,11 @@
 using Shared.Response;
 using StayHub.Application.DTO.RBAC;
 using StayHub.Application.Interfaces.Repository.RBAC;
+using StayHub.Domain.Entity.RBAC;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -28,18 +30,20 @@ namespace StayHub.Application.CQRS.RBAC.Command.Role
         // Parameterless constructor for model binding or deserialization
         public UpdateRoleCommand() { }
     }
-    public sealed class UpdateRoleCommandCommandHandler(IRoleRepository menuRepository) : BaseResponseHandler, IRequestHandler<UpdateRoleCommand, BaseResponse<RoleDTO>>
+    public sealed class UpdateRoleCommandCommandHandler(IRoleRepository roleRepository) : BaseResponseHandler, IRequestHandler<UpdateRoleCommand, BaseResponse<RoleDTO>>
     {
         public async Task<BaseResponse<RoleDTO>> Handle(UpdateRoleCommand request, CancellationToken cancellationToken)
         {
-            var role = new StayHub.Domain.Entity.RBAC.Role
+            var role = await roleRepository.FindOneEntityAsync(e => e.Id == request.Id);
+            if (role == null)
             {
-                Id = request.Id,
-                Code = request.Code,
-                Name = request.Name,
-                Description = request.Description
-            };
-            menuRepository.Update(role);
+                return Failure<RoleDTO>(message: "No role found", code: HttpStatusCode.BadRequest);
+
+            }
+            role.Code = request.Code;
+            role.Name = request.Name;
+            role.Description = request.Description;
+            roleRepository.Update(role);
             return Success<RoleDTO>(new RoleDTO
             {
                 Id = role.Id,

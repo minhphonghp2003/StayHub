@@ -19,7 +19,16 @@ namespace StayHub.API.Controllers.Catalog
         {
             return Ok(await Mediator.Send(new GetAllCategoryItemQuery()));
         }
-
+        [HttpGet("by-category-code/{categoryCode}")]
+        public async Task<IActionResult> GetByCategoryCode(string categoryCode)
+        {
+            return Ok(await Mediator.Send(new GetCategoryItemByCategoryCodeQuery(categoryCode)));
+        }
+        [HttpGet("by-category-id/{categoryId}")]
+        public async Task<IActionResult> GetByCategoryId(int categoryId)
+        {
+            return Ok(await Mediator.Send(new GetCategoryItemByCategoryIdQuery(categoryId)));
+        }
         [HttpPost]
         public async Task<IActionResult> CreateCategoryItem(AddCategoryItemCommand request)
         {
