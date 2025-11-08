@@ -22,11 +22,11 @@ namespace StayHub.Application.CQRS.RBAC.Command.Menu
         public string? Description { get; set; } = string.Empty;
         public string? Icon { get; set; } = string.Empty;
         public int? ParentId { get; set; }
-        public int? GroupId { get; set; }
+        public int GroupId { get; set; }
 
         public UpdateMenuCommand() { }
 
-        public UpdateMenuCommand(int id, string path, int? groupId, string name, string? description, string? icon, int? parentId)
+        public UpdateMenuCommand(int id, string path, int groupId, string name, string? description, string? icon, int? parentId)
         {
             Id = id;
             Path = path;

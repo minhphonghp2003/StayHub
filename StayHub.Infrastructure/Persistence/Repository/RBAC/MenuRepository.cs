@@ -10,7 +10,7 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
     {
         public async Task<List<MenuGroupDTO>> GetUserMenu(int userId)
         {
-            return await _dbSet.Where(e => e.IsActive == true && e.MenuActions.Any() && e.MenuActions.All(ma => ma.Action.RoleActions.Any(e => e.Role.UserRoles.Any(e => e.UserId == userId)))).GroupBy(e => new { GroupId = e.MenuGroupId, GroupName = e.MenuGroup.Name }).Select(g => new MenuGroupDTO
+            return await _dbSet.Where(e => e.IsActive == true  && e.MenuActions.All(ma => ma.Action.RoleActions.Any(e => e.Role.UserRoles.Any(e => e.UserId == userId)))).GroupBy(e => new { GroupId = e.MenuGroupId, GroupName = e.MenuGroup.Name }).Select(g => new MenuGroupDTO
             {
                 Name = g.Key.GroupName,
                 Items = g.Select(e => new MenuDTO

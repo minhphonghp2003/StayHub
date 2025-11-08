@@ -3,9 +3,10 @@ using Shared.Response;
 using StayHub.Application.DTO.RBAC;
 using StayHub.Application.Interfaces.Repository.RBAC;
 
+
 namespace StayHub.Application.CQRS.RBAC.Query.Menu
 {
-    // Include properties to be used as input for the query
+    // TODO  pagination
     public record GetAllMenuQuery() : IRequest<BaseResponse<List<MenuDTO>>>;
     public sealed class GetAllMenuQueryHandler(IMenuRepository menuRepository) : BaseResponseHandler, IRequestHandler<GetAllMenuQuery, BaseResponse<List<MenuDTO>>>
     {
@@ -15,6 +16,7 @@ namespace StayHub.Application.CQRS.RBAC.Query.Menu
             {
                 Id = e.Id,
                 Path = e.Path,
+                Name = e.Name,
                 Description = e.Description,
                 Icon = e.Icon,
                 GroupId = e.MenuGroupId,
