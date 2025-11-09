@@ -12,7 +12,6 @@ namespace StayHub.Infrastructure.Persistence.Repository
         }
         public async Task<(List<TResult>, int)> GetManyPagedAsync<TResult>(Expression<Func<T, bool>> filter, Func<T, int, TResult> selector, int pageNumber = 1, int pageSize = 10, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, Func<IQueryable<T>, IQueryable<T>>? include = null, bool? tracking = false)
         {
-            var count = await _dbSet.CountAsync();
             pageSize = Math.Max(pageSize, 1);
             pageNumber = Math.Max(pageNumber, 1);
             var result = tracking == true ? _dbSet.AsNoTracking() : _dbSet;
@@ -29,6 +28,7 @@ namespace StayHub.Infrastructure.Persistence.Repository
             {
                 result = orderBy(result);
             }
+            var count = await result.CountAsync();
             return (result.Skip((pageNumber - 1) * pageSize).Take(pageSize).Select(selector).ToList(), count);
 
         }
