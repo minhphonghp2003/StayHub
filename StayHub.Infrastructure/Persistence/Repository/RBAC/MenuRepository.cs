@@ -1,16 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StayHub.Application.DTO.RBAC;
+using StayHub.Application.Interfaces.Repository;
 using StayHub.Application.Interfaces.Repository.RBAC;
 using StayHub.Domain.Entity.RBAC;
 using StayHub.Infrastructure.Migrations;
 
 namespace StayHub.Infrastructure.Persistence.Repository.RBAC
 {
-    public class MenuRepository(AppDbContext context, IRoleRepository roleRepository) : Repository<Menu>(context), IMenuRepository
+    public class MenuRepository(AppDbContext context, IRoleRepository roleRepository) : PagingAndSortingRepository<Menu>(context), IMenuRepository
     {
         public async Task<List<MenuGroupDTO>> GetUserMenu(int userId)
         {
-            return await _dbSet.Where(e => e.IsActive == true  && e.MenuActions.All(ma => ma.Action.RoleActions.Any(e => e.Role.UserRoles.Any(e => e.UserId == userId)))).GroupBy(e => new { GroupId = e.MenuGroupId, GroupName = e.MenuGroup.Name }).Select(g => new MenuGroupDTO
+            return await _dbSet.Where(e => e.IsActive == true && e.MenuActions.All(ma => ma.Action.RoleActions.Any(e => e.Role.UserRoles.Any(e => e.UserId == userId)))).GroupBy(e => new { GroupId = e.MenuGroupId, GroupName = e.MenuGroup.Name }).Select(g => new MenuGroupDTO
             {
                 Name = g.Key.GroupName,
                 Items = g.Select(e => new MenuDTO

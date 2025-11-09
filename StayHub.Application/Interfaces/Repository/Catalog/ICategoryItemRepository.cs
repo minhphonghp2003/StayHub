@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace StayHub.Application.Interfaces.Repository.Catalog
 {
-    public interface ICategoryItemRepository : IRepository<CategoryItem>
+    public interface ICategoryItemRepository : IPagingAndSortingRepository<CategoryItem>
     {
     }
 }

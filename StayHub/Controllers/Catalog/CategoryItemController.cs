@@ -15,9 +15,9 @@ namespace StayHub.API.Controllers.Catalog
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync([FromQuery] string? search = null, [FromQuery] int? pageNumber = null, [FromQuery] int? pageSize = null)
         {
-            return Ok(await Mediator.Send(new GetAllCategoryItemQuery()));
+            return Ok(await Mediator.Send(new GetAllCategoryItemQuery(search, pageNumber, pageSize)));
         }
         [HttpGet("by-category-code/{categoryCode}")]
         public async Task<IActionResult> GetByCategoryCode(string categoryCode)

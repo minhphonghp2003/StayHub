@@ -14,7 +14,7 @@ namespace StayHub.API.Controllers
     {
         private IMediator _mediatorInstance;
         protected IMediator Mediator => _mediatorInstance ??= HttpContext.RequestServices.GetService<IMediator>();
-        public IActionResult GenerateResponse<T>(BaseResponse<T> response)
+        public IActionResult GenerateResponse<T>(Response<T> response)
         {
             switch (response.StatusCode)
             {
@@ -54,7 +54,7 @@ namespace StayHub.API.Controllers
             }
             Response.Cookies.Append(cookieKey, cookieValue, cookieOptions);
         }
-        protected void DeleteCookie(string cookieKey, string? cookieDomain =null)
+        protected void DeleteCookie(string cookieKey, string? cookieDomain = null)
         {
             var options = new CookieOptions
             {

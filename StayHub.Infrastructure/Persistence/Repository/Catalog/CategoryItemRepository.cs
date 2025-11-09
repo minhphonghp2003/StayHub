@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace StayHub.Infrastructure.Persistence.Repository.Catalog
 {
-    public class CategoryItemRepository : Repository<CategoryItem>, ICategoryItemRepository
+    public class CategoryItemRepository : PagingAndSortingRepository<CategoryItem>, ICategoryItemRepository
     {
         public CategoryItemRepository(AppDbContext context) : base(context)
         {
