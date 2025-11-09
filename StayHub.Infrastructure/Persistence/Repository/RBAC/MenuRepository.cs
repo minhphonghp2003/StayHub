@@ -9,13 +9,13 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
 {
     public class MenuRepository(AppDbContext context, IRoleRepository roleRepository) : PagingAndSortingRepository<Menu>(context), IMenuRepository
     {
-        public async Task<(List<MenuDTO>, int)> GetAllPaginatedMenu(int pageNumber, int pageSize, string? search = null)
+        public async Task<(List<MenuDTO>, int)> GetAllPaginatedMenu(int pageNumber, int pageSize, string? search = null, int? menuGroupId = null)
         {
             var (items, count) = await GetManyPagedAsync(
                      pageNumber: pageNumber,
                      pageSize: pageSize,
                      orderBy: e => e.OrderBy((j) => j.UpdatedAt),
-                     filter: e => string.IsNullOrEmpty(search) ? true : e.Name.Contains(search ?? "") || e.Name == search,
+                     filter: e => (string.IsNullOrEmpty(search) ? true : e.Name.Contains(search ?? "") || e.Name == search) && (menuGroupId == null || e.MenuGroupId == menuGroupId),
                      include: e => e.Include(j => j.MenuGroup),
                      selector: (e, i) => new MenuDTO
                      {
