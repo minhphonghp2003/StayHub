@@ -16,6 +16,7 @@ namespace StayHub.Application.DTO.RBAC
         public int? ParentId { get; set; }
         public bool? IsActive { get; set; }
         public int? GroupId { get; set; }
+        public string? GroupName { get; set; }
         public List<MenuDTO> Children { get; set; }
     }
     public class MenuGroupDTO

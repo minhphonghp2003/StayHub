@@ -14,7 +14,7 @@ namespace StayHub.Application.CQRS.Catalog.Query.CategoryItem
     {
         public async Task<Response<CategoryItemDTO>> Handle(GetAllCategoryItemQuery request, CancellationToken cancellationToken)
         {
-            var pageSize = request.pageNumber ?? _configuration.GetValue<int>("PageSize");
+            var pageSize = request.pageSize ?? _configuration.GetValue<int>("PageSize");
             var (items, totalCount) = await categoryItemRepository.GetManyPagedAsync(
                 pageNumber: request.pageNumber ?? 1,
                 pageSize: pageSize,

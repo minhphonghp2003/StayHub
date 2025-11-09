@@ -14,9 +14,9 @@ namespace StayHub.API.Controllers.RBAC
             return GenerateResponse(await Mediator.Send(request));
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync(string? search = null, int? pageNumber = null, int? pageSize = null)
         {
-            return Ok(await Mediator.Send(new GetAllMenuQuery()));
+            return Ok(await Mediator.Send(new GetAllMenuQuery(search,pageNumber,pageSize)));
         }
         [HttpGet("my")]
         public async Task<IActionResult> GetMine()
