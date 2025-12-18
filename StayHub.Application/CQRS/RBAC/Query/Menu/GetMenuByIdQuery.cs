@@ -19,6 +19,8 @@ namespace StayHub.Application.CQRS.RBAC.Query.Menu
             {
                 Id = e.Id,
                 Path = e.Path,
+                Name = e.Name,
+                GroupId = e.MenuGroupId,
                 Description = e.Description,
                 Icon = e.Icon,
                 ParentId = e.ParentId,

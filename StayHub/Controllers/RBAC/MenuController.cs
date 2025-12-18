@@ -18,6 +18,11 @@ namespace StayHub.API.Controllers.RBAC
         {
             return Ok(await Mediator.Send(new GetAllMenuQuery(search, pageNumber, pageSize, menuGroupId)));
         }
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllNoPaginateAsync()
+        {
+            return Ok(await Mediator.Send(new GetAllMenuNoPaginateQuery()));
+        }
         [HttpGet("my")]
         public async Task<IActionResult> GetMine()
         {
