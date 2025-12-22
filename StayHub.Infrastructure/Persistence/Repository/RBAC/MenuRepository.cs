@@ -34,21 +34,34 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
             return (items, count);
 
         }
+        //  TODO construct menu with children 
         public async Task<List<MenuGroupDTO>> GetUserMenu(int userId)
         {
-            return await _dbSet.Where(e => e.IsActive == true && e.MenuActions.All(ma => ma.Action.RoleActions.Any(e => e.Role.UserRoles.Any(e => e.UserId == userId)))).GroupBy(e => new { GroupId = e.MenuGroupId, GroupName = e.MenuGroup.Name }).Select(g => new MenuGroupDTO
-            {
-                Name = g.Key.GroupName,
-                Items = g.Select(e => new MenuDTO
+            var result = await _dbSet.Where(e => e.IsActive == true && e.MenuActions.All(ma => ma.Action.RoleActions.Any(e => e.Role.UserRoles.Any(e => e.UserId == userId))))
+                .GroupBy(e => new { GroupId = e.MenuGroupId, GroupName = e.MenuGroup.Name })
+                .Select(g => new MenuGroupDTO
                 {
-                    Id = e.Id,
-                    Name = e.Name,
-                    Path = e.Path,
-                    Icon = e.Icon,
-                    GroupId = e.MenuGroupId,
-                    ParentId = e.ParentId
-                }).ToList()
-            }).ToListAsync();
+                    Name = g.Key.GroupName,
+                    Items = g.Where(e=>e.ParentId==null).Select(e => new MenuDTO
+                    {
+                        Id = e.Id,
+                        Name = e.Name,
+                        Path = e.Path,
+                        Icon = e.Icon,
+                        GroupId = e.MenuGroupId,
+                        Children = g.Where(c => c.ParentId == e.Id).Select(c => new MenuDTO
+                        {
+                            Id = c.Id,
+                            Name = c.Name,
+                            Path = c.Path,
+                            Icon = c.Icon,
+                            GroupId = c.MenuGroupId,
+                            ParentId = c.ParentId
+                        }).ToList(),
+                        ParentId = e.ParentId
+                    }).ToList()
+                }).ToListAsync();
+            return result;
         }
 
         public async Task<bool> SetActivated(int id, bool activated)
