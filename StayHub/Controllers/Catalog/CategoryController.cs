@@ -15,9 +15,9 @@ namespace StayHub.API.Controllers.Catalog
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync(int? pageNumber, int? pageSize, string? search)
         {
-            return Ok(await Mediator.Send(new GetAllCategoryQuery()));
+            return GenerateResponse(await Mediator.Send(new GetAllCategoryQuery( pageSize,pageNumber,search )));
         }
 
         [HttpPost]

@@ -19,6 +19,7 @@ namespace StayHub.Application.CQRS.Catalog.Query.Category
                     Id = e.Id,
                     Name = e.Name ?? string.Empty,
                     Code = e.Code,
+                    Description = e.Description,
                     CreatedAt = e.CreatedAt,
                     UpdatedAt = e.UpdatedAt
                 });
