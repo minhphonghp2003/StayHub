@@ -17,7 +17,7 @@ namespace StayHub.API.Controllers.Catalog
         [HttpGet]
         public async Task<IActionResult> GetAllAsync(string? search = null, int? pageNumber = null,int? pageSize = null)
         {
-            return Ok(await Mediator.Send(new GetAllCategoryItemQuery(search, pageNumber, pageSize)));
+            return GenerateResponse(await Mediator.Send(new GetAllCategoryItemQuery(search, pageNumber, pageSize)));
         }
         [HttpGet("by-category-code/{categoryCode}")]
         public async Task<IActionResult> GetByCategoryCode(string categoryCode)
@@ -25,9 +25,9 @@ namespace StayHub.API.Controllers.Catalog
             return Ok(await Mediator.Send(new GetCategoryItemByCategoryCodeQuery(categoryCode)));
         }
         [HttpGet("by-category-id/{categoryId}")]
-        public async Task<IActionResult> GetByCategoryId(int categoryId)
+        public async Task<IActionResult> GetByCategoryId(int categoryId, string? search = null, int? pageNumber = null, int? pageSize = null)
         {
-            return Ok(await Mediator.Send(new GetCategoryItemByCategoryIdQuery(categoryId)));
+            return Ok(await Mediator.Send(new GetCategoryItemByCategoryIdQuery(categoryId,pageNumber,pageSize,search)));
         }
         [HttpPost]
         public async Task<IActionResult> CreateCategoryItem(AddCategoryItemCommand request)

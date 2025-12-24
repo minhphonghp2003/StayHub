@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Configuration;
 using Shared.Response;
 using StayHub.Application.DTO.Catalog;
 using StayHub.Application.Interfaces.Repository.Catalog;
@@ -6,17 +7,21 @@ using StayHub.Application.Interfaces.Repository.Catalog;
 namespace StayHub.Application.CQRS.Catalog.Query.CategoryItem
 {
     // Query record
-    public record GetCategoryItemByCategoryIdQuery(int CategoryId)
-        : IRequest<BaseResponse<List<CategoryItemDTO>>>;
+    public record GetCategoryItemByCategoryIdQuery(int? categoryId, int? pageNumber, int? pageSize, string? search)
+        : IRequest<Response<CategoryItemDTO>>;
 
     // Handler
-    public sealed class GetCategoryItemByCategoryIdQueryHandler(ICategoryItemRepository categoryItemRepository)
-        : BaseResponseHandler, IRequestHandler<GetCategoryItemByCategoryIdQuery, BaseResponse<List<CategoryItemDTO>>>
+    public sealed class GetCategoryItemByCategoryIdQueryHandler(ICategoryItemRepository categoryItemRepository, IConfiguration configuration)
+        : BaseResponseHandler, IRequestHandler<GetCategoryItemByCategoryIdQuery, Response<CategoryItemDTO>>
     {
-        public async Task<BaseResponse<List<CategoryItemDTO>>> Handle(GetCategoryItemByCategoryIdQuery request, CancellationToken cancellationToken)
+        public async Task<Response<CategoryItemDTO>> Handle(GetCategoryItemByCategoryIdQuery request, CancellationToken cancellationToken)
         {
-            var items = await categoryItemRepository.GetManyAsync<CategoryItemDTO>(
-                filter: e => e.CategoryId == request.CategoryId,
+            var pageSize = request.pageSize ?? configuration.GetValue<int>("pageSize");
+
+            var (items, count) = await categoryItemRepository.GetManyPagedAsync<CategoryItemDTO>(
+                pageNumber: request.pageNumber ?? 1,
+                pageSize: pageSize,
+                filter: e => (request.categoryId == null || e.CategoryId == request.categoryId) && (string.IsNullOrEmpty(request.search) || e.Code.Contains(request.search) || e.Code.Contains(request.search) || e.Value.Contains(request.search)),
                 selector: (e, i) => new CategoryItemDTO
                 {
                     Id = e.Id,
@@ -28,9 +33,9 @@ namespace StayHub.Application.CQRS.Catalog.Query.CategoryItem
                 });
 
             if (items == null || !items.Any())
-                return Failure<List<CategoryItemDTO>>("No category items found for the specified CategoryId", System.Net.HttpStatusCode.BadRequest);
+                return FailurePaginated<CategoryItemDTO>(message: "No category items found for the specified CategoryId", code: System.Net.HttpStatusCode.BadRequest);
 
-            return Success(items.ToList());
+            return SuccessPaginated<CategoryItemDTO>(items.ToList(), count, pageSize, request.pageNumber ?? 1);
         }
     }
 }

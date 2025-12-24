@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using StayHub.Application.Interfaces.Repository;
 using StayHub.Domain.Entity;
 using System.Linq.Expressions;
@@ -10,7 +11,7 @@ namespace StayHub.Infrastructure.Persistence.Repository
         public PagingAndSortingRepository(AppDbContext context) : base(context)
         {
         }
-        public async Task<(List<TResult>, int)> GetManyPagedAsync<TResult>(Expression<Func<T, bool>> filter, Func<T, int, TResult> selector, int pageNumber = 1, int pageSize = 10, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, Func<IQueryable<T>, IQueryable<T>>? include = null, bool? tracking = false)
+        public async Task<(List<TResult>, int)> GetManyPagedAsync<TResult>(Expression<Func<T, bool>> filter, Func<T, int, TResult> selector, int pageNumber = 1, int pageSize =10, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, Func<IQueryable<T>, IQueryable<T>>? include = null, bool? tracking = false)
         {
             pageSize = Math.Max(pageSize, 1);
             pageNumber = Math.Max(pageNumber, 1);
