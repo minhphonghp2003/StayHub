@@ -22,7 +22,7 @@ namespace StayHub.Application.CQRS.Catalog.Query.CategoryItem
                     Id = e.Id,
                     Name = e.Name,
                     Code = e.Code,
-                    Description = e.Value,
+                    Value = e.Value,
                     CreatedAt = e.CreatedAt,
                     UpdatedAt = e.UpdatedAt
                 });

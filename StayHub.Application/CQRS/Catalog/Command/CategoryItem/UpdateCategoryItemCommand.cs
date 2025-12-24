@@ -56,7 +56,7 @@ namespace StayHub.Application.CQRS.Catalog.Command.CategoryItem
                 Id = item.Id,
                 Name = item.Name,
                 Code = item.Code,
-                Description = item.Value,
+                Value = item.Value,
                 CreatedAt = item.CreatedAt,
                 UpdatedAt = item.UpdatedAt
             }, "CategoryItem updated successfully");

@@ -21,14 +21,13 @@ namespace StayHub.Application.CQRS.Catalog.Query.CategoryItem
             var (items, count) = await categoryItemRepository.GetManyPagedAsync<CategoryItemDTO>(
                 pageNumber: request.pageNumber ?? 1,
                 pageSize: pageSize,
-                filter: e => (request.categoryId == 0 || e.CategoryId == request.categoryId) && (string.IsNullOrEmpty(request.search) || e.Code.Contains(request.search) || e.Code.Contains(request.search) || e.Value.Contains(request.search)),
+                filter: e => (request.categoryId == 0 || e.CategoryId == request.categoryId) && (string.IsNullOrEmpty(request.search) || e.Code.Contains(request.search) || e.Name.Contains(request.search) || e.Value.Contains(request.search)),
                 selector: (e, i) => new CategoryItemDTO
                 {
                     Id = e.Id,
                     Name = e.Name,
                     Code = e.Code,
                     Value = e.Value,
-                    Description = e.Value,
                     CreatedAt = e.CreatedAt,
                     UpdatedAt = e.UpdatedAt
                 });
