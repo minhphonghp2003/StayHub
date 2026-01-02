@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Configuration;
 using Shared.Response;
 using StayHub.Application.DTO.RBAC;
 using StayHub.Application.Interfaces.Repository.RBAC;
@@ -6,28 +7,25 @@ using StayHub.Application.Interfaces.Repository.RBAC;
 namespace StayHub.Application.CQRS.RBAC.Query.Action
 {
     // Include properties to be used as input for the query
-    public record GetAllActionQuery() : IRequest<BaseResponse<List<ActionDTO>>>;
-    public class GetAllActionQueryHandler : BaseResponseHandler, IRequestHandler<GetAllActionQuery, BaseResponse<List<ActionDTO>>>
+    public record GetAllActionQuery(int? pageNumber, int? pageSize, string? searchKey) : IRequest<Response<ActionDTO>>;
+    public sealed class GetAllActionQueryHandler(IActionRepository actionRepository, IConfiguration configuration) : BaseResponseHandler, IRequestHandler<GetAllActionQuery, Response<ActionDTO>>
     {
-        private readonly IActionRepository _actionRepository;
-        public GetAllActionQueryHandler(IActionRepository actionRepo)
+        public async Task<Response<ActionDTO>> Handle(GetAllActionQuery request, CancellationToken cancellationToken)
         {
-            _actionRepository = actionRepo;
-
-        }
-        public async Task<BaseResponse<List<ActionDTO>>> Handle(GetAllActionQuery request, CancellationToken cancellationToken)
-        {
-            var actions = await _actionRepository.GetAllAsync((entity, index) => new ActionDTO
-            {
-                Id = entity.Id,
-                Path = entity.Path,
-                Method = entity.Method.ToString(),
-                AllowAnonymous = entity.AllowAnonymous,
-                CreatedAt = entity.CreatedAt,
-                UpdatedAt = entity.UpdatedAt,
-
-            });
-            return Success(actions.ToList());
+            var pageSize = request.pageSize ?? configuration.GetValue<int>("PageSize");
+            var (result,count) = await actionRepository.GetManyPagedAsync(
+                pageNumber: request.pageNumber ?? 1,
+                pageSize: pageSize,
+                filter: x => request.searchKey == null || x.Path.Contains(request.searchKey),
+                selector: (x, i) => new ActionDTO
+                {
+                    Id = x.Id,
+                    Path = x.Path,
+                    Method = x.Method,
+                    AllowAnonymous = x.AllowAnonymous
+                }
+                );
+            return SuccessPaginated(result, count, pageSize, request.pageNumber??1);
         }
     }
 

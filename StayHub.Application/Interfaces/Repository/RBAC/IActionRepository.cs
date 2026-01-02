@@ -2,7 +2,8 @@
 
 namespace StayHub.Application.Interfaces.Repository.RBAC
 {
-    public interface IActionRepository : IRepository<Action>
+    public interface IActionRepository : IPagingAndSortingRepository <Action>
     {
+        Task<bool> AllowAnonymous(int id, bool allowAnonymous);
     }
 }

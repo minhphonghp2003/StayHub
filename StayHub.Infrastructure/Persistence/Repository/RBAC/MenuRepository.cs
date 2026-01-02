@@ -16,7 +16,7 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
                      pageSize: pageSize,
                      orderBy: e => e.OrderBy((j) => j.UpdatedAt),
                      filter: e => (string.IsNullOrEmpty(search) ? true : e.Name.Contains(search ?? "") || e.Name == search) && (menuGroupId == null || e.MenuGroupId == menuGroupId),
-                     include: e => e.Include(j => j.MenuGroup),
+                     include: e => e.Include(j => j.MenuGroup).Include(j=>j.Parent),
                      selector: (e, i) => new MenuDTO
                      {
                          Id = e.Id,
@@ -27,6 +27,7 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
                          GroupId = e.MenuGroupId,
                          GroupName = e.MenuGroup?.Name,
                          ParentId = e.ParentId,
+                         ParentName = e.Parent?.Name,
                          IsActive = e.IsActive,
                          CreatedAt = e.CreatedAt,
                          UpdatedAt = e.UpdatedAt

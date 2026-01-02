@@ -11,10 +11,10 @@ using StayHub.Domain.Entity.RBAC;
 namespace StayHub.Application.CQRS.RBAC.Command.Action
 {
     // Include properties to be used as input for the command
-    public record GenerateAllActionCommand() : IRequest<BaseResponse<List<ActionDTO>>>;
-    public sealed class GenerateAllActionCommandHandler(IEnumerable<EndpointDataSource> endpointSources, IActionRepository actionRepository) : BaseResponseHandler, IRequestHandler<GenerateAllActionCommand, BaseResponse<List<ActionDTO>>>
+    public record GenerateAllActionCommand() : IRequest<BaseResponse<bool>>;
+    public sealed class GenerateAllActionCommandHandler(IEnumerable<EndpointDataSource> endpointSources, IActionRepository actionRepository) : BaseResponseHandler, IRequestHandler<GenerateAllActionCommand, BaseResponse<bool>>
     {
-        public async Task<BaseResponse<List<ActionDTO>>> Handle(GenerateAllActionCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<bool>> Handle(GenerateAllActionCommand request, CancellationToken cancellationToken)
         {
             var endpoints = endpointSources.SelectMany(s => s.Endpoints).OfType<RouteEndpoint>().Where(e => e.Metadata.OfType<HttpMethodMetadata>().Any()).Select(e =>
            new StayHub.Domain.Entity.RBAC.Action
@@ -30,14 +30,9 @@ namespace StayHub.Application.CQRS.RBAC.Command.Action
             );
             if (result.Any())
             {
-                return Success<List<ActionDTO>>(data: result.Select(e => new ActionDTO
-                {
-                    Path = e.Path,
-                    AllowAnonymous = e.AllowAnonymous,
-                    Method = e.Method.ToString()
-                }).ToList());
+                return Success<bool>(data:true);
             }
-            return Success<List<ActionDTO>>(data: [], message: "No new actions were generated.");
+            return Success<bool>(data: false, message: "No new actions were generated.");
         }
     }
 

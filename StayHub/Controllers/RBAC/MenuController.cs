@@ -43,7 +43,7 @@ namespace StayHub.API.Controllers.RBAC
         public async Task<IActionResult> SetActivate(int id, [FromQuery] bool activated)
         {
 
-            return GenerateResponse(await Mediator.Send(new AllowAnonymousCommand(id, activated)));
+            return GenerateResponse(await Mediator.Send(new SetActivateMenuCommand(id, activated)));
         }
 
 

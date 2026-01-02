@@ -14,6 +14,7 @@ namespace StayHub.Application.DTO.RBAC
         public string? Description { get; set; }
         public string? Icon { get; set; }
         public int? ParentId { get; set; }
+        public string? ParentName { get; set; }
         public bool? IsActive { get; set; }
         public int? GroupId { get; set; }
         public string? GroupName { get; set; }

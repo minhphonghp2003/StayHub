@@ -12,7 +12,7 @@ namespace StayHub.Domain.Entity.RBAC
         public bool? IsActive { get; set; }
         public int? MenuGroupId { get; set; }
         public virtual CategoryItem? MenuGroup { get; set; }
-
+        public virtual Menu? Parent { get; set; }
         public virtual List<Menu>? SubMenus { get; set; }
         public virtual List<MenuAction>? MenuActions { get; set; } = [];
     }

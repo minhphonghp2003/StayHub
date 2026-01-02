@@ -4,5 +4,6 @@ namespace StayHub.Infrastructure.Persistence.EntityConfiguration.RBAC
 {
     public class ActionConfiguration : BaseEntityConfiguration<Action>
     {
+        
     }
 }

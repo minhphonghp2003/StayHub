@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StayHub.Application.CQRS.RBAC.Command.Action;
+using StayHub.Application.CQRS.RBAC.Command.Menu;
 using StayHub.Application.CQRS.RBAC.Query.Action;
+using StayHub.Application.CQRS.RBAC.Query.Menu;
 
 namespace StayHub.API.Controllers.RBAC
 {
@@ -11,13 +13,22 @@ namespace StayHub.API.Controllers.RBAC
         {
             return Ok(await Mediator.Send(new GetActionByIdQuery(Id)));
         }
-
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync(string? search = null, int? pageNumber = null, int? pageSize = null)
         {
-            return Ok(await Mediator.Send(new GetAllActionQuery()));
+            return Ok(await Mediator.Send(new GetAllActionQuery( pageNumber, pageSize, search)));
         }
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllNoPaginatedAsync()
+        {
+            return Ok(await Mediator.Send(new GetAllActionNoPaginatedQuery()));
+        }
+        [HttpPatch("allow-anonymous/{id}")]
+        public async Task<IActionResult> AllowAnon(int id, [FromQuery] bool allow)
+        {
 
+            return GenerateResponse(await Mediator.Send(new AllowAnonymousCommand(id, allow)));
+        }
         [HttpPost("generate")]
         public async Task<IActionResult> GenerateAllAction()
         {

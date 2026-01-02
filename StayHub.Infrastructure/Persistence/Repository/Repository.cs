@@ -20,10 +20,9 @@ namespace StayHub.Infrastructure.Persistence.Repository
             await _dbSet.AddAsync(entity);
             await SaveAsync();
         }
-        public async Task<List<T>> AddRangeIfNotExitsAsync(List<T> entities, Func<T, List<T>, bool> existFilter)
+        public async Task<List<T>> AddRangeIfNotExitsAsync(List<T> entities, Func<T,DbSet<T>, bool> existFilter)
         {
-            var existingEntities = await _dbSet.ToListAsync();
-            var newEntities = entities.Where(e => existFilter(e, existingEntities)).ToList();
+            var newEntities = entities.Where(e => existFilter(e, _dbSet)).ToList();
             if (newEntities.Any())
             {
                 _dbSet.AddRange(newEntities);
