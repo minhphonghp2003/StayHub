@@ -14,7 +14,7 @@ namespace StayHub.Application.CQRS.RBAC.Query.User
         {
             var pageSize = request.pageSize ?? configuration.GetValue<int>("PageSize");
             var (items, totalCount) = await userRepository.GetAllUser(request.pageNumber??1, pageSize, request.searchKey);
-            return SuccessPaginated(items, request.pageNumber ?? 1, pageSize, totalCount);
+            return SuccessPaginated(items,totalCount,pageSize, request.pageNumber ?? 1);
         }
     }
 
