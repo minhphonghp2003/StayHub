@@ -24,6 +24,7 @@ namespace StayHub.Application.CQRS.RBAC.Query.Menu
                 Description = e.Description,
                 Icon = e.Icon,
                 ParentId = e.ParentId,
+                Order = e.Order,
                 IsActive = e.IsActive,
                 CreatedAt = e.CreatedAt,
                 UpdatedAt = e.UpdatedAt

@@ -23,10 +23,11 @@ namespace StayHub.Application.CQRS.RBAC.Command.Menu
         public string? Icon { get; set; } = string.Empty;
         public int? ParentId { get; set; }
         public int GroupId { get; set; }
+        public int? Order { get; set; }
 
         public UpdateMenuCommand() { }
 
-        public UpdateMenuCommand(int id, string path, int groupId, string name, string? description, string? icon, int? parentId)
+        public UpdateMenuCommand(int id, string path, int groupId, string name, string? description, string? icon, int? parentId, int? order)
         {
             Id = id;
             Path = path;
@@ -35,6 +36,7 @@ namespace StayHub.Application.CQRS.RBAC.Command.Menu
             Icon = icon;
             ParentId = parentId;
             GroupId = groupId;
+            Order = order;
         }
     }
     public sealed class UpdateMenuCommandCommandHandler(IMenuRepository menuRepository) : BaseResponseHandler, IRequestHandler<UpdateMenuCommand, BaseResponse<MenuDTO>>
@@ -53,6 +55,7 @@ namespace StayHub.Application.CQRS.RBAC.Command.Menu
             menu.Icon = request.Icon;
             menu.ParentId = request.ParentId;
             menu.MenuGroupId = request.GroupId;
+            menu.Order = request.Order ?? menu.Order;
             menuRepository.Update(menu);
             return Success<MenuDTO>(new MenuDTO
             {
@@ -63,6 +66,7 @@ namespace StayHub.Application.CQRS.RBAC.Command.Menu
                 Icon = menu.Icon,
                 ParentId = menu.ParentId,
                 IsActive = menu.IsActive,
+                Order = menu.Order,
                 CreatedAt = menu.CreatedAt,
                 UpdatedAt = menu.UpdatedAt
             });

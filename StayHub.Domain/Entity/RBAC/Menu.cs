@@ -11,6 +11,7 @@ namespace StayHub.Domain.Entity.RBAC
         public int? ParentId { get; set; }
         public bool? IsActive { get; set; }
         public int? MenuGroupId { get; set; }
+        public int? Order { get; set; } = 1;
         public virtual CategoryItem? MenuGroup { get; set; }
         public virtual Menu? Parent { get; set; }
         public virtual List<Menu>? SubMenus { get; set; }

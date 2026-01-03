@@ -14,9 +14,9 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
             var (items, count) = await GetManyPagedAsync(
                      pageNumber: pageNumber,
                      pageSize: pageSize,
-                     orderBy: e => e.OrderBy((j) => j.UpdatedAt),
+                     orderBy: e => e.OrderBy((j) => j.Order),
                      filter: e => (string.IsNullOrEmpty(search) ? true : e.Name.Contains(search ?? "") || e.Name == search) && (menuGroupId == null || e.MenuGroupId == menuGroupId),
-                     include: e => e.Include(j => j.MenuGroup).Include(j=>j.Parent),
+                     include: e => e.Include(j => j.MenuGroup).Include(j => j.Parent),
                      selector: (e, i) => new MenuDTO
                      {
                          Id = e.Id,
@@ -29,21 +29,22 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
                          ParentId = e.ParentId,
                          ParentName = e.Parent?.Name,
                          IsActive = e.IsActive,
+                         Order = e.Order,
                          CreatedAt = e.CreatedAt,
                          UpdatedAt = e.UpdatedAt
                      });
             return (items, count);
 
         }
-        //  TODO construct menu with children 
         public async Task<List<MenuGroupDTO>> GetUserMenu(int userId)
         {
             var result = await _dbSet.Where(e => e.IsActive == true && e.MenuActions.All(ma => ma.Action.RoleActions.Any(e => e.Role.UserRoles.Any(e => e.UserId == userId))))
+                .OrderBy(e => e.Order)
                 .GroupBy(e => new { GroupId = e.MenuGroupId, GroupName = e.MenuGroup.Name })
                 .Select(g => new MenuGroupDTO
                 {
                     Name = g.Key.GroupName,
-                    Items = g.Where(e=>e.ParentId==null).Select(e => new MenuDTO
+                    Items = g.Where(e => e.ParentId == null).OrderBy(e=>e.Order).Select(e => new MenuDTO
                     {
                         Id = e.Id,
                         Name = e.Name,
