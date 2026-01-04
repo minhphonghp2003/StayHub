@@ -24,13 +24,20 @@ namespace StayHub.Application.CQRS.RBAC.Command.Action
                Method = e.Metadata
                     .OfType<HttpMethodMetadata>()
                     .FirstOrDefault()?.HttpMethods.FirstOrDefault().ToUpper() ?? "GET"
-           });
-            var result = await actionRepository.AddRangeIfNotExitsAsync(endpoints.ToList(), (newAction, existingActions) =>
-                !existingActions.Any(e => e.Path == newAction.Path && e.Method == newAction.Method)
-            );
+           }).ToList();
+            var paths = endpoints.Select(e => e.Path);
+            var methods = endpoints.Select(e => e.Method);
+
+            var existEndpoints =( await actionRepository.GetManyAsync(filter: e => paths.Contains(e.Path) && methods.Contains(e.Method), selector: (e, i) => new StayHub.Domain.Entity.RBAC.Action
+            {
+                Path = e.Path,
+                Method = e.Method
+            })).ToList();
+            var newEndpoints = endpoints.Where(ep => !existEndpoints.Any(e => e.Path == ep.Path && e.Method == ep.Method)).ToList();
+            var result = await actionRepository.AddRangeAsync(newEndpoints);
             if (result.Any())
             {
-                return Success<bool>(data:true);
+                return Success<bool>(data: true);
             }
             return Success<bool>(data: false, message: "No new actions were generated.");
         }

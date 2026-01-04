@@ -20,17 +20,7 @@ namespace StayHub.Infrastructure.Persistence.Repository
             await _dbSet.AddAsync(entity);
             await SaveAsync();
         }
-        public async Task<List<T>> AddRangeIfNotExitsAsync(List<T> entities, Func<T,DbSet<T>, bool> existFilter)
-        {
-            var newEntities = entities.Where(e => existFilter(e, _dbSet)).ToList();
-            if (newEntities.Any())
-            {
-                _dbSet.AddRange(newEntities);
-                await SaveAsync();
-            }
-            return newEntities;
-        }
-
+      
         public async Task Delete(T entity)
         {
             _dbSet.Remove(entity);
@@ -118,5 +108,11 @@ namespace StayHub.Infrastructure.Persistence.Repository
             return await query.Select(selector).FirstOrDefaultAsync();
         }
 
+        public async Task<List<T>> AddRangeAsync(List<T> entities)
+        {
+            _dbSet.AddRange(entities);
+            return entities;
+
         }
+    }
 }

@@ -13,11 +13,12 @@ namespace StayHub.Application.Interfaces.Repository
         Task<T?> FindOneEntityAsync(Expression<Func<T, bool>>? filter, Func<IQueryable<T>, IQueryable<T>>? include = null, bool trackChange = false);
         Task<TResult?> FindOneAsync<TResult>(Expression<Func<T, bool>> filter, Expression<Func<T, TResult>> selector, Func<IQueryable<T>, IQueryable<T>>? include = null, bool trackChange = false);
         Task AddAsync(T entity);
-        Task<List<T>> AddRangeIfNotExitsAsync(List<T> entities, Func<T, DbSet<T>, bool> existFilter);
         void Update(T entity);
         Task Delete(T entity);
         Task<bool> ExistsAsync(int id);
         Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate);
+        Task<List<T>> AddRangeAsync(List<T> entities);
         Task SaveAsync();
+        
     }
 }
