@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using StayHub.Application.CQRS.RBAC.Command.MenuAction;
 using StayHub.Application.CQRS.RBAC.Command.RoleAction;
 using StayHub.Application.CQRS.RBAC.Query.Action;
 
@@ -6,8 +7,8 @@ namespace StayHub.API.Controllers.RBAC
 {
     public class MenuActionController : BaseController
     {
-        [HttpPost("menu/assignActionToMenu")]
-        public async Task<IActionResult> AssignActionToMenu(AddMenuActionCommand request)
+        [HttpPost("menu/assign-action")]
+        public async Task<IActionResult> AssignActionToMenu(AssignActionsToMenuCommand   request)
         {
             return GenerateResponse(await Mediator.Send(request));
         }
