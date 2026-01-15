@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using StayHub.Application.CQRS.RBAC.Command.MenuAction;
 using StayHub.Application.CQRS.RBAC.Command.RoleAction;
 using StayHub.Application.CQRS.RBAC.Command.UserRole;
 using StayHub.Application.CQRS.RBAC.Query.Action;
@@ -8,8 +9,8 @@ namespace StayHub.API.Controllers.RBAC
 {
     public class RoleActionController : BaseController
     {
-        [HttpPost("role/assignRoleToAction")]
-        public async Task<IActionResult> AssignRoleToAction(AddRoleActionCommand request)
+        [HttpPost("role/assign-action")]
+        public async Task<IActionResult> AssignRoleToAction(AssignActionsToRoleCommand request)
         {
             return GenerateResponse(await Mediator.Send(request));
         }

@@ -11,10 +11,8 @@ namespace StayHub.Application.CQRS.RBAC.Command.MenuAction
     {
         public async Task<Response<List<int>>> Handle(AssignActionsToRoleCommand request, CancellationToken cancellationToken)
         {
-            var existActions = (await roleActionRepository.GetManyAsync(ma => ma.RoleId == request.roleId && request.actionIds.Contains(ma.ActionId),
-                selector: (e, i) => e.ActionId)).ToList();
-            var newActionIds = request.actionIds.Except(existActions).ToList();
-            var result = await roleActionRepository.AddRangeAsync(newActionIds.Select(aid => new StayHub.Domain.Entity.RBAC.RoleAction
+            await roleActionRepository.DeleteWhere(e => e.RoleId == request.roleId, false);
+            var result = await roleActionRepository.AddRangeAsync(request.actionIds.Select(aid => new StayHub.Domain.Entity.RBAC.RoleAction
             {
                 ActionId = aid,
                 RoleId = request.roleId
@@ -23,7 +21,7 @@ namespace StayHub.Application.CQRS.RBAC.Command.MenuAction
             if (result == null)
                 return Failure<List<int>>("Failed to assign actions to role.", System.Net.HttpStatusCode.OK);
 
-            return Success(result.Select(e => e.ActionId).ToList(), "Actions assigned to role successfully.", System.Net.HttpStatusCode.OK);
+            return Success(request.actionIds, "Actions assigned to role successfully.", System.Net.HttpStatusCode.OK);
         }
     }
 
