@@ -30,12 +30,12 @@ namespace StayHub.Application.Services
         }
         public async Task<(string, DateTime)> GenerateJwtToken(User user, List<string> roles)
         {
-            var signingKey = await signingKeyRepository.FindOneEntityAsync(k => k.IsActive);
+            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             if (signingKey == null)
             {
                 throw new Exception("No active signing key available.");
             }
-            var creds = _hashService.SigningKey(privateKey: signingKey.PrivateKey, id: signingKey.Id.ToString());
+            var creds = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Username),

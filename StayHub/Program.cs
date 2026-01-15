@@ -5,6 +5,7 @@ using Microsoft.OpenApi.Models;
 using StayHub;
 using StayHub.Application.Middlewares;
 using StayHub.Infrastructure.BackgroundJob;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,37 +16,37 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAppDI(builder.Configuration);
-builder.Services.AddHostedService<KeyRotationService>();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+//builder.Services.AddHostedService<KeyRotationService>();
+//builder.Services.AddSwaggerGen(c =>
+//{
+//    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
 
-    // Define the Bearer token security scheme
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.Http,
-        Scheme = "Bearer"
-    });
+//    // Define the Bearer token security scheme
+//    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+//    {
+//        Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+//        Name = "Authorization",
+//        In = ParameterLocation.Header,
+//        Type = SecuritySchemeType.Http,
+//        Scheme = "Bearer"
+//    });
 
-    // Add a security requirement to apply the Bearer scheme globally
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-        {
-            {
-                new OpenApiSecurityScheme
-                {
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "Bearer"
-                    }
-                },
-                Array.Empty<string>()
-            }
-        });
-});
+//    // Add a security requirement to apply the Bearer scheme globally
+//    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+//        {
+//            {
+//                new OpenApiSecurityScheme
+//                {
+//                    Reference = new OpenApiReference
+//                    {
+//                        Type = ReferenceType.SecurityScheme,
+//                        Id = "Bearer"
+//                    }
+//                },
+//                Array.Empty<string>()
+//            }
+//        });
+//});
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -61,13 +62,15 @@ builder.Services.AddAuthentication(options =>
                   ValidateLifetime = true, // Ensure the token has not expiredAuthService
                   ValidateIssuerSigningKey = true, // Ensure the token's signing key is valid
                   ClockSkew = TimeSpan.Zero,
-                  IssuerSigningKeyResolver = (token, securityToken, kid, parameters) =>
-                  {
-                      var httpClient = new HttpClient();
-                      var jwks = httpClient.GetStringAsync($"{builder.Configuration["Jwt:Issuer"]}/.well-known/jwks.json").Result;
-                      var keys = new JsonWebKeySet(jwks);
-                      return keys.Keys;
-                  }
+                  //IssuerSigningKeyResolver = (token, securityToken, kid, parameters) =>
+                  //{
+                  //    var httpClient = new HttpClient();
+                  //    var jwks = httpClient.GetStringAsync($"{builder.Configuration["Jwt:Issuer"]}/.well-known/jwks.json").Result;
+                  //    var keys = new JsonWebKeySet(jwks);
+                  //    return keys.Keys;
+                  //}
+                  IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+
               };
           });
 var app = builder.Build();
