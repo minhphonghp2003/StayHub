@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using StayHub.Application.DTO.RBAC;
 using StayHub.Application.Interfaces.Repository;
 using StayHub.Application.Interfaces.Repository.RBAC;
@@ -9,6 +10,22 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
 {
     public class MenuRepository(AppDbContext context, IRoleRepository roleRepository) : PagingAndSortingRepository<Menu>(context), IMenuRepository
     {
+        public async Task<(List<MenuDTO>, int)> GetAllCompactPaginatedMenu(int pageNumber, int pageSize, string? search = null, int? menuGroupId = null)
+        {
+            return await GetManyPagedAsync(pageNumber: pageNumber , pageSize: pageSize,
+           filter: e => !e.SubMenus.Any() && (string.IsNullOrEmpty(search) ? true : e.Name.Contains(search ?? "") || e.Name == search),
+           include:e=>e.Include(j=>j.SubMenus),
+           orderBy:e=>e.OrderBy(j=>j.Order),
+           selector: (e, i) => new MenuDTO
+           {
+               Id = e.Id,
+               Name = e.Name,
+               Path = e.Path,
+           }
+
+       );
+        }
+
         public async Task<(List<MenuDTO>, int)> GetAllPaginatedMenu(int pageNumber, int pageSize, string? search = null, int? menuGroupId = null)
         {
             var (items, count) = await GetManyPagedAsync(
