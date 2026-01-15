@@ -11,10 +11,8 @@ namespace StayHub.Application.CQRS.RBAC.Command.MenuAction
     {
         public async Task<Response<List<int>>> Handle(AssignActionsToMenuCommand request, CancellationToken cancellationToken)
         {
-            var existActions = (await menuActionRepository.GetManyAsync(ma => ma.MenuId == request.menuId && request.actionIds.Contains(ma.ActionId),
-                selector: (e, i) => e.ActionId)).ToList();
-            var newActionIds = request.actionIds.Except(existActions).ToList();
-            var result = await menuActionRepository.AddRangeAsync(newActionIds.Select(aid => new StayHub.Domain.Entity.RBAC.MenuAction
+            await menuActionRepository.DeleteWhere(e => e.MenuId == request.menuId,false);
+             var result = await menuActionRepository.AddRangeAsync(request.actionIds.Select(aid => new StayHub.Domain.Entity.RBAC.MenuAction
             {
                 ActionId = aid,
                 MenuId = request.menuId
@@ -23,7 +21,7 @@ namespace StayHub.Application.CQRS.RBAC.Command.MenuAction
             if (result == null)
                 return Failure<List<int>>("Failed to assign actions to menu.", System.Net.HttpStatusCode.OK);
 
-            return Success(result.Select(e => e.ActionId).ToList(), "Actions assigned to menu successfully.", System.Net.HttpStatusCode.OK);
+            return Success(request.actionIds, "Actions assigned to menu successfully.", System.Net.HttpStatusCode.OK);
         }
     }
 

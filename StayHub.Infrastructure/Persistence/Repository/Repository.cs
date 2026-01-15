@@ -111,8 +111,18 @@ namespace StayHub.Infrastructure.Persistence.Repository
         public async Task<List<T>> AddRangeAsync(List<T> entities)
         {
             _dbSet.AddRange(entities);
+            await SaveAsync();
             return entities;
 
+        }
+
+        public async Task DeleteWhere(Expression<Func<T, bool>> filter, bool saveChanges = true)
+        {
+            await _dbSet.Where(filter).ExecuteDeleteAsync();
+            if (saveChanges)
+            {
+                SaveAsync();
+            }
         }
     }
 }
