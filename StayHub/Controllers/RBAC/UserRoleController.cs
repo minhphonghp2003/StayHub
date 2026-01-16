@@ -22,6 +22,12 @@ namespace StayHub.API.Controllers.RBAC
             return GenerateResponse(await Mediator.Send(new GetAllRoleOfUserQuery(id)
            ));
         }
+        [HttpGet("user-of-role/{id}")]
+        public async Task<IActionResult> GetUserOfRole(int id)
+        {
+            return GenerateResponse(await Mediator.Send(new GetAllUserOfRoleQuery(id)
+           ));
+        }
         [HttpGet("my")]
         public async Task<IActionResult> GetMyRole()
         {
