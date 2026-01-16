@@ -11,20 +11,13 @@ namespace StayHub.Application.CQRS.RBAC.Command.UserRole
     {
         public async Task<BaseResponse<List<int>>> Handle(AssignRoleToUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await userRepository.GetEntityByIdAsync(request.UserId);
-            if (user == null)
-            {
-                return Failure<List<int>>(message: "No user found", code: System.Net.HttpStatusCode.BadRequest);
-            }
-            var existRoles = (await userRoleRepository.GetManyAsync(e => e.UserId == request.UserId && request.RoleId.Contains(e.RoleId),
-                selector: (e, i) => e.RoleId)).ToList();
-            var newRoles = request.RoleId.Except(existRoles).ToList();
-            var result = await userRoleRepository.AddRangeAsync(newRoles.Select(rid => new Domain.Entity.RBAC.UserRole
+            await userRoleRepository.DeleteWhere(e => e.UserId == request.UserId, false);
+            var result = await userRoleRepository.AddRangeAsync(request.RoleId.Select(rid => new StayHub.Domain.Entity.RBAC.UserRole
             {
                 UserId = request.UserId,
                 RoleId = rid
             }).ToList());
-            return Success<List<int>>(data: result.Select(e => e.RoleId).ToList(), message: "Role assigned to user successfully");
+            return Success<List<int>>(data: request.RoleId.ToList(), message: "Role assigned to user successfully");
         }
     }
 
