@@ -39,6 +39,17 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
                               );
         }
 
+        public async Task<List<UserDTO>> GetUserOfRole(int roleId)
+        {
+            return (await GetManyAsync(filter: e => e.UserRoles.Any(j => j.RoleId == roleId), selector: (e, i) => new UserDTO
+            {
+                Id = e.Id,
+                Username = e.Username,
+                Fullname = e.Profile.Fullname,
+                Phone = e.Profile.Phone,
+                Image= e.Profile.Image,
+            },include:e=>e.Include(j=>j.Profile))).ToList();
+        }
 
         public async Task<bool> SetActivated(int id, bool activated)
         {

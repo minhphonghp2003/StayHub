@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace StayHub.Application.CQRS.RBAC.Query.User
 {
-    public record GetAllUserOfRoleQuery(int roleId) : IRequest<BaseResponse<List<int>>>;
-    public sealed class GetAllUserOfRoleQueryHandler(IUserRoleRepository userRoleRepository) : BaseResponseHandler, IRequestHandler<GetAllUserOfRoleQuery, BaseResponse<List<int>>>
+    public record GetAllUserOfRoleQuery(int roleId) : IRequest<BaseResponse<List<UserDTO>>>;
+    public sealed class GetAllUserOfRoleQueryHandler(IUserRepository userRepository) : BaseResponseHandler, IRequestHandler<GetAllUserOfRoleQuery, BaseResponse<List<UserDTO>>>
     {
-        public async Task<BaseResponse<List<int>>> Handle(GetAllUserOfRoleQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<UserDTO>>> Handle(GetAllUserOfRoleQuery request, CancellationToken cancellationToken)
         {
-            return Success(data: (await userRoleRepository.GetManyAsync(filter:e=>e.RoleId==request.roleId,selector:(e,i)=>e.UserId)).ToList());
+            return Success(data: (await userRepository.GetUserOfRole(request.roleId)));
         }
     }
 }
