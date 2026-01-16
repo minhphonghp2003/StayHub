@@ -12,10 +12,10 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
     {
         public async Task<(List<MenuDTO>, int)> GetAllCompactPaginatedMenu(int pageNumber, int pageSize, string? search = null, int? menuGroupId = null)
         {
-            return await GetManyPagedAsync(pageNumber: pageNumber , pageSize: pageSize,
+            return await GetManyPagedAsync(pageNumber: pageNumber, pageSize: pageSize,
            filter: e => !e.SubMenus.Any() && (string.IsNullOrEmpty(search) ? true : e.Name.Contains(search ?? "") || e.Name == search),
-           include:e=>e.Include(j=>j.SubMenus),
-           orderBy:e=>e.OrderBy(j=>j.Order),
+           include: e => e.Include(j => j.SubMenus),
+           orderBy: e => e.OrderBy(j => j.Order),
            selector: (e, i) => new MenuDTO
            {
                Id = e.Id,
@@ -53,6 +53,12 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
             return (items, count);
 
         }
+
+        public async Task<List<int>> GetMenusOfRole(int roleId)
+        {
+            return (await GetManyAsync(filter: menu => menu.MenuActions.All(ma => ma.Action.AllowAnonymous || ma.Action.RoleActions.Any(e => e.RoleId == roleId)), selector: (e, i) => e.Id)).ToList();
+        }
+
         public async Task<List<MenuGroupDTO>> GetUserMenu(int userId)
         {
             var result = await _dbSet.Where(e => e.IsActive == true && e.MenuActions.All(ma => ma.Action.AllowAnonymous || !ma.Action.RoleActions.Any() || ma.Action.RoleActions.Any(e => e.Role.UserRoles.Any(e => e.UserId == userId))))
