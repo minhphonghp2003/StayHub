@@ -29,7 +29,6 @@
 	<ItemGroup>
 		<Folder Include="Atrtributes\" />
 		<Folder Include="CQRS\Catalog\Validator\" />
-		<Folder Include="CQRS\RBAC\Command\RoleMenu\" />
 	</ItemGroup>
 
 </Project>
