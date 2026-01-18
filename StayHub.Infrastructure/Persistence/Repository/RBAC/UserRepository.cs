@@ -39,16 +39,17 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
                               );
         }
 
-        public async Task<List<UserDTO>> GetUserOfRole(int roleId)
+        public async Task<(List<UserDTO>,int)> GetUserOfRole(int roleId, int pageNumber, int pageSize)
         {
-            return (await GetManyAsync(filter: e => e.UserRoles.Any(j => j.RoleId == roleId), selector: (e, i) => new UserDTO
+            return (await GetManyPagedAsync(pageNumber: pageNumber,
+                              pageSize: pageSize, filter: e => e.UserRoles.Any(j => j.RoleId == roleId), selector: (e, i) => new UserDTO
             {
                 Id = e.Id,
                 Username = e.Username,
                 Fullname = e.Profile.Fullname,
                 Phone = e.Profile.Phone,
                 Image= e.Profile.Image,
-            },include:e=>e.Include(j=>j.Profile))).ToList();
+            },include:e=>e.Include(j=>j.Profile)));
         }
 
         public async Task<bool> SetActivated(int id, bool activated)

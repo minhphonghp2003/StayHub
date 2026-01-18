@@ -56,8 +56,10 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
 
         public async Task<List<int>> GetMenusOfRole(int roleId)
         {
-            return (await GetManyAsync(filter: menu => menu.MenuActions.All(ma => ma.Action.AllowAnonymous || ma.Action.RoleActions.Any(e => e.RoleId == roleId)), selector: (e, i) => e.Id)).ToList();
+            var result =  (await GetManyAsync(filter: menu =>!menu.SubMenus.Any() && ( menu.MenuActions.All(ma => ma.Action.AllowAnonymous || !ma.Action.RoleActions.Any() || ma.Action.RoleActions.Any(e => e.RoleId == roleId))), selector: (e, i) => e.Id)).ToList();
+            return result;
         }
+
 
         public async Task<List<MenuGroupDTO>> GetUserMenu(int userId)
         {
