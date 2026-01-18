@@ -12,8 +12,18 @@ namespace StayHub.Application.Middlewares
 {
     public class AuthorizationMiddleware(RequestDelegate _next, ILogger<AuthorizationMiddleware> _logger)
     {
-        public async Task InvokeAsync(HttpContext context, IRoleRepository roleRepository)
+        public async Task InvokeAsync(HttpContext context, IRoleRepository roleRepository, IUserRepository userRepository)
         {
+            var currentUser = context.User;
+            int.TryParse(currentUser.FindFirst(ClaimTypes.NameIdentifier).Value, out int userId);
+            var user =await userRepository.GetEntityByIdAsync(userId);
+            if (!user.IsActive)
+            {
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                await context.Response.WriteAsync("Unauthorized access.");
+                return; // Short-circuits the pipeline
+
+            }
             var endpoint = context.GetEndpoint();
             var allowAnon = endpoint?.Metadata.GetMetadata<AllowAnonymousAttribute>();
             if (allowAnon != null)
@@ -32,8 +42,6 @@ namespace StayHub.Application.Middlewares
                 return;
             }
             var method = context.Request.Method;
-            var currentUser = context.User;
-            int.TryParse(currentUser.FindFirst(ClaimTypes.NameIdentifier).Value, out int userId);
             if (!(await roleRepository.HasAccessToAction(userId, routePattern, method)))
             {
 
