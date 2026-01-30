@@ -20,6 +20,7 @@ namespace StayHub.Application.Interfaces.Repository
         Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate);
         Task<List<T>> AddRangeAsync(List<T> entities);
         Task SaveAsync();
+        Task Detattch(T entity);
         
     }
 }

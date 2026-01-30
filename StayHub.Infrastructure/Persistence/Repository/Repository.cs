@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StayHub.Application.Interfaces.Repository;
 using StayHub.Domain.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -123,6 +124,11 @@ namespace StayHub.Infrastructure.Persistence.Repository
             {
                 SaveAsync();
             }
+        }
+
+        public async Task Detattch(T entity)
+        {
+            _appDbContext.Entry(entity).State = EntityState.Detached;
         }
     }
 }

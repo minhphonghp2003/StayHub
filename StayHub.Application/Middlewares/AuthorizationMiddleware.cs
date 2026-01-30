@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using StayHub.Application.Interfaces.Repository.RBAC;
 using StayHub.Domain.Entity.RBAC;
+using System.Diagnostics;
 using System.Reflection.Metadata;
 using System.Security.Claims;
 
@@ -14,16 +16,6 @@ namespace StayHub.Application.Middlewares
     {
         public async Task InvokeAsync(HttpContext context, IRoleRepository roleRepository, IUserRepository userRepository)
         {
-            var currentUser = context.User;
-            int.TryParse(currentUser.FindFirst(ClaimTypes.NameIdentifier).Value, out int userId);
-            var user =await userRepository.GetEntityByIdAsync(userId);
-            if (!user.IsActive)
-            {
-                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                await context.Response.WriteAsync("Unauthorized access.");
-                return; // Short-circuits the pipeline
-
-            }
             var endpoint = context.GetEndpoint();
             var allowAnon = endpoint?.Metadata.GetMetadata<AllowAnonymousAttribute>();
             if (allowAnon != null)
@@ -42,6 +34,18 @@ namespace StayHub.Application.Middlewares
                 return;
             }
             var method = context.Request.Method;
+            var currentUser = context.User;
+            int.TryParse(currentUser.FindFirst(ClaimTypes.NameIdentifier).Value, out int userId);
+            var user = await userRepository.GetEntityByIdAsync(userId);
+            if (!user.IsActive)
+            {
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                await context.Response.WriteAsync("Unauthorized access.");
+                return; // Short-circuits the pipeline
+
+            }
+            await userRepository.Detattch(user);
+
             if (!(await roleRepository.HasAccessToAction(userId, routePattern, method)))
             {
 
