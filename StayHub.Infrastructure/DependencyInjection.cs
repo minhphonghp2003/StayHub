@@ -15,7 +15,7 @@ namespace StayHub.Infrastructure
         {
             service.AddDbContext<AppDbContext>(options =>
             options.UseLazyLoadingProxies()
-                .UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+                .UseNpgsql(configuration.GetConnectionString("RemoteConnection")));
             service.AddScoped<IUserRepository, UserRepository>();
             service.AddScoped<ITokenRepository, TokenRepository>();
             service.AddScoped<IRoleRepository, RoleRepository>();

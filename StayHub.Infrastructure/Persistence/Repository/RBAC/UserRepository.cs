@@ -64,6 +64,31 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
             await SaveAsync();
             return activated;
         }
+
+        public async Task<ProfileDTO> GetProfile(int userId)
+        {
+            var profile = await FindOneAsync(filter: e => e.Id == userId, selector: e => new ProfileDTO
+            {
+                Id = e.Id,
+                Username = e.Username,
+                Fullname = e.Profile.Fullname,
+                Email = e.Profile.Email,
+                Phone = e.Profile.Phone,
+                Image = e.Profile.Image,
+                IsActive = e.IsActive,
+                Address = e.Profile.Address,
+                Roles = e.UserRoles.Select(ur => new RoleDTO
+                {
+                    Name = ur.Role.Name,
+                    Code = ur.Role.Code,
+                }).ToList()
+                
+            },include: e => e.Include(j => j.Profile));
+            return profile;
+            
+
+
+        }
     }
 
 }

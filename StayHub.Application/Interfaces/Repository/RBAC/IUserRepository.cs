@@ -10,5 +10,6 @@ namespace StayHub.Application.Interfaces.Repository.RBAC
         Task<(List<UserDTO>, int)> GetAllUser(int pageNumber, int pageSize, string? searchKey);
         Task<(List<UserDTO>,int)> GetUserOfRole(int roleId, int pageNumber, int pageSize);
         Task<bool> SetActivated(int id, bool activated);
+        Task<ProfileDTO> GetProfile(int userId);
     }
 }

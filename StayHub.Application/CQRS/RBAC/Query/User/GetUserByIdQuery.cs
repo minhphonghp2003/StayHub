@@ -11,23 +11,8 @@ namespace StayHub.Application.CQRS.RBAC.Query.User
     {
         public async Task<BaseResponse<ProfileDTO>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
-            var profile = await userRepository.FindOneAsync(e => e.Id == request.Id, selector: e => new ProfileDTO
-            {
-                Id = e.Id,
-                Username = e.Username,
-                Roles = e.UserRoles.Select(ur => new RoleDTO
-                {
-                    Id = ur.Role.Id,
-                    Name = ur.Role.Name,
-                    Code = ur.Role.Code,
-                    Description = ur.Role.Description
-                }).ToList()
-            });
-            if (profile != null)
-            {
-                return Success<ProfileDTO>(profile);
-            }
-            return Failure<ProfileDTO>("User not found", System.Net.HttpStatusCode.NotFound);
+            var profile = await userRepository.GetProfile(request.Id);
+            return Success<ProfileDTO>(profile);
         }
     }
 
