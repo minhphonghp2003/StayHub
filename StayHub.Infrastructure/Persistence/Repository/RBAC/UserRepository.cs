@@ -79,8 +79,11 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
                 Address = e.Profile.Address,
                 Roles = e.UserRoles.Select(ur => new RoleDTO
                 {
+                    Id = ur.RoleId,
                     Name = ur.Role.Name,
                     Code = ur.Role.Code,
+                    Description = ur.Role.Description,
+                    
                 }).ToList()
                 
             },include: e => e.Include(j => j.Profile));
