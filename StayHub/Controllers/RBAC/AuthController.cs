@@ -44,6 +44,12 @@ namespace StayHub.API.Controllers.RBAC
 
         }
 
+        [HttpPost("revoke-all-token/{id}")]
+        public async Task<IActionResult> RevokeAllToken(int id)
+        {
+            var result = await Mediator.Send(new RevokeAllUserTokenCommand(id));
+            return GenerateResponse(result);
 
+        }
     }
 }
