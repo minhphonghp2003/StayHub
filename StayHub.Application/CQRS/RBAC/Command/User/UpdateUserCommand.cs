@@ -55,6 +55,12 @@ namespace StayHub.Application.CQRS.RBAC.Command.User
                 Phone = user.Profile.Phone,
                 Address = user.Profile.Address,
                 Image = user.Profile.Image,
+                Roles = user.UserRoles.Select(ur => new RoleDTO
+                {
+                    Id = ur.Role.Id,
+                    Name = ur.Role.Name,
+                }).ToList(),
+                IsActive = user.IsActive,
                 CreatedAt = user.CreatedAt,
                 UpdatedAt = user.UpdatedAt
             });
