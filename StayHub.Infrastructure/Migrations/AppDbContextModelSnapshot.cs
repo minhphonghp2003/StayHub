@@ -389,6 +389,10 @@ namespace StayHub.Infrastructure.Migrations
                     b.Property<int?>("ProfileId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("ResetPasswordToken")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 

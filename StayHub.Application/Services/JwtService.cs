@@ -4,7 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using StayHub.Application.Interfaces.Repository.RBAC;
 using StayHub.Application.Interfaces.Services;
 using StayHub.Domain.Entity.RBAC;
-using StayHub.Infrastructure.Services;
+using Shared.Services;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;

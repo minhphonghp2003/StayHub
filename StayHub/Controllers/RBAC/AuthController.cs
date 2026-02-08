@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StayHub.Application.CQRS.RBAC.Command.Token;
+using StayHub.Application.CQRS.RBAC.Command.User;
 
 namespace StayHub.API.Controllers.RBAC
 {
@@ -48,6 +49,38 @@ namespace StayHub.API.Controllers.RBAC
         public async Task<IActionResult> RevokeAllToken(int id)
         {
             var result = await Mediator.Send(new RevokeAllUserTokenCommand(id));
+            return GenerateResponse(result);
+
+        }
+        [HttpPost("forget-password")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgetPassword(ForgetPasswordCommand command)
+        {
+            var result = await Mediator.Send(command);
+            return GenerateResponse(result);
+
+        }
+        
+        [HttpPost("new-password")]
+        [AllowAnonymous]
+        public async Task<IActionResult> NewPassword(NewPasswordCommand command)
+        {
+            var result = await Mediator.Send(command);
+            return GenerateResponse(result);
+
+        }
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordCommand command)
+        {
+            var result = await Mediator.Send(command);
+            return GenerateResponse(result);
+
+        }
+        [HttpPost("change-tenant-password")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ChangeTenantPassword(ChangeTenantPasswordCommand command)
+        {
+            var result = await Mediator.Send(command);
             return GenerateResponse(result);
 
         }
