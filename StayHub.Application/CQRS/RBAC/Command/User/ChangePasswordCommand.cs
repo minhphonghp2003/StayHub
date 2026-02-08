@@ -15,14 +15,12 @@ using StayHub.Application.Extension;
 
 namespace StayHub.Application.CQRS.RBAC.Command.User
 {
-    public record ChangePasswordCommand(string oldPassword, string newPassword) : IRequest<BaseResponse<bool>>;
-    public sealed class ChangePasswordCommandHandler(IUserRepository userRepository,HttpContext context ) : BaseResponseHandler, IRequestHandler<ChangePasswordCommand, BaseResponse<bool>>
+    public record ChangePasswordCommand(int userId,string oldPassword, string newPassword) : IRequest<BaseResponse<bool>>;
+    public sealed class ChangePasswordCommandHandler(IUserRepository userRepository ) : BaseResponseHandler, IRequestHandler<ChangePasswordCommand, BaseResponse<bool>>
     {
         public async Task<BaseResponse<bool>> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
         {
-            var userId = context.GetUserId();
-            if (userId == null) return Failure<bool>("User not found", HttpStatusCode.NotFound);
-            var user = await userRepository.GetEntityByIdAsync(userId!.Value);
+            var user = await userRepository.GetEntityByIdAsync(request.userId);
 
             if (user == null)
             {

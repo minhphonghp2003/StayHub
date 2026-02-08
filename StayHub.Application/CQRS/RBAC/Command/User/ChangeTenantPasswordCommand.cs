@@ -16,7 +16,7 @@ using StayHub.Application.Extension;
 namespace StayHub.Application.CQRS.RBAC.Command.User
 {
     public record ChangeTenantPasswordCommand(int userId, string newPassword) : IRequest<BaseResponse<bool>>;
-    public sealed class ChangeTenantPasswordCommandHandler(IUserRepository userRepository,HttpContext context ) : BaseResponseHandler, IRequestHandler<ChangeTenantPasswordCommand, BaseResponse<bool>>
+    public sealed class ChangeTenantPasswordCommandHandler(IUserRepository userRepository) : BaseResponseHandler, IRequestHandler<ChangeTenantPasswordCommand, BaseResponse<bool>>
     {
         public async Task<BaseResponse<bool>> Handle(ChangeTenantPasswordCommand request, CancellationToken cancellationToken)
         {

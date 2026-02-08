@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using StayHub.Application.CQRS.RBAC.Command.Token;
 using StayHub.Application.CQRS.RBAC.Command.User;
+using StayHub.Application.Extension;
 
 namespace StayHub.API.Controllers.RBAC
 {
@@ -70,12 +71,13 @@ namespace StayHub.API.Controllers.RBAC
 
         }
         [HttpPost("change-password")]
-        public async Task<IActionResult> ChangePassword(ChangePasswordCommand command)
+        public async Task<IActionResult> ChangePassword(string oldPassword, string newPassword)
         {
-            var result = await Mediator.Send(command);
+            var result = await Mediator.Send(new ChangePasswordCommand(HttpContext.GetUserId()??0, oldPassword, newPassword));
             return GenerateResponse(result);
 
         }
+      
         [HttpPost("change-tenant-password")]
         [AllowAnonymous]
         public async Task<IActionResult> ChangeTenantPassword(ChangeTenantPasswordCommand command)
