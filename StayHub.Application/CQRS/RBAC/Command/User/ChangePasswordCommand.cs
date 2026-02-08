@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -15,7 +16,22 @@ using StayHub.Application.Extension;
 
 namespace StayHub.Application.CQRS.RBAC.Command.User
 {
-    public record ChangePasswordCommand(int userId,string oldPassword, string newPassword) : IRequest<BaseResponse<bool>>;
+    public record ChangePasswordCommand
+        : IRequest<BaseResponse<bool>>
+    {
+        
+        [JsonIgnore]
+        public int userId { get; set; }
+        public string oldPassword { get; set; }
+        public string newPassword { get; set; }
+
+        public ChangePasswordCommand(string oldPassword, string newPassword)
+        {
+            this.oldPassword = oldPassword;
+            this.newPassword = newPassword;
+        }
+        public ChangePasswordCommand(){}
+    };
     public sealed class ChangePasswordCommandHandler(IUserRepository userRepository ) : BaseResponseHandler, IRequestHandler<ChangePasswordCommand, BaseResponse<bool>>
     {
         public async Task<BaseResponse<bool>> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)

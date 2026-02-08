@@ -71,9 +71,10 @@ namespace StayHub.API.Controllers.RBAC
 
         }
         [HttpPost("change-password")]
-        public async Task<IActionResult> ChangePassword(string oldPassword, string newPassword)
+        public async Task<IActionResult> ChangePassword(ChangePasswordCommand command)
         {
-            var result = await Mediator.Send(new ChangePasswordCommand(HttpContext.GetUserId()??0, oldPassword, newPassword));
+            command.userId = HttpContext.GetUserId() ?? 0;
+            var result = await Mediator.Send(command);
             return GenerateResponse(result);
 
         }
