@@ -36,19 +36,21 @@ namespace StayHub.Application.CQRS.Catalog.Command.CategoryItem
     {
         public async Task<BaseResponse<CategoryItemDTO>> Handle(UpdateCategoryItemCommand request, CancellationToken cancellationToken)
         {
-            if (await categoryItemRepository.ExistsAsync(e => e.Code == request.Code))
-            {
-                return Failure<CategoryItemDTO>(message: "Duplicate CODE", code: HttpStatusCode.BadRequest);
-            }
+            
             var item = await categoryItemRepository.FindOneEntityAsync(e => e.Id == request.Id);
             if (item == null)
                 return Failure<CategoryItemDTO>(message: "No category item found", code: HttpStatusCode.BadRequest);
 
+            if (await categoryItemRepository.ExistsAsync(e => e.Code == request.Code && e.Id != request.Id))
+            {
+                return Failure<CategoryItemDTO>(message: "Duplicate CODE", code: HttpStatusCode.BadRequest);
+            }
             item.Name = request.Name;
             item.Code = request.Code;
             item.Value = request.Value;
             item.Icon = request.Icon;
             item.CategoryId = request.CategoryId;
+            categoryItemRepository.Update(item);
 
 
             return Success(new CategoryItemDTO

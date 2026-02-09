@@ -64,8 +64,8 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
         public async Task<List<MenuGroupDTO>> GetUserMenu(int userId)
         {
             var result = await _dbSet.Where(e => e.IsActive == true && e.MenuActions.All(ma => ma.Action.AllowAnonymous || !ma.Action.RoleActions.Any() || ma.Action.RoleActions.Any(e => e.Role.UserRoles.Any(e => e.UserId == userId))))
-                .OrderBy(e => e.Order)
                 .GroupBy(e => new { GroupId = e.MenuGroupId, GroupName = e.MenuGroup.Name })
+                .OrderBy(e => e.Min(j=>j.Order))
                 .Select(g => new MenuGroupDTO
                 {
                     Name = g.Key.GroupName,
