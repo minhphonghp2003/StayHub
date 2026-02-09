@@ -1,9 +1,12 @@
 using MediatR;
 using Microsoft.Extensions.Configuration;
-using SendGrid;
-using SendGrid.Helpers.Mail;
 using Shared.Response;
 using Shared.Services;
+using Mailtrap;
+using Mailtrap.Emails.Requests;
+using Mailtrap.Emails.Responses;
+using Mailtrap;
+using Mailtrap.Core.Exceptions;
 
 namespace StayHub.Application.CQRS.Common.Command.Email
 {
@@ -12,26 +15,34 @@ public sealed class SendEmailCommandHandler(IConfiguration configuration ) : INo
 {
     public async Task Handle(SendForgetPasswordEmailCommand request, CancellationToken cancellationToken)
     {
-        var fromAddress = configuration.GetValue<string>("SendGrid:FromEmail");
-        var fromName = configuration.GetValue<string>("SendGrid:FromName");
-        var subject = configuration.GetValue<string>("SendGrid:ResetPasswordSubject");
-        var apiKey = configuration.GetValue<string>("SendGrid:ApiKey");
-        var client = new SendGridClient(apiKey);
-        var from = new EmailAddress(fromAddress, fromName);
-          var msg = new SendGridMessage
+        try
         {
-            From = from,
-            Subject = subject,
-            TemplateId = "d-79520cc9d88b4da59950b2608481ee28"
-        };
-        msg.AddTo(new EmailAddress(request.email));
-
-        var dynamicTemplateData = new {
-            reset_password_url = "Google.com",
-        };
-        msg.SetTemplateData(dynamicTemplateData);
-        var response = await client.SendEmailAsync(msg);
-        Console.WriteLine(response);
+            
+        var apiToken = configuration.GetSection("Email:ApiToken").Value;
+        using var mailtrapClientFactory = new MailtrapClientFactory(apiToken);
+        IMailtrapClient mailtrapClient = mailtrapClientFactory.CreateClient();
+        SendEmailRequest emailRequest = SendEmailRequest
+            .Create()
+            .From(configuration.GetSection("Email:From").Value)
+            .To(request.email)
+            .Subject("Bạn đã yêu cầu đặt lại mật khẩu")
+            .Html("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n<html data-editor-version=\"2\" class=\"sg-campaigns\" xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"vi\">\n<head>\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1\">\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\">\n    <style type=\"text/css\">\n        /* Import Font Outfit từ Google Fonts */\n        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');\n\n        body, p, div {\n            font-family: 'Outfit', Arial, sans-serif; /* Ưu tiên Outfit, nếu lỗi sẽ dùng Arial */\n            font-size: 16px;\n        }\n        body {\n            color: #0b0e11; /* --color-black */\n            background-color: #f9fafb; /* --color-bg-white */\n        }\n        body a {\n            color: #b54708; /* --color-orange-600 */\n            text-decoration: none;\n        }\n        .wrapper {\n            width: 100% !important;\n            table-layout: fixed;\n            background-color: #f9fafb;\n        }\n        .main-container {\n            background-color: #ffffff;\n            border-radius: 10px; /* --radius */\n            box-shadow: 0px 4px 8px -2px rgba(16, 24, 40, 0.08);\n            margin: 0 auto;\n            max-width: 600px;\n        }\n        .btn-primary {\n            background-color: #fed85e; /* --color-brand-300 */\n            color: #0b0e11 !important;\n            border-radius: 8px;\n            padding: 14px 40px;\n            display: inline-block;\n            font-weight: 600;\n            text-align: center;\n            text-decoration: none;\n            box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);\n            font-family: 'Outfit', Arial, sans-serif;\n        }\n        .btn-primary:hover {\n            background-color: #f5c94d !important;\n        }\n        .footer-text {\n            color: #98a2b3;\n            font-size: 12px;\n            line-height: 18px;\n        }\n        /* Style riêng cho tiêu đề để chắc chắn dùng Outfit */\n        h1 {\n            font-family: 'Outfit', Arial, sans-serif;\n        }\n        @media screen and (max-width:480px) {\n            .main-container {\n                width: 100% !important;\n                border-radius: 0 !important;\n            }\n            .mobile-padding {\n                padding: 20px !important;\n            }\n        }\n    </style>\n</head>\n<body style=\"margin: 0; padding: 0; background-color: #f9fafb;\">\n    <center class=\"wrapper\">\n        <div class=\"webkit\">\n            <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\" class=\"wrapper\" bgcolor=\"#f9fafb\">\n                <tr>\n                    <td valign=\"top\" bgcolor=\"#f9fafb\" width=\"100%\" style=\"padding-top: 40px; padding-bottom: 40px;\">\n                        \n                        <table width=\"600\" class=\"main-container\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n                            \n                            <tr>\n                                <td style=\"padding: 40px 40px 20px 40px; text-align: center;\" class=\"mobile-padding\">\n                                    <img src=\"http://cdn.mcauto-images-production.sendgrid.net/40162ed57364f1b0/88710e9b-0583-4fd3-b0dc-4e2293fa83ad/654x209.png\" alt=\"Logo\" width=\"150\" style=\"display: block; margin: 0 auto; border: 0;\">\n                                </td>\n                            </tr>\n\n                            <tr>\n                                <td style=\"padding: 0 40px 10px 40px; text-align: center;\" class=\"mobile-padding\">\n                                   <img src=\"https://cdn-icons-png.flaticon.com/512/3064/3064197.png\" width=\"48\" height=\"48\" alt=\"Lock\" style=\"display:inline-block; opacity: 0.9;\">\n                                </td>\n                            </tr>\n\n                            <tr>\n                                <td style=\"padding: 10px 40px 30px 40px; text-align: center;\" class=\"mobile-padding\">\n                                    <h1 style=\"margin: 0; font-family: 'Outfit', Arial, sans-serif; font-size: 24px; font-weight: 600; color: #0b0e11; letter-spacing: -0.5px;\">\n                                        Yêu cầu đặt lại mật khẩu\n                                    </h1>\n                                    <p style=\"margin: 20px 0 0 0; font-family: 'Outfit', Arial, sans-serif; font-size: 16px; line-height: 24px; color: #475467;\">\n                                        Chúng tôi đã nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn. Bảo mật thông tin của bạn là ưu tiên hàng đầu của chúng tôi. Vui lòng nhấn vào nút bên dưới để tạo mật khẩu mới.\n                                    </p>\n                                </td>\n                            </tr>\n\n                            <tr>\n                                <td style=\"padding: 0 40px 40px 40px; text-align: center;\" class=\"mobile-padding\">\n                                    <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\">\n                                        <tr>\n                                            <td align=\"center\">\n                                                <a href=\"{{reset_password_url}}\" target=\"_blank\" class=\"btn-primary\">\n                                                    Đặt lại mật khẩu\n                                                </a>\n                                            </td>\n                                        </tr>\n                                    </table>\n                                </td>\n                            </tr>\n\n                            <tr>\n                                <td style=\"padding: 0 40px;\">\n                                    <div style=\"height: 1px; background-color: #e4e7ec; width: 100%;\"></div>\n                                </td>\n                            </tr>\n\n                            <tr>\n                                <td style=\"padding: 30px 40px 40px 40px; text-align: left;\" class=\"mobile-padding\">\n                                    <p style=\"margin: 0; font-family: 'Outfit', Arial, sans-serif; font-size: 14px; line-height: 20px; color: #667085;\">\n                                        <strong>Bạn không yêu cầu thay đổi này?</strong><br>\n                                        Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này hoặc liên hệ ngay với bộ phận hỗ trợ để đảm bảo an toàn cho tài khoản của bạn.\n                                    </p>\n                                    <p style=\"margin: 15px 0 0 0; font-family: 'Outfit', Arial, sans-serif; font-size: 14px; line-height: 20px; color: #667085;\">\n                                        Email hỗ trợ: <a href=\"mailto:support@yourdomain.com\" style=\"color: #b54708; font-weight: 500;\">support@yourdomain.com</a>\n                                    </p>\n                                </td>\n                            </tr>\n\n                        </table>\n                        <table width=\"600\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-top: 24px;\">\n                            <tr>\n                                <td style=\"text-align: center; padding: 0 20px;\">\n                                    <p class=\"footer-text\" style=\"font-family: 'Outfit', Arial, sans-serif;\">\n                                        © 2024 [Tên Công Ty Của Bạn]. Bảo lưu mọi quyền.<br>\n                                        <a href=\"{{{unsubscribe}}}\" style=\"color: #98a2b3; text-decoration: underline;\">Hủy đăng ký</a> &nbsp;|&nbsp; <a href=\"{{{unsubscribe_preferences}}}\" style=\"color: #98a2b3; text-decoration: underline;\">Tùy chọn</a>\n                                    </p>\n                                </td>\n                            </tr>\n                        </table>\n\n                    </td>\n                </tr>\n            </table>\n        </div>\n    </center>\n</body>\n</html>");
+        SendEmailResponse? response = await mailtrapClient
+            .Email()
+            .Send(emailRequest); 
+        }
+        catch (MailtrapException mtex)
+        {
+            // handle Mailtrap specific exceptions  
+        }
+        catch (OperationCanceledException ocex)
+        {
+            // handle cancellation
+        }
+        catch (Exception ex)
+        {
+            // handle other exceptions
+        }  
     }
 }
 }
