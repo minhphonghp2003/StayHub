@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using StayHub.Application.CQRS.Common.Command.Email;
 using StayHub.Application.CQRS.RBAC.Command.Token;
 using StayHub.Application.CQRS.RBAC.Command.User;
 using StayHub.Application.Extension;
+using StayHub.Domain.Entity.RBAC;
 
 namespace StayHub.API.Controllers.RBAC
 {
@@ -13,10 +15,12 @@ namespace StayHub.API.Controllers.RBAC
         public async Task<IActionResult> Login(LoginCommand command)
         {
             var result = await Mediator.Send(command);
+           
             if (result.Success)
             {
                 SetCookie("refresh", result.Data.RefreshToken, result.Data.ExpiresDate);
                 SetCookie("access_token", result.Data.Token);
+              
             }
             return GenerateResponse(result);
         }

@@ -137,18 +137,15 @@ namespace StayHub.Infrastructure.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Browser")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("IP")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("OS")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("Status")
