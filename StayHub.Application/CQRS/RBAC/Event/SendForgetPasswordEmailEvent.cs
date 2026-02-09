@@ -10,10 +10,10 @@ using Mailtrap.Core.Exceptions;
 
 namespace StayHub.Application.CQRS.Common.Command.Email
 {
-public record SendForgetPasswordEmailCommand(string email,string token, int expiresMinute) : INotification;
-public sealed class SendEmailCommandHandler(IConfiguration configuration ) : INotificationHandler<SendForgetPasswordEmailCommand >
+public record SendForgetPasswordEmailEvent(string email,string token, int expiresMinute) : INotification;
+public sealed class SendEmailCommandHandler(IConfiguration configuration ) : INotificationHandler<SendForgetPasswordEmailEvent >
 {
-    public async Task Handle(SendForgetPasswordEmailCommand request, CancellationToken cancellationToken)
+    public async Task Handle(SendForgetPasswordEmailEvent request, CancellationToken cancellationToken)
     {
         try
         {

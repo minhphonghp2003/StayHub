@@ -28,7 +28,7 @@ namespace StayHub.Application.CQRS.RBAC.Command.User
                 user.ResetPasswordToken = token;
                 userRepository.Update(user);
             }
-             mediator.Publish(new SendForgetPasswordEmailCommand(
+             mediator.Publish(new SendForgetPasswordEmailEvent(
                 request.email,token,expireMinutes));
             return Success<int>(expireMinutes);
         }

@@ -27,6 +27,7 @@ namespace StayHub.Infrastructure
             service.AddScoped<IMenuActionRepository, MenuActionRepository>();
             service.AddScoped<ICategoryRepository, CategoryRepository>();
             service.AddScoped<ICategoryItemRepository, CategoryItemRepository>();
+            service.AddScoped<ILoginActivityRepository, LoginActivityRepository>();
             return service;
         }
     }

@@ -15,7 +15,6 @@ namespace StayHub.API.Controllers.RBAC
             var result = await Mediator.Send(command);
             if (result.Success)
             {
-
                 SetCookie("refresh", result.Data.RefreshToken, result.Data.ExpiresDate);
                 SetCookie("access_token", result.Data.Token);
             }

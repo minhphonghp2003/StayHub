@@ -128,6 +128,48 @@ namespace StayHub.Infrastructure.Migrations
                     b.ToTable("Action");
                 });
 
+            modelBuilder.Entity("StayHub.Domain.Entity.RBAC.LoginActivity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Browser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("IP")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("OS")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("LoginActivity");
+                });
+
             modelBuilder.Entity("StayHub.Domain.Entity.RBAC.Menu", b =>
                 {
                     b.Property<int>("Id")
@@ -446,6 +488,15 @@ namespace StayHub.Infrastructure.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("StayHub.Domain.Entity.RBAC.LoginActivity", b =>
+                {
+                    b.HasOne("StayHub.Domain.Entity.RBAC.User", null)
+                        .WithMany("LoginActivities")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("StayHub.Domain.Entity.RBAC.Menu", b =>
                 {
                     b.HasOne("StayHub.Domain.Entity.Catalog.CategoryItem", "MenuGroup")
@@ -571,6 +622,8 @@ namespace StayHub.Infrastructure.Migrations
 
             modelBuilder.Entity("StayHub.Domain.Entity.RBAC.User", b =>
                 {
+                    b.Navigation("LoginActivities");
+
                     b.Navigation("RefreshTokens");
 
                     b.Navigation("UserRoles");
