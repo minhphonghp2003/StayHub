@@ -429,7 +429,6 @@ namespace StayHub.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("ResetPasswordToken")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedAt")
