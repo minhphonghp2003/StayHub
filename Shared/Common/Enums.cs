@@ -1,10 +1,17 @@
 ﻿namespace Shared.Common
 {
-    public enum HttpVerb
-    {
-        GET,
-        POST,
-        PUT,
-        DELETE,
-    }
+  public enum PropertyType
+  {
+    House, 
+    Apartment,
+    Coliving, 
+    Commercial
+  }
+
+  public enum SubscriptionStatus
+  {
+    Active,
+    Inactive,
+    Pending
+  }
 }

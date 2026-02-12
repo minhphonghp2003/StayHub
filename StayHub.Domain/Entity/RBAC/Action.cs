@@ -1,4 +1,6 @@
 ﻿using Shared.Common;
+using StayHub.Domain.Entity.Catalog;
+using StayHub.Domain.Entity.TMS;
 
 namespace StayHub.Domain.Entity.RBAC
 {
@@ -9,5 +11,6 @@ namespace StayHub.Domain.Entity.RBAC
         public string Method { get; set; }
         public virtual List<MenuAction>? MenuActions { get; set; }
         public virtual List<RoleAction>? RoleActions { get; set; }
+        public virtual List<Tier>? Tiers { get; set; }
     }
 }
