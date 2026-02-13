@@ -2,5 +2,6 @@ namespace StayHub.Application.DTO.Catalog;
 
 public class ProvinceDTO : BaseDTO
 {
-    // Add properties matching the Entity
+    public string Name { get; set; }
+    public string? Code { get; set; }
 }
