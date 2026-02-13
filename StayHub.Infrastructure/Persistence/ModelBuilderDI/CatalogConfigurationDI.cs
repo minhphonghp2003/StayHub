@@ -16,6 +16,7 @@ namespace StayHub.Infrastructure.Persistence.ModelBuilderDI
             modelbuilder.ApplyConfiguration(new CategoryConfiguration());
             modelbuilder.ApplyConfiguration(new CategoryItemConfiguration());
             modelbuilder.ApplyConfiguration(new ProvinceConfiguration());
+            modelbuilder.ApplyConfiguration(new WardConfiguration());
             return modelbuilder;
         }
     }
