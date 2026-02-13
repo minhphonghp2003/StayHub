@@ -32,6 +32,7 @@ namespace StayHub.Infrastructure
             service.AddScoped<ILoginActivityRepository, LoginActivityRepository>();
             service.AddScoped<IPropertyRepository, PropertyRepository>();
             service.AddScoped<ITierRepository, TierRepository>();
+            service.AddScoped<IProvinceRepository, ProvinceRepository>();
             return service;
         }
     }
