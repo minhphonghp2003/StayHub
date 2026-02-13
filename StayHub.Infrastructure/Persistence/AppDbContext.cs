@@ -13,6 +13,8 @@ namespace StayHub.Infrastructure.Persistence
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyRBACConfiguration();
             modelBuilder.ApplyCatalogConfiguration();
+            modelBuilder.ApplyTMSConfiguration();
+            ;
         }
         public override int SaveChanges()
         {

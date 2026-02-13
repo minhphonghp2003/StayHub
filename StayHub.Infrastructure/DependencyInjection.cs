@@ -3,9 +3,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StayHub.Application.Interfaces.Repository.Catalog;
 using StayHub.Application.Interfaces.Repository.RBAC;
+using StayHub.Application.Interfaces.Repository.TMS;
 using StayHub.Infrastructure.Persistence;
 using StayHub.Infrastructure.Persistence.Repository.Catalog;
 using StayHub.Infrastructure.Persistence.Repository.RBAC;
+using StayHub.Infrastructure.Persistence.Repository.TMS;
 
 namespace StayHub.Infrastructure
 {
@@ -28,6 +30,7 @@ namespace StayHub.Infrastructure
             service.AddScoped<ICategoryRepository, CategoryRepository>();
             service.AddScoped<ICategoryItemRepository, CategoryItemRepository>();
             service.AddScoped<ILoginActivityRepository, LoginActivityRepository>();
+            service.AddScoped<IPropertyRepository, PropertyRepository>();
             return service;
         }
     }

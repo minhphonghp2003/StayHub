@@ -25,6 +25,21 @@ namespace StayHub.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("ActionTier", b =>
+                {
+                    b.Property<int>("ActionsId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TiersId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ActionsId", "TiersId");
+
+                    b.HasIndex("TiersId");
+
+                    b.ToTable("ActionTier");
+                });
+
             modelBuilder.Entity("StayHub.Domain.Entity.Catalog.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -96,6 +111,63 @@ namespace StayHub.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("CategoryItem");
+                });
+
+            modelBuilder.Entity("StayHub.Domain.Entity.Catalog.Province", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Province");
+                });
+
+            modelBuilder.Entity("StayHub.Domain.Entity.Catalog.Ward", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("ProvinceId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProvinceId");
+
+                    b.ToTable("Ward");
                 });
 
             modelBuilder.Entity("StayHub.Domain.Entity.RBAC.Action", b =>
@@ -475,6 +547,116 @@ namespace StayHub.Infrastructure.Migrations
                     b.ToTable("UserRole");
                 });
 
+            modelBuilder.Entity("StayHub.Domain.Entity.TMS.Property", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("EndSubscriptionDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("LastPaymentDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("ProvinceId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("StartSubscriptionDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("SubscriptionStatus")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TierId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("WardId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProvinceId");
+
+                    b.HasIndex("TierId");
+
+                    b.HasIndex("WardId");
+
+                    b.ToTable("Property");
+                });
+
+            modelBuilder.Entity("StayHub.Domain.Entity.TMS.Tier", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BillingCycle")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Code")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tier");
+                });
+
+            modelBuilder.Entity("ActionTier", b =>
+                {
+                    b.HasOne("StayHub.Domain.Entity.RBAC.Action", null)
+                        .WithMany()
+                        .HasForeignKey("ActionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StayHub.Domain.Entity.TMS.Tier", null)
+                        .WithMany()
+                        .HasForeignKey("TiersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("StayHub.Domain.Entity.Catalog.CategoryItem", b =>
                 {
                     b.HasOne("StayHub.Domain.Entity.Catalog.Category", "Category")
@@ -482,6 +664,17 @@ namespace StayHub.Infrastructure.Migrations
                         .HasForeignKey("CategoryId");
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("StayHub.Domain.Entity.Catalog.Ward", b =>
+                {
+                    b.HasOne("StayHub.Domain.Entity.Catalog.Province", "Province")
+                        .WithMany()
+                        .HasForeignKey("ProvinceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Province");
                 });
 
             modelBuilder.Entity("StayHub.Domain.Entity.RBAC.LoginActivity", b =>
@@ -583,6 +776,29 @@ namespace StayHub.Infrastructure.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("StayHub.Domain.Entity.TMS.Property", b =>
+                {
+                    b.HasOne("StayHub.Domain.Entity.Catalog.Province", "Province")
+                        .WithMany()
+                        .HasForeignKey("ProvinceId");
+
+                    b.HasOne("StayHub.Domain.Entity.TMS.Tier", "Tier")
+                        .WithMany()
+                        .HasForeignKey("TierId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StayHub.Domain.Entity.Catalog.Ward", "Ward")
+                        .WithMany()
+                        .HasForeignKey("WardId");
+
+                    b.Navigation("Province");
+
+                    b.Navigation("Tier");
+
+                    b.Navigation("Ward");
                 });
 
             modelBuilder.Entity("StayHub.Domain.Entity.Catalog.Category", b =>
