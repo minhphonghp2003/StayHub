@@ -13,7 +13,7 @@ internal sealed class GetProvinceByIdQueryHandler(IProvinceRepository repository
 {
     public async Task<BaseResponse<ProvinceDTO>> Handle(GetProvinceByIdQuery request, CancellationToken cancellationToken)
     {
-        var result = await repository.FindOneAsync(e => e.Id == request.Id, e => new ProvinceDTO { Id = e.Id });
+        var result = await repository.FindOneAsync(e => e.Id == request.Id, e => new ProvinceDTO { Id = e.Id, Name = e.Name, Code = e.Code });
         return result == null ? Failure<ProvinceDTO>("Not found",HttpStatusCode.BadRequest) : Success(result);
     }
 }

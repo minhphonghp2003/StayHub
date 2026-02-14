@@ -2,6 +2,6 @@ using StayHub.Domain.Entity.TMS;
 
 namespace StayHub.Application.Interfaces.Repository.TMS;
 
-public interface IPropertyRepository : IRepository<Property>
+public interface IPropertyRepository : IPagingAndSortingRepository<Property>
 {
 }

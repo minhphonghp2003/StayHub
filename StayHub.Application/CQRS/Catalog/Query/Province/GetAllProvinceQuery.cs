@@ -12,7 +12,7 @@ public sealed class GetAllProvinceQueryHandler(IProvinceRepository repository)
 {
     public async Task<BaseResponse<List<ProvinceDTO>>> Handle(GetAllProvinceQuery request, CancellationToken cancellationToken)
     {
-        var result = await repository.GetAllAsync(selector: (e, i) => new ProvinceDTO { Id = e.Id });
+        var result = await repository.GetAllAsync(selector: (e, i) => new ProvinceDTO { Id = e.Id, Name = e.Name, Code = e.Code });
         return Success(result.ToList());
     }
 }

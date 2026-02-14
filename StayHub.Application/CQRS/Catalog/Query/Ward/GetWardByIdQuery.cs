@@ -13,7 +13,7 @@ internal sealed class GetWardByIdQueryHandler(IWardRepository repository)
 {
     public async Task<BaseResponse<WardDTO>> Handle(GetWardByIdQuery request, CancellationToken cancellationToken)
     {
-        var result = await repository.FindOneAsync(e => e.Id == request.Id, e => new WardDTO { Id = e.Id });
+        var result = await repository.FindOneAsync(e => e.Id == request.Id, e => new WardDTO { Id = e.Id, Name = e.Name, Code = e.Code });
         return result == null ? Failure<WardDTO>("Not found",HttpStatusCode.BadRequest) : Success(result);
     }
 }

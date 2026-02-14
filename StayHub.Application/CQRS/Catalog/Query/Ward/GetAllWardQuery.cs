@@ -12,7 +12,7 @@ public sealed class GetAllWardQueryHandler(IWardRepository repository)
 {
     public async Task<BaseResponse<List<WardDTO>>> Handle(GetAllWardQuery request, CancellationToken cancellationToken)
     {
-        var result = await repository.GetAllAsync(selector: (e, i) => new WardDTO { Id = e.Id });
+        var result = await repository.GetAllAsync(selector: (e, i) => new WardDTO { Id = e.Id, Name = e.Name, Code = e.Code,  });
         return Success(result.ToList());
     }
 }
