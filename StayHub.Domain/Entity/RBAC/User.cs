@@ -1,4 +1,6 @@
-﻿namespace StayHub.Domain.Entity.RBAC
+﻿using StayHub.Domain.Entity.TMS;
+
+namespace StayHub.Domain.Entity.RBAC
 {
     public class User : BaseEntity
     {
@@ -11,6 +13,7 @@
         public int?  ProfileId { get; set; }
         public virtual Profile? Profile { get; set; }
         public virtual List<LoginActivity> LoginActivities { get; set; }
+        public virtual List<Property> Properties { get; set; }
 
     }
 }

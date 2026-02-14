@@ -21,6 +21,7 @@ namespace StayHub.Application.Interfaces.Repository
         Task<List<T>> AddRangeAsync(List<T> entities);
         Task SaveAsync();
         Task Detattch(T entity);
+        void Attach(T entity);
         
     }
 }

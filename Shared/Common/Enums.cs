@@ -1,17 +1,9 @@
 ﻿namespace Shared.Common
 {
-  public enum PropertyType
-  {
-    House, 
-    Apartment,
-    Coliving, 
-    Commercial
-  }
-
-  public enum SubscriptionStatus
-  {
-    Active,
-    Inactive,
-    Pending
-  }
+    public enum CategoryCode
+    {
+        PROPERTY_TYPE,
+        SUBSCRIPTION_STATUS,
+        
+    } 
 }

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Shared.Common;
 
 namespace StayHub.Infrastructure.Persistence.Repository.Catalog
 {
@@ -13,6 +14,11 @@ namespace StayHub.Infrastructure.Persistence.Repository.Catalog
     {
         public CategoryRepository(AppDbContext context) : base(context)
         {
+        }
+
+        public bool ExistItemAsync(int itemId, CategoryCode code)
+        {
+           return  _dbSet.Any(x => x.Code== code.ToString() && x.CategoryItems !=null && x.CategoryItems.Any(item=>item.Id==itemId) );
         }
     }
 }

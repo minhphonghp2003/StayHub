@@ -130,5 +130,9 @@ namespace StayHub.Infrastructure.Persistence.Repository
         {
             _appDbContext.Entry(entity).State = EntityState.Detached;
         }
+        public void Attach(T entity)
+        {
+            _dbSet.Attach(entity);
+        }
     }
 }
