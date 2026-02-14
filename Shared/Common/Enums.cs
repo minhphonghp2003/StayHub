@@ -4,6 +4,6 @@
     {
         PROPERTY_TYPE,
         SUBSCRIPTION_STATUS,
-        
+        UNIT_STATUS 
     } 
 }

@@ -1,6 +1,7 @@
 using System.Net;
 using MediatR;
 using Shared.Response;
+using StayHub.Application.DTO.Catalog;
 using StayHub.Application.DTO.TMS;
 using StayHub.Application.Interfaces.Repository.TMS;
 
@@ -13,7 +14,11 @@ internal sealed class GetUnitByIdQueryHandler(IUnitRepository repository)
 {
     public async Task<BaseResponse<UnitDTO>> Handle(GetUnitByIdQuery request, CancellationToken cancellationToken)
     {
-        var result = await repository.FindOneAsync(e => e.Id == request.Id, e => new UnitDTO { Id = e.Id });
+        var result = await repository.FindOneAsync(e => e.Id == request.Id && e.IsDeleted!=true, e => new UnitDTO { Id = e.Id,  PropertyId = e.PropertyId, BasePrice = e.BasePrice,Status = new CategoryItemDTO
+        {
+                Id = e.Status.Id,
+                Name = e.Status.Name
+        }, });
         return result == null ? Failure<UnitDTO>("Not found",HttpStatusCode.BadRequest) : Success(result);
     }
 }
