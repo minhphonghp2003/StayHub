@@ -14,11 +14,7 @@ internal sealed class GetUnitByIdQueryHandler(IUnitRepository repository)
 {
     public async Task<BaseResponse<UnitDTO>> Handle(GetUnitByIdQuery request, CancellationToken cancellationToken)
     {
-        var result = await repository.FindOneAsync(e => e.Id == request.Id && e.IsDeleted!=true, e => new UnitDTO { Id = e.Id,  PropertyId = e.UnitGroupId, BasePrice = e.BasePrice,Status = new CategoryItemDTO
-        {
-                Id = e.Status.Id,
-                Name = e.Status.Name
-        }, });
+        var result = await repository.FindOneAsync(e => e.Id == request.Id && e.IsDeleted!=true, e => new UnitDTO { Id = e.Id,  PropertyId = e.UnitGroupId, BasePrice = e.BasePrice,Status = e.Status, });
         return result == null ? Failure<UnitDTO>("Not found",HttpStatusCode.BadRequest) : Success(result);
     }
 }

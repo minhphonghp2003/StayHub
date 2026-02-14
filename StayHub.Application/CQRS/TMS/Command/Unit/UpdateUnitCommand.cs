@@ -1,6 +1,8 @@
 using MediatR;
 using Shared.Response;
 using System.Net;
+using System.Text.Json.Serialization;
+using Shared.Common;
 using StayHub.Application.DTO.TMS;
 using StayHub.Application.Interfaces.Repository.TMS;
 
@@ -8,7 +10,24 @@ namespace StayHub.Application.CQRS.TMS.Command.Unit;
 
 public class UpdateUnitCommand : IRequest<BaseResponse<UnitDTO>>
 {
+    [JsonIgnore]
     public int Id { get; set; }
+        public int UnitGroupId { get; set; }
+        public decimal BasePrice { get; set; }
+        public UnitStatus Status { get; set; }
+
+        public UpdateUnitCommand()
+        {
+        }
+
+        public UpdateUnitCommand(int unitGroupId, decimal basePrice, UnitStatus status)
+        {
+            UnitGroupId = unitGroupId;
+            BasePrice = basePrice;
+            Status = status;
+            {
+            }
+        }
 }
 
 public sealed class UpdateUnitCommandHandler(IUnitRepository repository) 
@@ -18,7 +37,9 @@ public sealed class UpdateUnitCommandHandler(IUnitRepository repository)
     {
         var entity = await repository.FindOneEntityAsync(e => e.Id == request.Id);
         if (entity == null) return Failure<UnitDTO>("Not found", HttpStatusCode.BadRequest);
-        
+        entity.UnitGroupId = request.UnitGroupId;
+        entity.BasePrice = request.BasePrice;
+        entity.Status = request.Status;
         repository.Update(entity);
         return Success(new UnitDTO { Id = entity.Id });
     }
