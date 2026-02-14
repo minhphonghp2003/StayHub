@@ -8,4 +8,5 @@ public interface IUnitGroupRepository : IPagingAndSortingRepository<UnitGroup>
 {
     Task<(List<UnitGroupDTO>, int)> GetAllUnitGroupPaginated(int pageNumber, int pageSize, string? searchKey);
     Task<List<UnitGroupDTO>> GetAllUnitGroupNoPaginated();
+    Task<UnitGroupDTO?> GetUnitGroupById(int id);
 }

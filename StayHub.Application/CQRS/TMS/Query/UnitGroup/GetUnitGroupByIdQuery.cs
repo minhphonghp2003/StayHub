@@ -13,7 +13,7 @@ internal sealed class GetUnitGroupByIdQueryHandler(IUnitGroupRepository reposito
 {
     public async Task<BaseResponse<UnitGroupDTO>> Handle(GetUnitGroupByIdQuery request, CancellationToken cancellationToken)
     {
-        var result = await repository.FindOneAsync(e => e.Id == request.Id, e => new UnitGroupDTO { Id = e.Id });
+        var result = await repository.FindOneAsync(e => e.Id == request.Id, e => new UnitGroupDTO { Id = e.Id, Name = e.Name, Code = e.Code, PropertyId = e.PropertyId });
         return result == null ? Failure<UnitGroupDTO>("Not found",HttpStatusCode.BadRequest) : Success(result);
     }
 }

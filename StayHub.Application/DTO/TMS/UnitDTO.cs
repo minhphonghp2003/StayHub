@@ -6,8 +6,10 @@ namespace StayHub.Application.DTO.TMS;
 public class UnitDTO : BaseDTO
 {
     public int PropertyId { get; set; }
+    public string Name { get; set; }
     public decimal BasePrice { get; set; }
-    public UnitStatus Status { get; set; } 
+    public UnitStatus Status { get; set; }
+    public int UnitGroupId { get; set; }
     public bool IsDeleted { get; set; }
     public PropertyDTO Property { get; set; } 
 }

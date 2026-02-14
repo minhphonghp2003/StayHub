@@ -13,7 +13,7 @@ public class UnitRepository(AppDbContext context)
     {
         return await GetManyPagedAsync(
             filter: x => string.IsNullOrEmpty(searchKey) || x.Id.ToString().Contains(searchKey),
-            selector: (x, i) => new UnitDTO { Id = x.Id,  PropertyId = x.UnitGroupId, BasePrice = x.BasePrice,Status = x.Status,  },
+            selector: (x, i) => new UnitDTO { Id = x.Id,Name  =x.Name, PropertyId = x.UnitGroupId, BasePrice = x.BasePrice,Status = x.Status,  },
             pageNumber: pageNumber,
             pageSize: pageSize
         );
@@ -21,7 +21,7 @@ public class UnitRepository(AppDbContext context)
 
     public async Task<List<UnitDTO>> GetAllUnitNoPaginated()
     {
-        var result = await GetAllAsync((x, i) => new UnitDTO { Id = x.Id,  PropertyId = x.UnitGroupId, BasePrice = x.BasePrice,Status =x.Status 
+        var result = await GetAllAsync((x, i) => new UnitDTO { Id = x.Id,Name  =x.Name, PropertyId = x.UnitGroupId, BasePrice = x.BasePrice,Status =x.Status 
        , });
         return result.ToList();
     }

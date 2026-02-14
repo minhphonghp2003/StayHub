@@ -15,18 +15,18 @@ public class UpdateUnitCommand : IRequest<BaseResponse<UnitDTO>>
         public int UnitGroupId { get; set; }
         public decimal BasePrice { get; set; }
         public UnitStatus Status { get; set; }
+        public string Name  { get; set; }
 
         public UpdateUnitCommand()
         {
         }
 
-        public UpdateUnitCommand(int unitGroupId, decimal basePrice, UnitStatus status)
+        public UpdateUnitCommand(int unitGroupId, decimal basePrice, UnitStatus status, string name)
         {
             UnitGroupId = unitGroupId;
             BasePrice = basePrice;
             Status = status;
-            {
-            }
+            Name = name;
         }
 }
 
@@ -40,6 +40,7 @@ public sealed class UpdateUnitCommandHandler(IUnitRepository repository)
         entity.UnitGroupId = request.UnitGroupId;
         entity.BasePrice = request.BasePrice;
         entity.Status = request.Status;
+        entity.Name = request.Name;
         repository.Update(entity);
         return Success(new UnitDTO { Id = entity.Id });
     }

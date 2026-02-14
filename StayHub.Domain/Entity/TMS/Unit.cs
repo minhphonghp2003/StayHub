@@ -5,6 +5,7 @@ namespace StayHub.Domain.Entity.TMS;
 
 public class Unit : BaseEntity
 {
+    public string Name { get; set; }
     public int UnitGroupId { get; set; }
     public UnitStatus Status{ get; set; }
     public decimal BasePrice { get; set; }
