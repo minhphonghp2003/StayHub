@@ -35,6 +35,7 @@ namespace StayHub.Infrastructure
             service.AddScoped<IProvinceRepository, ProvinceRepository>();
             service.AddScoped<IWardRepository, WardRepository>();
             service.AddScoped<IUnitRepository, UnitRepository>();
+            service.AddScoped<IUnitGroupRepository, UnitGroupRepository>();
             return service;
         }
     }
