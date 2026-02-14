@@ -2,5 +2,8 @@ namespace StayHub.Domain.Entity.TMS;
 
 public class UnitGroup : BaseEntity
 {
-    // Properties for UnitGroup
+        public string Name { get; set; }
+        public string Code { get; set; }
+        public virtual List<Unit> Units { get; set; }
+        public virtual Property Property { get; set; }
 }
