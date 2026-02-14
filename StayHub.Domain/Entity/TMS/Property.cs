@@ -21,6 +21,7 @@ public class Property: BaseEntity
     public int? ProvinceId { get; set; }
     // Nav
     public virtual List<User> Users { get; set; }
+    public virtual List<Unit> Units { get; set; }
     public virtual CategoryItem Type {  get; set; }
     public virtual CategoryItem? SubscriptionStatus { get; set; }
     public virtual Tier Tier { get; set; }

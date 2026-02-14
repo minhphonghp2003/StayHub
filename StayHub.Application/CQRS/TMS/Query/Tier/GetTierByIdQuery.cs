@@ -13,7 +13,7 @@ internal sealed class GetTierByIdQueryHandler(ITierRepository repository)
 {
     public async Task<BaseResponse<TierDTO>> Handle(GetTierByIdQuery request, CancellationToken cancellationToken)
     {
-        var result = await repository.FindOneAsync(e => e.Id == request.Id, e => new TierDTO { Id = e.Id });
+        var result = await repository.FindOneAsync(e => e.Id == request.Id, e => new TierDTO { Id = e.Id, Name = e.Name, Description = e.Description, Price = e.Price, BillingCycle = e.BillingCycle });
         return result == null ? Failure<TierDTO>("Not found",HttpStatusCode.BadRequest) : Success(result);
     }
 }

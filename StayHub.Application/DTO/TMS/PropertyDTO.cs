@@ -15,7 +15,7 @@ public class PropertyDTO : BaseDTO
     public DateTime? EndSubscriptionDate { get; set; }
     public CategoryItemDTO SubscriptionStatus { get; set; }
     public DateTime? LastPaymentDate { get; set; }
-    public int TierId { get; set; }
+    public CategoryItemDTO Tier {  get; set; }
     public int? WardId { get; set; }
     public int? ProvinceId { get; set; }
     

@@ -13,7 +13,7 @@ internal sealed class GetPropertyByIdQueryHandler(IPropertyRepository repository
 {
     public async Task<BaseResponse<PropertyDTO>> Handle(GetPropertyByIdQuery request, CancellationToken cancellationToken)
     {
-        var result = await repository.FindOneAsync(e => e.Id == request.Id, e => new PropertyDTO { Id = e.Id });
+        var result = await repository.GetPropertyByIdAsync(request.Id);
         return result == null ? Failure<PropertyDTO>("Not found",HttpStatusCode.BadRequest) : Success(result);
     }
 }

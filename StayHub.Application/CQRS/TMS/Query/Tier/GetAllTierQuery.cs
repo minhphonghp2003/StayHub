@@ -12,7 +12,7 @@ public sealed class GetAllTierQueryHandler(ITierRepository repository)
 {
     public async Task<BaseResponse<List<TierDTO>>> Handle(GetAllTierQuery request, CancellationToken cancellationToken)
     {
-        var result = await repository.GetAllAsync(selector: (e, i) => new TierDTO { Id = e.Id });
+        var result = await repository.GetAllAsync(selector: (e, i) => new TierDTO { Id = e.Id, Name = e.Name, Description = e.Description, Price = e.Price, BillingCycle = e.BillingCycle });
         return Success(result.ToList());
     }
 }
