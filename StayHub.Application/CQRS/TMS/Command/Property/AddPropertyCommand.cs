@@ -27,7 +27,7 @@ public record AddPropertyCommand(
     int? ProvinceId
     ) : IRequest<BaseResponse<PropertyDTO>>;
 
-public sealed class AddPropertyCommandHandler(IPropertyRepository repository,ICategoryRepository categoryRepository,IUserRepository userRepository, HttpContextAccessor contextAccessor) 
+public sealed class AddPropertyCommandHandler(IPropertyRepository repository,ICategoryRepository categoryRepository,IUserRepository userRepository, IHttpContextAccessor contextAccessor) 
     : BaseResponseHandler, IRequestHandler<AddPropertyCommand, BaseResponse<PropertyDTO>>
 {
     public async Task<BaseResponse<PropertyDTO>> Handle(AddPropertyCommand request, CancellationToken cancellationToken)

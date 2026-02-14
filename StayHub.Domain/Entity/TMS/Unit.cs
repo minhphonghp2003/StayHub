@@ -5,9 +5,10 @@ namespace StayHub.Domain.Entity.TMS;
 public class Unit : BaseEntity
 {
     public int PropertyId { get; set; }
+    public int StatusId { get; set; }
     public decimal BasePrice { get; set; }
-    public CategoryItem Status { get; set; } 
     public bool IsDeleted { get; set; }
+    public virtual CategoryItem Status { get; set; } 
     
-    public Property Property { get; set; } // Navigation property
+    public virtual Property Property { get; set; } // Navigation property
 }
