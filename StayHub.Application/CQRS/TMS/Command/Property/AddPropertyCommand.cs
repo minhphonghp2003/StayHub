@@ -12,18 +12,7 @@ using StayHub.Domain.Entity.RBAC;
 
 namespace StayHub.Application.CQRS.TMS.Command.Property;
 
-// public string Name { get; set; }
-// public string? Address { get; set; }
-// public CategoryItem Type { get; set; }
-// public string? Image { get; set; }
-// // Subscription Details
-// public DateTime? StartSubscriptionDate { get; set; }
-// public DateTime? EndSubscriptionDate { get; set; }
-// public CategoryItem? SubscriptionStatus { get; set; }
-// public DateTime? LastPaymentDate { get; set; }
-// public int TierId { get; set; }
-// public int? WardId { get; set; }
-// public int? ProvinceId { get; set; }
+
 public record AddPropertyCommand(
     string Name,
     string Address,
