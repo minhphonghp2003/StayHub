@@ -62,13 +62,6 @@ builder.Services.AddAuthentication(options =>
                   ValidateLifetime = true, // Ensure the token has not expiredAuthService
                   ValidateIssuerSigningKey = true, // Ensure the token's signing key is valid
                   ClockSkew = TimeSpan.Zero,
-                  //IssuerSigningKeyResolver = (token, securityToken, kid, parameters) =>
-                  //{
-                  //    var httpClient = new HttpClient();
-                  //    var jwks = httpClient.GetStringAsync($"{builder.Configuration["Jwt:Issuer"]}/.well-known/jwks.json").Result;
-                  //    var keys = new JsonWebKeySet(jwks);
-                  //    return keys.Keys;
-                  //}
                   IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
 
               };
@@ -87,6 +80,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<LoggingMiddleware>();
 app.UseMiddleware<AuthorizationMiddleware>();
+app.UseMiddleware<TierAccessMiddleware>();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
