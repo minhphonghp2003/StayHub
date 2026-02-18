@@ -25,4 +25,14 @@ public class UnitRepository(AppDbContext context)
        , });
         return result.ToList();
     }
+
+    public Task<bool> IsUserInUnitAsync(int userId, int unitId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> IsSubscriptionActiveAsync(int unitId)
+    {
+        throw new NotImplementedException();
+    }
 }

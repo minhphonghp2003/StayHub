@@ -35,4 +35,14 @@ public class PropertyRepository(AppDbContext context) : PagingAndSortingReposito
             }
         },include:e=>e.Include(j=>j.Province).Include(j=>j.Ward).Include(j=>j.Type).Include(j=>j.SubscriptionStatus).Include(j=>j.Tier));
     }
+
+    public Task<bool> IsUserInPropertyAsync(int userId, int propertyId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> IsSubscriptionActiveAsync(int propertyId)
+    {
+        throw new NotImplementedException();
+    }
 }

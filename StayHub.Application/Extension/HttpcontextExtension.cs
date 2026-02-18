@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Routing;
 using uaParserLibrary;
 
 namespace StayHub.Application.Extension
@@ -20,10 +21,13 @@ namespace StayHub.Application.Extension
 
         public static string? GetEmail(this HttpContext context)
             => context.User?.FindFirstValue(ClaimTypes.Email);
+
         public static List<string>? GetRoles(this HttpContext context)
             => context.User?.FindAll(ClaimTypes.Role).Select(r => r.Value).ToList();
-        public static string? GetIp(this HttpContext context)   =>
+
+        public static string? GetIp(this HttpContext context) =>
             context.Connection.RemoteIpAddress?.ToString();
+
         public static string GetBrowser(this HttpContext context)
         {
             var userAgent = context.Request.Headers["User-Agent"].ToString();
@@ -40,6 +44,19 @@ namespace StayHub.Application.Extension
 
             var clientInfo = UAParser.GetOS(userAgent);
             return $"{clientInfo.Name} {clientInfo.Version}"; // e.g., "Windows 10" or "iOS 17"
+        }
+
+        public static (string method, string? routePattern) GetRouteInfo(this HttpContext context)
+        {
+            var endpoint = context.GetEndpoint();
+            if (endpoint is RouteEndpoint routeEndpoint)
+            {
+                var routePattern = routeEndpoint.RoutePattern.RawText;
+                var method = context.Request.Method;
+                return (method, routePattern);
+            }
+
+            return ("Unknown", "Unknown");
         }
     }
 }

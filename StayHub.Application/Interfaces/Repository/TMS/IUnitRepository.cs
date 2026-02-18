@@ -8,4 +8,6 @@ public interface IUnitRepository : IPagingAndSortingRepository<Unit>
 {
     Task<(List<UnitDTO>, int)> GetAllUnitPaginated(int pageNumber, int pageSize, string? searchKey);
     Task<List<UnitDTO>> GetAllUnitNoPaginated();
+    Task<bool> IsUserInUnitAsync(int userId, int unitId);
+    Task<bool> IsSubscriptionActiveAsync(int unitId);
 }

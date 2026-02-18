@@ -1,5 +1,8 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using StayHub.Application.Extension;
+using StayHub.Application.Interfaces.Repository.RBAC;
 using StayHub.Application.Interfaces.Repository.TMS;
 
 public class TierAccessMiddleware
@@ -11,43 +14,39 @@ public class TierAccessMiddleware
         _next = next;
     }
     // todo: Check user in property/unit, check property(unit) tier -> allowed actions, check subscription end
-    public async Task InvokeAsync(HttpContext context, IPropertyRepository propertyRepository)
+    public async Task InvokeAsync(HttpContext context, IPropertyRepository propertyRepository,IUserRepository userRepositor,ITierRepository tierRepository)
     {
-        // 1. Extract ID from Path (e.g., /api/properties/{id}/...)
+        var (method, action) = context.GetRouteInfo();
         var routeData = context.GetRouteData();
-        var idValue = routeData.Values["propertyId"]?.ToString();
-
-        if (Guid.TryParse(idValue, out var propertyId))
+        var propertyIdValue = routeData.Values["propertyId"]?.ToString();
+        var unitIdValue = routeData.Values["unitId"]?.ToString();
+        var currentUser = context.User;
+        int.TryParse(currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value, out int userId);
+        var hasProperty = int.TryParse(propertyIdValue, out var propertyId);
+        var hasUnit = int.TryParse(propertyIdValue, out var unitId);
+        // check supscrioption
+        if (!((hasUnit && await tierRepository.IsUnitAlloweForActionAsync(unitId,action))||(hasProperty && await tierRepository.IsPropertyAlloweForActionAsync(propertyId,action))))
         {
-            // 2. Fetch Property + Tier + Allowed Actions
-            // var propertyInfo = await dbContext.Properties
-            //     .Where(p => p.Id == propertyId)
-            //     .Select(p => new {
-            //         p.Id,
-            //         p.TierId,
-            //         p.SubscriptionEnd,
-            //         AllowedActions = p.Tier.TierMenus.Select(m => m.ActionCode).ToList()
-            //     })
-            //     .FirstOrDefaultAsync();
-            //
-            // if (propertyInfo == null)
-            // {
-            //     context.Response.StatusCode = StatusCodes.Status404NotFound;
-            //     await context.Response.WriteAsJsonAsync(new { error = "Property not found" });
-            //     return;
-            // }
-            //
-            // // 3. Check Subscription Expiry
-            // if (propertyInfo.SubscriptionEnd < DateTime.UtcNow)
-            // {
-            //     context.Response.StatusCode = StatusCodes.Status402PaymentRequired;
-            //     await context.Response.WriteAsJsonAsync(new { error = "Subscription expired" });
-            //     return;
-            // }
-            //
-            // // 4. Store Info in HttpContext.Items for the Controller to use
-            // context.Items["PropertyActions"] = propertyInfo.AllowedActions;
-            // context.Items["CurrentPropertyId"] = propertyInfo.Id;
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            await context.Response.WriteAsync("End of subscription.");
+            return; // Short-circuits the pipeline
+        }
+        if (hasUnit)
+        {
+            
+        }
+        else if (hasProperty)
+        {
+           // Check if User is associated with the Property/Unit
+            var isUserInProperty = await propertyRepository.IsUserInPropertyAsync(userId, propertyId);
+            if (!isUserInProperty)
+            {
+                context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                await context.Response.WriteAsJsonAsync(new { error = "Access denied: User not associated with this property" });
+                return;
+            }
+            // Check tier    
+            
         }
 
         await _next(context);
