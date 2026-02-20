@@ -28,4 +28,10 @@
         DEBT = 2,            // ĐANG NỢ TIỀN
         PARTIAL = 3          // THANH TOÁN MỘT PHẦN
     }
+    public enum SystemRole
+    {
+        SUPER_ADMIN = 1,
+        SUPPORT = 2,
+        STAFF = 4
+    }
 }

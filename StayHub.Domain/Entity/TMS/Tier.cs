@@ -9,4 +9,6 @@ public class Tier :BaseEntity
     public int Price { get; set; }
     public string BillingCycle { get; set; }
     public virtual List<RBAC.Action>? Actions { get; set; }
+    public virtual List<Property>? Properties { get; set; }
+    
 }

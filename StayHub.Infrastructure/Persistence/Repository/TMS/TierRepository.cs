@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using StayHub.Domain.Entity.TMS;
 using StayHub.Application.Interfaces.Repository.TMS;
 
@@ -14,4 +15,6 @@ public class TierRepository(AppDbContext context) : PagingAndSortingRepository<T
     {
         throw new NotImplementedException();
     }
+
+   
 }

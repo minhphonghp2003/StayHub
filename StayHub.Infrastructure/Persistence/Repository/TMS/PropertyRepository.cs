@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Shared.Common;
 using StayHub.Application.DTO.Catalog;
 using StayHub.Application.DTO.TMS;
 using StayHub.Domain.Entity.TMS;
@@ -44,5 +45,25 @@ public class PropertyRepository(AppDbContext context) : PagingAndSortingReposito
     public Task<bool> IsSubscriptionActiveAsync(int propertyId)
     {
         throw new NotImplementedException();
+    }
+    public async Task<(bool, bool, bool)> CheckTierAllowancesAsync(int userId,List<string>? roles, string method, string action, int? propertyId, int? unitId)
+    {
+        if ((roles!=null && roles.Any(r => r == SystemRole.SUPER_ADMIN.ToString())) || ( propertyId == null && unitId == null))
+        {
+            return (true, true, true);
+        }
+        var property = await FindOneAsync(filter: e=>e.Users.Any(u=>u.Id==userId) && ((propertyId.HasValue&& e.Id==propertyId) || (unitId.HasValue && e.UnitGroups.Any(ug=>ug.Units.Any(u=>u.Id==unitId)))) ,include: e=>e.Include(p=>p.Tier).ThenInclude(t=>t.Actions),selector:
+            (e) =>
+            new {
+              SubscriptionEnd = e.EndSubscriptionDate,
+                TierActions = e.Tier.Actions.Select(a=>new {Method=a.Method,Path=a.Path}).ToList()
+            });
+        if (property == null)
+        {
+            return (false, false, false);
+        }
+        var isSubscriptionActive = property.SubscriptionEnd >= DateTime.UtcNow;
+        var isActionAllowed = property.TierActions.Any(a => a.Method == method && a.Path == action);
+        return (true,isSubscriptionActive , isActionAllowed);
     }
 }
