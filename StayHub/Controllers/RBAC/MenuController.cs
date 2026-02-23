@@ -29,9 +29,9 @@ namespace StayHub.API.Controllers.RBAC
             return Ok(await Mediator.Send(new GetAllMenuNoPaginateQuery()));
         }
         [HttpGet("my")]
-        public async Task<IActionResult> GetMine()
+        public async Task<IActionResult> GetMine(int? propertyId)
         {
-            return Ok(await Mediator.Send(new GetMyMenuQuery()));
+            return Ok(await Mediator.Send(new GetMyMenuQuery(propertyId)));
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int Id)

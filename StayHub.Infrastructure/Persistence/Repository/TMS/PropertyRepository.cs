@@ -21,6 +21,8 @@ public class PropertyRepository(AppDbContext context) : PagingAndSortingReposito
             StartSubscriptionDate = e.StartSubscriptionDate ,
             EndSubscriptionDate = e.EndSubscriptionDate,
             LastPaymentDate = e.LastPaymentDate,
+            ProvinceId = e.ProvinceId,
+            WardId = e.WardId,
             Tier = new CategoryItemDTO
             {
                 Name = e.Tier.Name

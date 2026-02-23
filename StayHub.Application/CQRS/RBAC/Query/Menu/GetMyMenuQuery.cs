@@ -8,7 +8,7 @@ using StayHub.Application.Interfaces.Repository.RBAC;
 namespace StayHub.Application.CQRS.RBAC.Query.Menu
 {
     // Include properties to be used as input for the query
-    public record GetMyMenuQuery() : IRequest<BaseResponse<List<MenuGroupDTO>>>;
+    public record GetMyMenuQuery(int? propertyId) : IRequest<BaseResponse<List<MenuGroupDTO>>>;
     public sealed class GetMenuOfUserQueryHandler(IHttpContextAccessor httpContextAccessor, IMenuRepository menuRepository) : BaseResponseHandler, IRequestHandler<GetMyMenuQuery, BaseResponse<List<MenuGroupDTO>>>
     {
         public async Task<BaseResponse<List<MenuGroupDTO>>> Handle(GetMyMenuQuery request, CancellationToken cancellationToken)
@@ -18,7 +18,7 @@ namespace StayHub.Application.CQRS.RBAC.Query.Menu
             {
                 return Failure<List<MenuGroupDTO>>(message: "Unauthorized", code: System.Net.HttpStatusCode.Unauthorized);
             }
-            return Success(await menuRepository.GetUserMenu((int)userId));
+            return Success(await menuRepository.GetUserMenu((int)userId, request.propertyId));
         }
     }
 

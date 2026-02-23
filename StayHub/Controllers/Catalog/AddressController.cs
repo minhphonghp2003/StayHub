@@ -33,7 +33,7 @@ public class AddressController : BaseController
     public async Task<IActionResult> CreateWard(AddWardCommand request) => GenerateResponse(await Mediator.Send(request));
 
     [HttpGet("ward")]
-    public async Task<IActionResult> GetAll() => Ok(await Mediator.Send(new GetAllWardQuery()));
+    public async Task<IActionResult> GetAll(int provinceId) => Ok(await Mediator.Send(new GetAllWardQuery(provinceId)));
 
     [HttpGet("ward/{id}")]
     public async Task<IActionResult> GetWardById(int id) => Ok(await Mediator.Send(new GetWardByIdQuery(id)));
