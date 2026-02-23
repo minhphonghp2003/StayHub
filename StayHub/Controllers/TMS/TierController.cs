@@ -48,5 +48,9 @@ public class TierController : BaseController
     {
         return GenerateResponse(await Mediator.Send(request));
     }
- 
+    [HttpPost("renew-subscription")]
+    public async Task<IActionResult> RenewSubscription(RenewSubscriptionCommand request)
+    {
+        return GenerateResponse(await Mediator.Send(request));
+    }
 }

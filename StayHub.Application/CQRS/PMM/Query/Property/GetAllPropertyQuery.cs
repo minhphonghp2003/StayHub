@@ -32,8 +32,9 @@ public sealed class GetAllPropertyQueryHandler(IPropertyRepository repository,IC
                 SubscriptionStatus = x.SubscriptionStatusId.HasValue ? new CategoryItemDTO { Id = x.SubscriptionStatusId.Value, Name = x.SubscriptionStatus.Name } : null,
                 LastPaymentDate = x.LastPaymentDate,
                 Tier = new CategoryItemDTO { Id = x.TierId, Name = x.Tier.Name },
+                UpdatedAt = x.UpdatedAt
             },
-            include:e=>e.Include(j=>j.Tier).Include(j=>j.Type).Include(j=>j.SubscriptionStatus)
+            include:e=>e.Include(j=>j.Tier).Include(j=>j.Type).Include(j=>j.SubscriptionStatus),orderBy:e=>e.OrderByDescending(j=>j.UpdatedAt)
             
         );
         return SuccessPaginated(result, count, pageSize, request.pageNumber??1);

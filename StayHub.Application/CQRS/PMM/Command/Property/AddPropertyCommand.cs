@@ -25,22 +25,26 @@ public record AddPropertyCommand(
     DateTime? LastPaymentDate,
     int? WardId,
     int? ProvinceId
-    ) : IRequest<BaseResponse<PropertyDTO>>;
+    ) : IRequest<BaseResponse<bool>>;
 
 public sealed class AddPropertyCommandHandler(IPropertyRepository repository,ICategoryRepository categoryRepository,IUserRepository userRepository, IHttpContextAccessor contextAccessor) 
-    : BaseResponseHandler, IRequestHandler<AddPropertyCommand, BaseResponse<PropertyDTO>>
+    : BaseResponseHandler, IRequestHandler<AddPropertyCommand, BaseResponse<bool>>
 {
-    public async Task<BaseResponse<PropertyDTO>> Handle(AddPropertyCommand request, CancellationToken cancellationToken)
+    public async Task<BaseResponse<bool>> Handle(AddPropertyCommand request, CancellationToken cancellationToken)
     {
         if (!categoryRepository.ExistItemAsync(request.TypeId, CategoryCode.PROPERTY_TYPE))
         {
-            return Failure<PropertyDTO>(message: "Invalid Type", code: System.Net.HttpStatusCode.BadRequest);
+            return Failure<bool>(message: "Invalid Type", code: System.Net.HttpStatusCode.BadRequest);
         }
         if (request.SubscriptionStatusId.HasValue && !categoryRepository.ExistItemAsync(request.SubscriptionStatusId.Value, CategoryCode.SUBSCRIPTION_STATUS))
         {
-            return Failure<PropertyDTO>(message: "Invalid Subscription Status", code: System.Net.HttpStatusCode.BadRequest);
+            return Failure<bool>(message: "Invalid Subscription Status", code: System.Net.HttpStatusCode.BadRequest);
             
         } 
+        if(request.StartSubscriptionDate.HasValue && request.EndSubscriptionDate.HasValue && request.StartSubscriptionDate > request.EndSubscriptionDate)
+        {
+            return Failure<bool>(message: "Start subscription date cannot be after end subscription date.", code: System.Net.HttpStatusCode.BadRequest);
+        }
         var entity = new Domain.Entity.TMS.Property
         {
             
@@ -55,6 +59,7 @@ public sealed class AddPropertyCommandHandler(IPropertyRepository repository,ICa
             TierId = request.TierId,
             WardId = request.WardId,
             ProvinceId = request.ProvinceId,
+            Users = new List<User>()
         };
         var user = new User
         {
@@ -63,13 +68,6 @@ public sealed class AddPropertyCommandHandler(IPropertyRepository repository,ICa
         userRepository.Attach(user);
         entity.Users.Add(user); 
         await repository.AddAsync(entity);
-        return Success(new PropertyDTO
-        {
-            Id = entity.Id,
-            Name = entity.Name, 
-            Address = entity.Address,   
-            Type = new CategoryItemDTO { Id = entity.Type.Id, Name = entity.Type.Name },
-            Image = entity.Image,
-        });
+        return Success(true);
     }
 }
