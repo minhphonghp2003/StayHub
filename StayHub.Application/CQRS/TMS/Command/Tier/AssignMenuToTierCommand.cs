@@ -24,6 +24,7 @@ namespace StayHub.Application.CQRS.TMS.Command.Tier
                 return Failure<List<int>>("Tier not found.", System.Net.HttpStatusCode.NotFound);
             tier.Actions?.Clear();
             tier.Actions =  actions;
+            tierRepository.Update(tier);
             return Success(request.menuIds, "Menus assigned to tier successfully.");
         }
     }
