@@ -10,5 +10,6 @@ namespace StayHub.Application.Interfaces.Repository.RBAC
         Task<(List<MenuDTO>, int)> GetAllPaginatedMenu(int pageNumber, int pageSize, string? search = null, int? menuGroupId = null);
         Task<(List<MenuDTO>, int)> GetAllCompactPaginatedMenu(int pageNumber, int pageSize, string? search = null, int? menuGroupId = null);
         Task<List<int>> GetMenusOfRole(int roleId);
+        Task<List<int>> GetMenusOfTier(int tierId);
     }
 }

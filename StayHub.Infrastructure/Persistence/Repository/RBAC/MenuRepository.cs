@@ -60,6 +60,12 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
             return result;
         }
 
+        public async Task<List<int>> GetMenusOfTier(int tierId)
+        {
+            var result =  (await GetManyAsync(filter: menu =>!menu.SubMenus.Any() && menu.MenuActions.Any() && ( menu.MenuActions.All(ma =>ma.Action.Tiers.Any() && ma.Action.Tiers.Any(e => e.Id == tierId))), selector: (e, i) => e.Id)).ToList();
+            return result;
+        }
+
 
         public async Task<List<MenuGroupDTO>> GetUserMenu(int userId)
         {

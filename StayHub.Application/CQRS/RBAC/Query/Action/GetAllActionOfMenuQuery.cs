@@ -5,7 +5,6 @@ using StayHub.Application.Interfaces.Repository.RBAC;
 
 namespace StayHub.Application.CQRS.RBAC.Query.Action
 {
-    // Include properties to be used as input for the query
     public record GetAllActionOfMenuQuery(int MenuId) : IRequest<BaseResponse<List<ActionDTO>>>;
     public sealed class GetAllActionOfMenuQueryHandler(IMenuActionRepository menuActionRepository) : BaseResponseHandler, IRequestHandler<GetAllActionOfMenuQuery, BaseResponse<List<ActionDTO>>>
     {

@@ -1,4 +1,5 @@
 ﻿using StayHub.Domain.Entity.Catalog;
+using StayHub.Domain.Entity.TMS;
 
 namespace StayHub.Domain.Entity.RBAC
 {
@@ -16,5 +17,6 @@ namespace StayHub.Domain.Entity.RBAC
         public virtual Menu? Parent { get; set; }
         public virtual List<Menu>? SubMenus { get; set; }
         public virtual List<MenuAction>? MenuActions { get; set; } = [];
+        
     }
 }
