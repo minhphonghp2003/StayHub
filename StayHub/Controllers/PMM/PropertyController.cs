@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using StayHub.Application.CQRS.TMS.Command.Property;
 using StayHub.Application.CQRS.TMS.Query.Property;
 
-namespace StayHub.API.Controllers.TMS;
+namespace StayHub.API.Controllers.PMM;
 
 public class PropertyController : BaseController
 {
@@ -11,6 +11,8 @@ public class PropertyController : BaseController
 
     [HttpGet]
     public async Task<IActionResult> GetAll(string? search = null, int? pageNumber = null, int? pageSize = null) => Ok(await Mediator.Send(new GetAllPropertyQuery(pageNumber, pageSize, search)));
+    [HttpGet("my")]
+    public async Task<IActionResult> GetMy() => Ok(await Mediator.Send(new GetMyPropertyQuery()));
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id) => Ok(await Mediator.Send(new GetPropertyByIdQuery(id)));
