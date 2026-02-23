@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using StayHub.Application.Interfaces.Repository.TMS;
 
-namespace StayHub.Application.CQRS.RBAC.Command.RoleMenu
+namespace StayHub.Application.CQRS.TMS.Command.Tier
 {
     // Include properties to be used as input for the command
     public record AssignMenuToTierCommand(List<int> menuIds, int tierId) : IRequest<Response<List<int>>>;

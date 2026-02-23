@@ -5,7 +5,7 @@ using StayHub.Application.DTO.RBAC;
 using StayHub.Application.Interfaces.Repository.RBAC;
 using StayHub.Application.Interfaces.Repository.TMS;
 
-namespace StayHub.Application.CQRS.RBAC.Command.MenuAction
+namespace StayHub.Application.CQRS.TMS.Command.Tier
 {
     // Include properties to be used as input for the command
     public record AssignActionsToTierCommand(List<int> actionIds, int tierId) : IRequest<Response<List<int>>>;

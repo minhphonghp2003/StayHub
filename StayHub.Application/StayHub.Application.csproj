@@ -31,6 +31,8 @@
 
 	<ItemGroup>
 		<Folder Include="CQRS\Catalog\Validator\" />
+		<Folder Include="CQRS\PMM\Command\" />
+		<Folder Include="CQRS\PMM\Query\" />
 	</ItemGroup>
 
 </Project>
