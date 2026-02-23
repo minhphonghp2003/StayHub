@@ -10,7 +10,7 @@ public class PropertyController : BaseController
     public async Task<IActionResult> Create(AddPropertyCommand request) => GenerateResponse(await Mediator.Send(request));
 
     [HttpGet]
-    public async Task<IActionResult> GetAll() => Ok(await Mediator.Send(new GetAllPropertyQuery()));
+    public async Task<IActionResult> GetAll(string? search = null, int? pageNumber = null, int? pageSize = null) => Ok(await Mediator.Send(new GetAllPropertyQuery(pageNumber, pageSize, search)));
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id) => Ok(await Mediator.Send(new GetPropertyByIdQuery(id)));

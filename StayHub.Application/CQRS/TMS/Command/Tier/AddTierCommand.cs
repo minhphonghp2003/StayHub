@@ -5,7 +5,7 @@ using StayHub.Application.Interfaces.Repository.TMS;
 
 namespace StayHub.Application.CQRS.TMS.Command.Tier;
 
-public record AddTierCommand(string Name, string? Description,string? Code,int Price,string BilingCycle  ) : IRequest<BaseResponse<TierDTO>>;
+public record AddTierCommand(string Name, string? Description,string? Code,int Price,string BillingCycle  ) : IRequest<BaseResponse<TierDTO>>;
 
 public sealed class AddTierCommandHandler(ITierRepository repository) 
     : BaseResponseHandler, IRequestHandler<AddTierCommand, BaseResponse<TierDTO>>
@@ -18,7 +18,7 @@ public sealed class AddTierCommandHandler(ITierRepository repository)
             Description = request.Description,
             Code = request.Code,
             Price = request.Price,
-            BillingCycle = request.BilingCycle
+            BillingCycle = request.BillingCycle
         };
         await repository.AddAsync(entity);
         return Success(new TierDTO { Id = entity.Id, Name = entity.Name, Description = entity.Description,  Price = entity.Price, BillingCycle = entity.BillingCycle });

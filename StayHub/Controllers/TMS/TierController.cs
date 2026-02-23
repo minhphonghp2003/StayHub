@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using StayHub.Application.CQRS.RBAC.Query.Action;
+using StayHub.Application.CQRS.RBAC.Query.Menu;
 using StayHub.Application.CQRS.TMS.Command.Tier;
 using StayHub.Application.CQRS.TMS.Query.Tier;
 
@@ -24,4 +26,27 @@ public class TierController : BaseController
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id) => GenerateResponse(await Mediator.Send(new DeleteTierCommand(id)));
+   
+    [HttpPost("assign-action")]
+    public async Task<IActionResult> AssignRoleToAction(AssignActionsToTierCommand request)
+    {
+        return GenerateResponse(await Mediator.Send(request));
+    }
+    [HttpGet("action-of-tier/{id}")]
+    public async Task<IActionResult> GetActionOfRole(int id)
+    {
+        return GenerateResponse(await Mediator.Send(new GetAllActionOfTierQuery(id)
+        ));
+    }
+    [HttpGet("menu-of-tier/{roleId}")]
+    public async Task<IActionResult> GetMenuOfRole(int roleId)
+    {
+        return Ok(await Mediator.Send(new GetAllMenuOfTier(roleId)));
+    }
+    [HttpPost("assign-menu")]
+    public async Task<IActionResult> AssignMenuToRole(AssignMenuToTierCommand request)
+    {
+        return GenerateResponse(await Mediator.Send(request));
+    }
+ 
 }
