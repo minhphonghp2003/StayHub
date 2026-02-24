@@ -16,7 +16,7 @@ namespace StayHub.Application.CQRS.RBAC.Query.Action
             var (result,count) = await actionRepository.GetManyPagedAsync(
                 pageNumber: request.pageNumber ?? 1,
                 pageSize: pageSize,
-                filter: x => request.searchKey == null || x.Path.Contains(request.searchKey),
+                filter: x => request.searchKey == null || x.Path.ToLower().Contains(request.searchKey.ToLower()),
                 selector: (x, i) => new ActionDTO
                 {
                     Id = x.Id,

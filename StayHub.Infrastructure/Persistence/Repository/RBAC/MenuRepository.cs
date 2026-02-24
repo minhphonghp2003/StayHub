@@ -38,7 +38,7 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
                 pageSize: pageSize,
                 orderBy: e => e.OrderBy((j) => j.Order),
                 filter: e =>
-                    (string.IsNullOrEmpty(search) ? true : e.Name.Contains(search ?? "") || e.Name == search) &&
+                    (string.IsNullOrEmpty(search) || (e.Name.ToLower().Contains(search.ToLower() ?? "") || e.Name.ToLower() == search.ToLower())) &&
                     (menuGroupId == null || e.MenuGroupId == menuGroupId),
                 include: e => e.Include(j => j.MenuGroup).Include(j => j.Parent),
                 selector: (e, i) => new MenuDTO
