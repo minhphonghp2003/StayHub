@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Shared.Common;
 using StayHub.Application.DTO.Catalog;
+using StayHub.Application.DTO.RBAC;
 using StayHub.Application.DTO.TMS;
 using StayHub.Domain.Entity.TMS;
 using StayHub.Application.Interfaces.Repository.TMS;
@@ -58,14 +59,14 @@ public class PropertyRepository(AppDbContext context) : PagingAndSortingReposito
             (e) =>
             new {
               SubscriptionEnd = e.EndSubscriptionDate,
-                TierActions = e.Tier.Actions.Select(a=>new {Method=a.Method,Path=a.Path}).ToList()
+                TierActions =e.Tier!=null? e.Tier.Actions.Select(a=>new {Method=a.Method,Path=a.Path}).ToList(): null
             });
         if (property == null)
         {
             return (false, false, false);
         }
         var isSubscriptionActive = property.SubscriptionEnd >= DateTime.UtcNow;
-        var isActionAllowed = property.TierActions.Any(a => a.Method == method && a.Path == action);
+        var isActionAllowed = (property.TierActions ?? []).Any(a => a.Method == method && a.Path == action);
         return (true,isSubscriptionActive , isActionAllowed);
     }
 }

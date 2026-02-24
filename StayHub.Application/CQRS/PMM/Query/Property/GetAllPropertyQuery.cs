@@ -31,7 +31,7 @@ public sealed class GetAllPropertyQueryHandler(IPropertyRepository repository,IC
                 EndSubscriptionDate = x.EndSubscriptionDate,
                 SubscriptionStatus = x.SubscriptionStatusId.HasValue ? new CategoryItemDTO { Id = x.SubscriptionStatusId.Value, Name = x.SubscriptionStatus.Name } : null,
                 LastPaymentDate = x.LastPaymentDate,
-                Tier = new CategoryItemDTO { Id = x.TierId, Name = x.Tier.Name },
+                Tier =x.Tier!=null? new CategoryItemDTO { Id = x.Tier.Id, Name = x.Tier.Name }:null,
                 UpdatedAt = x.UpdatedAt
             },
             include:e=>e.Include(j=>j.Tier).Include(j=>j.Type).Include(j=>j.SubscriptionStatus),orderBy:e=>e.OrderByDescending(j=>j.UpdatedAt)

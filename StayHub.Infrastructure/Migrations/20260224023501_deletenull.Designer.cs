@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using StayHub.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using StayHub.Infrastructure.Persistence;
 namespace StayHub.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260224023501_deletenull")]
+    partial class deletenull
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -598,7 +601,7 @@ namespace StayHub.Infrastructure.Migrations
                     b.Property<int?>("SubscriptionStatusId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("TierId")
+                    b.Property<int>("TierId")
                         .HasColumnType("integer");
 
                     b.Property<int>("TypeId")
@@ -895,7 +898,8 @@ namespace StayHub.Infrastructure.Migrations
                     b.HasOne("StayHub.Domain.Entity.TMS.Tier", "Tier")
                         .WithMany("Properties")
                         .HasForeignKey("TierId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("StayHub.Domain.Entity.Catalog.CategoryItem", "Type")
                         .WithMany()

@@ -15,6 +15,7 @@ namespace StayHub.Domain.Entity.Catalog
         public string? Value { get; set; }
         public string? Icon { get; set; }
         public int? CategoryId { get; set; }
+        [DeleteBehavior(DeleteBehavior.SetNull)]
         public virtual Category? Category { get; set; }
     }
 }

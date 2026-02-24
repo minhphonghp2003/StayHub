@@ -25,7 +25,7 @@ internal sealed class GetMyPropertyQueryHandler(IPropertyRepository repository, 
                 Type = new CategoryItemDTO { Id = e.TypeId, Name = e.Type.Name },
                 Image = e.Image,
                 Address = e.Address,
-                Tier = new CategoryItemDTO { Id = e.TierId, Name = e.Tier.Name },
+                Tier =e.Tier!=null? new CategoryItemDTO { Id = e.Tier.Id, Name = e.Tier.Name }:null,
             }, include: e => e.Include(j => j.Tier).Include(j => j.Type).Include(j => j.SubscriptionStatus));
         return  Success<List<PropertyDTO>>(result.ToList());
     }

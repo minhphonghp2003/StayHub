@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Shared.Common;
 using StayHub.Domain.Entity.Catalog;
 using StayHub.Domain.Entity.RBAC;
@@ -16,7 +17,7 @@ public class Property: BaseEntity
     public DateTime? EndSubscriptionDate { get; set; }
     public int? SubscriptionStatusId { get; set; }
     public DateTime? LastPaymentDate { get; set; }
-    public int TierId { get; set; }
+    public int? TierId { get; set; }
     public int? WardId { get; set; }
     public int? ProvinceId { get; set; }
     // Nav
@@ -24,7 +25,8 @@ public class Property: BaseEntity
     public virtual List<UnitGroup> UnitGroups { get; set; }
     public virtual CategoryItem Type {  get; set; }
     public virtual CategoryItem? SubscriptionStatus { get; set; }
-    public virtual Tier Tier { get; set; }
+    [DeleteBehavior(DeleteBehavior.SetNull)]
+    public virtual Tier? Tier { get; set; }
     public virtual Catalog.Ward? Ward { get; set; }
     public virtual Catalog.Province? Province { get; set; }
 }
