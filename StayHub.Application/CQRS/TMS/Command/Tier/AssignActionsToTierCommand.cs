@@ -13,13 +13,17 @@ namespace StayHub.Application.CQRS.TMS.Command.Tier
     {
         public async Task<Response<List<int>>> Handle(AssignActionsToTierCommand request, CancellationToken cancellationToken)
         {
-           var tier = await tierRepository.FindOneEntityAsync(e=>e.Id==request.tierId,include:e=>e.Include(j=>j.Actions));
+           var tier = await tierRepository.FindOneEntityAsync(e=>e.Id==request.tierId,include:e=>e.Include(j=>j.Actions),trackChange:true);
             if(tier == null)
                 return Failure<List<int>>("Tier not found.", System.Net.HttpStatusCode.NotFound);
             tier.Actions?.Clear();
-            tier.Actions = (await actionRepository.GetManyEntityAsync(e=>request.actionIds.Contains(e.Id))).ToList();
-            tierRepository.Update(tier);
-
+            
+            var actions = (await actionRepository.GetManyEntityAsync(e=>request.actionIds.Contains(e.Id))).ToList();
+            foreach (var action in actions)
+            {
+                tier.Actions.Add(action);
+            }
+            await tierRepository.SaveAsync();
             return Success(request.actionIds, "Actions assigned to tier successfully.", System.Net.HttpStatusCode.OK);
         }
     }
