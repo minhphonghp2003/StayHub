@@ -5,15 +5,15 @@ using StayHub.Application.Interfaces.Repository.HRM;
 
 namespace StayHub.Application.CQRS.HRM.Command.Employee;
 
-public record AddEmployeeCommand() : IRequest<BaseResponse<EmployeeDTO>>;
+public record AddEmployeeCommand() : IRequest<BaseResponse<bool>>;
 
 public sealed class AddEmployeeCommandHandler(IEmployeeRepository repository) 
-    : BaseResponseHandler, IRequestHandler<AddEmployeeCommand, BaseResponse<EmployeeDTO>>
+    : BaseResponseHandler, IRequestHandler<AddEmployeeCommand, BaseResponse<bool>>
 {
-    public async Task<BaseResponse<EmployeeDTO>> Handle(AddEmployeeCommand request, CancellationToken cancellationToken)
+    public async Task<BaseResponse<bool>> Handle(AddEmployeeCommand request, CancellationToken cancellationToken)
     {
         var entity = new Domain.Entity.HRM.Employee { };
         await repository.AddAsync(entity);
-        return Success(new EmployeeDTO { Id = entity.Id });
+        return Success(true);
     }
 }

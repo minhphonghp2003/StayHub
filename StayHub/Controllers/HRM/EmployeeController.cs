@@ -9,25 +9,10 @@ public class EmployeeController : BaseController
     [HttpPost]
     public async Task<IActionResult> Create(AddEmployeeCommand request) => GenerateResponse(await Mediator.Send(request));
 
-   [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] int? pageNumber, [FromQuery] int? pageSize, [FromQuery] string? searchKey)
+   [HttpGet("{propertyId}")]
+    public async Task<IActionResult> GetAll(int propertyId, [FromQuery] int? pageNumber, [FromQuery] int? pageSize, [FromQuery] string? searchKey)
     {
-        return Ok(await Mediator.Send(new GetAllEmployeeQuery(pageNumber, pageSize, searchKey)));
-    }
-
-    [HttpGet("no-paginated")]
-    public async Task<IActionResult> GetAllNoPaginated()
-    {
-        return Ok(await Mediator.Send(new GetAllEmployeeNoPaginatedQuery()));
-    }
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(int id) => Ok(await Mediator.Send(new GetEmployeeByIdQuery(id)));
-
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, UpdateEmployeeCommand request) 
-    {
-        request.Id = id;
-        return GenerateResponse(await Mediator.Send(request));
+        return Ok(await Mediator.Send(new GetAllEmployeeQuery(propertyId, pageNumber, pageSize, searchKey)));
     }
 
     [HttpDelete("{id}")]
