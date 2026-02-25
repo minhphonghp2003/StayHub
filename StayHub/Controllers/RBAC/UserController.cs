@@ -18,6 +18,11 @@ namespace StayHub.API.Controllers.RBAC
         {
             return Ok(await Mediator.Send(new GetAllUserQuery(pageNumber, pageSize, search)));
         }
+        [HttpGet("no-paging/{search}")]
+        public async Task<IActionResult> GetAllNoPagingAsync(string search)
+        {
+            return Ok(await Mediator.Send(new GetAllUserNoPagingQuery(search)));
+        }
         [HttpGet("profile/{id}")]
         public async Task<IActionResult> GetProfile(int id)
         {
