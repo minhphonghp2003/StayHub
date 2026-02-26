@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Shared.Response;
 using StayHub.Application.DTO.HRM;
@@ -28,6 +29,7 @@ public sealed class GetAllEmployeeQueryHandler(IUserRepository userRepository, I
                 Phone = x.Profile.Phone,
                 Image = x.Profile.Image,
             },
+            include:e=>e.Include(j=>j.Profile),
             pageNumber: request.pageNumber??1,
             pageSize: pageSize
         );;
