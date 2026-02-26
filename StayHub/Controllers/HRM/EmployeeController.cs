@@ -15,6 +15,6 @@ public class EmployeeController : BaseController
         return Ok(await Mediator.Send(new GetAllEmployeeQuery(propertyId, pageNumber, pageSize, searchKey)));
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id) => GenerateResponse(await Mediator.Send(new DeleteEmployeeCommand(id)));
+    [HttpDelete("user/{id}/property/{propertyId}")]
+    public async Task<IActionResult> Delete(int id,int propertyId) => GenerateResponse(await Mediator.Send(new DeleteEmployeeCommand(id,propertyId)));
 }
