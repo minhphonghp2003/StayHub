@@ -7,6 +7,7 @@ namespace StayHub.Domain.Entity.RBAC
         public string Username { get; set; }
         public string Password { get; set; }
         public string? ResetPasswordToken { get; set; }
+        public int? CreatedByUserId { get; set; }
         public virtual List<Token>? RefreshTokens { get; set; }
         public virtual List<UserRole>? UserRoles { get; set; }
         public bool IsActive { get; set; } = true;

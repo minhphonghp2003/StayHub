@@ -1,8 +1,10 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Shared.Response;
 using StayHub.Application.DTO.RBAC;
+using StayHub.Application.Extension;
 using StayHub.Application.Interfaces.Repository.RBAC;
 
 namespace StayHub.Application.CQRS.RBAC.Query.User
@@ -10,7 +12,7 @@ namespace StayHub.Application.CQRS.RBAC.Query.User
     // Include properties to be used as input for the query
     public record GetAllUserNoPagingQuery(string searchKey) : IRequest<BaseResponse<List<UserDTO>>>;
 
-    public sealed class GetAllUserNoPagingQueryHandler(IUserRepository userRepository, IConfiguration configuration)
+    public sealed class GetAllUserNoPagingQueryHandler(IUserRepository userRepository, IConfiguration configuration, IHttpContextAccessor contextAccessor)
         : BaseResponseHandler, IRequestHandler<GetAllUserNoPagingQuery, BaseResponse<List<UserDTO>>>
     {
         public async Task<BaseResponse<List<UserDTO>>> Handle(GetAllUserNoPagingQuery request,
@@ -21,6 +23,7 @@ namespace StayHub.Application.CQRS.RBAC.Query.User
                return Success(new List<UserDTO>()); 
             }
             var items = await userRepository.GetManyAsync(filter: e =>
+                    e.CreatedByUserId==contextAccessor.HttpContext.GetUserId() &&
                     e.Username.ToLower().Contains(request.searchKey.ToLower()) ||
                     e.Profile.Email.ToLower().Contains(request.searchKey.ToLower()) ||
                     e.Profile.Phone.ToLower().Contains(request.searchKey.ToLower()) ||

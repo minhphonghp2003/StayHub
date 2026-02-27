@@ -1,8 +1,10 @@
 using System.Text.Json.Serialization;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Shared.Response;
 using StayHub.Application.DTO.HRM;
+using StayHub.Application.Extension;
 using StayHub.Application.Interfaces.Repository.HRM;
 using StayHub.Application.Interfaces.Repository.RBAC;
 using StayHub.Domain.Entity.RBAC;
@@ -38,13 +40,15 @@ public record UpdateEmployeeCommand
     }
 };
 
-public sealed class UpdateEmployeeCommandHandler(IUserRepository userRepository)
+public sealed class UpdateEmployeeCommandHandler(IUserRepository userRepository, IHttpContextAccessor accessor)
     : BaseResponseHandler, IRequestHandler<UpdateEmployeeCommand, BaseResponse<bool>>
 {
     public async Task<BaseResponse<bool>> Handle(UpdateEmployeeCommand request, CancellationToken cancellationToken)
     {
         var user = await userRepository.FindOneEntityAsync(
-            filter: e => e.Id == request.userId && e.Properties.Any(p => p.Id == request.propertyId),
+            filter: e =>
+                e.Id == request.userId && e.Properties.Any(p => p.Id == request.propertyId) &&
+                e.CreatedByUserId == accessor.HttpContext.GetUserId(),
             include: e => e.Include(j => j.Properties).Include(j => j.Profile), trackChange: true);
         if (user == null)
         {
@@ -79,6 +83,7 @@ public sealed class UpdateEmployeeCommandHandler(IUserRepository userRepository)
                 UserId = user.Id
             });
         }
+
         await userRepository.SaveAsync();
         return Success(true);
     }
