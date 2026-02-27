@@ -14,7 +14,7 @@ public class TierAccessMiddleware
         _next = next;
     }
 
-    public async Task InvokeAsync(HttpContext context, IPropertyRepository propertyRepository)
+    public async Task InvokeAsync(HttpContext context, IPropertyRepository propertyRepository,IUserRepository userRepository)
     {
         var (method, action) = context.GetRouteInfo();
         var routeData = context.GetRouteData();
@@ -22,6 +22,11 @@ public class TierAccessMiddleware
         var unitIdValue = routeData.Values["unitId"]?.ToString();
         var currentUser = context.User;
         int.TryParse(currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value, out int userId);
+        if (await userRepository.IsSystemUser(userId))
+        {
+            await _next(context);
+            return;
+        }
         var hasProperty = int.TryParse(propertyIdValue, out var propertyId);
         var hasUnit = int.TryParse(unitIdValue, out var unitId);
         var (userHasAccess, subscriptionActive, actionAllowed) =

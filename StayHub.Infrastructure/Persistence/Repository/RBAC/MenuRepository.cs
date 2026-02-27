@@ -38,7 +38,8 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
                 pageSize: pageSize,
                 orderBy: e => e.OrderBy((j) => j.Order),
                 filter: e =>
-                    (string.IsNullOrEmpty(search) || (e.Name.ToLower().Contains(search.ToLower() ?? "") || e.Name.ToLower() == search.ToLower())) &&
+                    (string.IsNullOrEmpty(search) || (e.Name.ToLower().Contains(search.ToLower() ?? "") ||
+                                                      e.Name.ToLower() == search.ToLower())) &&
                     (menuGroupId == null || e.MenuGroupId == menuGroupId),
                 include: e => e.Include(j => j.MenuGroup).Include(j => j.Parent),
                 selector: (e, i) => new MenuDTO
@@ -82,15 +83,23 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
         }
 
 
-        public async Task<List<MenuGroupDTO>> GetUserMenu(int userId, int? propertyId)
+        public async Task<List<MenuGroupDTO>> GetUserMenu(bool isSystemuser, int userId, int? propertyId)
         {
             var result = await _dbSet.Where(e => e.IsActive == true && e.MenuActions.All(ma =>
-                    ma.Action.AllowAnonymous || (!ma.Action.RoleActions.Any() ||
-                                                 ma.Action.RoleActions.Any(e =>
-                                                     e.Role.UserRoles.Any(e => e.UserId == userId)) &&
-                                                 (propertyId == null || !ma.Action.Tiers.Any() ||
-                                                  ma.Action.Tiers.Any(t =>
-                                                      t.Properties.Any(p => p.Id == propertyId))))))
+                        ma.Action.AllowAnonymous || (
+                            (!ma.Action.RoleActions.Any() ||
+                             ma.Action.RoleActions.Any(ra =>
+                                 ra.Role.UserRoles.Any(ur => ur.UserId == userId)
+                             )
+                            ) &&
+                            (propertyId == null || isSystemuser ||
+                             ma.Action.Tiers.Any(t =>
+                                 t.Properties.Any(p => p.Id == propertyId)
+                             )
+                            )
+                        )
+                    )
+                )
                 .GroupBy(e => new { GroupId = e.MenuGroupId, GroupName = e.MenuGroup.Name })
                 .OrderBy(e => e.Min(j => j.Order))
                 .Select(g => new MenuGroupDTO

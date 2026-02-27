@@ -18,10 +18,5 @@ public class EmployeeController : BaseController
     [HttpDelete("{propertyId}/user/{id}")]
     public async Task<IActionResult> Delete(int id,int propertyId) => GenerateResponse(await Mediator.Send(new DeleteEmployeeCommand(id,propertyId)));
     
-    [HttpPut("{propertyId}/user/{id}")]
-    public async Task<IActionResult> UpdateEmployee(int id, UpdateEmployeeCommand request)
-    {
-        request.Id = id;
-        return GenerateResponse(await Mediator.Send(request));
-    }
+  
 }

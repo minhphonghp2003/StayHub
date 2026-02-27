@@ -3,6 +3,7 @@ using StayHub.Application.DTO.RBAC;
 using StayHub.Application.Interfaces.Repository.RBAC;
 using StayHub.Domain.Entity.RBAC;
 using System;
+using Shared.Common;
 
 namespace StayHub.Infrastructure.Persistence.Repository.RBAC
 {
@@ -91,6 +92,12 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
             
 
 
+        }
+
+        public Task<bool> IsSystemUser(int userId)
+        {
+            return _dbSet.AnyAsync(e => e.Id == userId && e.UserRoles.Any(ur => ur.Role.Code == SystemRole.SUPER_ADMIN.ToString()));
+            
         }
     }
 
