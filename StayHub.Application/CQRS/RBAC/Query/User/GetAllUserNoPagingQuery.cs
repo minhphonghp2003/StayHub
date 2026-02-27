@@ -9,7 +9,6 @@ using StayHub.Application.Interfaces.Repository.RBAC;
 
 namespace StayHub.Application.CQRS.RBAC.Query.User
 {
-    // Include properties to be used as input for the query
     public record GetAllUserNoPagingQuery(string searchKey) : IRequest<BaseResponse<List<UserDTO>>>;
 
     public sealed class GetAllUserNoPagingQueryHandler(IUserRepository userRepository, IConfiguration configuration, IHttpContextAccessor contextAccessor)

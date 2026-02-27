@@ -22,20 +22,18 @@ public record UpdateEmployeeCommand
     public string fullname;
     public string username;
     public string password;
-    public List<int> roleIds;
 
     public UpdateEmployeeCommand()
     {
     }
 
-    public UpdateEmployeeCommand(int userId, int propertyId, string fullname, string username, string password,
-        List<int> roleIds)
+    public UpdateEmployeeCommand(int userId, int propertyId, string fullname, string username, string password
+    )
     {
         this.propertyId = propertyId;
         this.fullname = fullname;
         this.username = username;
         this.password = password;
-        this.roleIds = roleIds;
         this.userId = userId;
     }
 };
@@ -72,16 +70,6 @@ public sealed class UpdateEmployeeCommandHandler(IUserRepository userRepository,
         else
         {
             user.Profile = new Domain.Entity.RBAC.Profile { Fullname = request.fullname };
-        }
-
-        user.UserRoles?.Clear();
-        foreach (var roleId in request.roleIds)
-        {
-            user.UserRoles.Add(new UserRole
-            {
-                RoleId = roleId,
-                UserId = user.Id
-            });
         }
 
         await userRepository.SaveAsync();
