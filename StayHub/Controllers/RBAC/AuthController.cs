@@ -24,18 +24,18 @@ namespace StayHub.API.Controllers.RBAC
             }
             return GenerateResponse(result);
         }
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterCommand command)
-        {
-            var result = await Mediator.Send(command);
-            if (result.Success)
-            {
-
-                SetCookie("refresh", result.Data.RefreshToken, result.Data.ExpiresDate);
-                SetCookie("access_token", result.Data.Token);
-            }
-            return GenerateResponse(result);
-        }
+        // [HttpPost("register")]
+        // public async Task<IActionResult> Register(RegisterCommand command)
+        // {
+        //     var result = await Mediator.Send(command);
+        //     if (result.Success)
+        //     {
+        //
+        //         SetCookie("refresh", result.Data.RefreshToken, result.Data.ExpiresDate);
+        //         SetCookie("access_token", result.Data.Token);
+        //     }
+        //     return GenerateResponse(result);
+        // }
         [HttpPost("logout")]
         public async Task<IActionResult> Logout(RevokeTokenCommand command)
         {

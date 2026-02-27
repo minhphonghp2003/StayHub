@@ -5,7 +5,7 @@ using StayHub.Domain.Entity.RBAC;
 
 namespace StayHub.Application.CQRS.RBAC.Command.UserRole
 {
-    // Include properties to be used as input for the command
+    // TODO prevent tenant from assigning system role to user
     public record AssignRoleToUserCommand(int UserId, List<int> RoleIds) : IRequest<BaseResponse<List<int>>>;
     public sealed class AssignRoleToUserCommandHandler(IUserRepository userRepository, IUserRoleRepository userRoleRepository) : BaseResponseHandler, IRequestHandler<AssignRoleToUserCommand, BaseResponse<List<int>>>
     {

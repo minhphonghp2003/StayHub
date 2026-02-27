@@ -24,6 +24,20 @@ namespace StayHub.Application.CQRS.RBAC.Command.Token
             
                 return Failure<TokenDTO>("Invalid username or password", HttpStatusCode.BadRequest);
             }
+
+            if (!user.IsActive)
+            {  
+                await  mediatR.Publish(new UpdateLoginActivityEvent(new LoginActivity
+                {
+                    UserId = user.Id,
+                    Time = DateTime.UtcNow,
+                    Status =false,
+                    IP = httpContextAccessor.HttpContext?.GetIp(),
+                    Browser = httpContextAccessor.HttpContext?.GetBrowser(),
+                    OS = httpContextAccessor.HttpContext?.GetOS()
+                }));
+                return Failure<TokenDTO>("Your account has been deactivated. Please contact support for assistance.", HttpStatusCode.BadRequest);
+            }
             bool isPasswordValid = BCrypt.Net.BCrypt.Verify(request.Password, user.Password);
             if (!isPasswordValid)
             {
