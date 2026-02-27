@@ -16,7 +16,7 @@ public sealed class DeleteEmployeeCommandHandler(IUserRepository userRepository,
     public async Task<BaseResponse<bool>> Handle(DeleteEmployeeCommand request, CancellationToken cancellationToken)
     {
         var user = await userRepository.FindOneEntityAsync(
-            filter: e => e.Id == request.Id && e.CreatedByUserId == contextAccessor.HttpContext.GetUserId(),
+            filter: e => e.Id == request.Id ,
             include: e => e.Include(j => j.Properties));
         if (user == null)
         {
