@@ -96,8 +96,8 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
 
         public Task<bool> IsSystemUser(int userId)
         {
-            return _dbSet.AnyAsync(e => e.Id == userId && e.UserRoles.Any(ur => ur.Role.Code == SystemRole.SUPER_ADMIN.ToString()));
-            
+            var systemRoles = Enum.GetNames(typeof(SystemRole)).ToList();
+            return _dbSet.AnyAsync(e => e.Id == userId && e.UserRoles.Any(ur => systemRoles.Contains(ur.Role.Code) ));
         }
     }
 

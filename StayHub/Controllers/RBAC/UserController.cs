@@ -59,6 +59,11 @@ namespace StayHub.API.Controllers.RBAC
             return GenerateResponse(await Mediator.Send(new DeleteUserCommand(id)));
         }
 
-
+        [HttpPost("add")]
+        public async Task<IActionResult> Register(RegisterCommand command)
+        {
+            var result = await Mediator.Send(command);
+            return GenerateResponse(result);
+        }
     }
 }

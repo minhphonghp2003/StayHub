@@ -18,9 +18,9 @@ public sealed class GetAllEmployeeQueryHandler(IUserRepository userRepository, I
     public async Task<Response<UserDTO>> Handle(GetAllEmployeeQuery request, CancellationToken cancellationToken)
     {
         var pageSize = request.pageSize ?? configuration.GetValue<int>("PageSize");
-         var inValidRoles = Enum.GetNames(typeof(SystemRole)).ToList(); 
+         var systemRoles = Enum.GetNames(typeof(SystemRole)).ToList(); 
         var (result, count) = await userRepository.GetManyPagedAsync(
-            filter: x =>!x.UserRoles.Any(ur=>inValidRoles.Contains(ur.Role.Code)) && x.Properties.Any(e=>e.Id==request.propertyId) && string.IsNullOrEmpty(request.searchKey) || x.Id.ToString().Contains(request.searchKey),
+            filter: x =>!x.UserRoles.Any(ur=>systemRoles.Contains(ur.Role.Code)) && x.Properties.Any(e=>e.Id==request.propertyId) && string.IsNullOrEmpty(request.searchKey) || x.Id.ToString().Contains(request.searchKey),
             selector: (x, i) => new UserDTO
             {
                 Id = x.Id,

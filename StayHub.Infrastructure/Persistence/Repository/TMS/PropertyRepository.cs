@@ -49,13 +49,10 @@ public class PropertyRepository(AppDbContext context, IRoleRepository roleReposi
     public async Task<(bool, bool, bool)> CheckTierAllowancesAsync(int userId, string method, string action,
         int? propertyId, int? unitId)
     {
-        var roles = (await roleRepository.GetManyAsync(filter: e => e.UserRoles.Any(ug => ug.UserId == userId),
-            selector: (e, i) => e.Code)).ToList();
-        if (roles.Any(r => r == SystemRole.SUPER_ADMIN.ToString()) || (propertyId == null && unitId == null))
+        if ( propertyId == null && unitId == null)
         {
             return (true, true, true);
         }
-
         var property = await FindOneAsync(
             filter: e => e.Users.Any(u => u.Id == userId) && ((propertyId.HasValue && e.Id == propertyId) ||
                                                               (unitId.HasValue && e.UnitGroups.Any(ug =>
