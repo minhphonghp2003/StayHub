@@ -44,15 +44,7 @@ public class PropertyRepository(AppDbContext context, IRoleRepository roleReposi
                 .Include(j => j.SubscriptionStatus).Include(j => j.Tier));
     }
 
-    public Task<bool> IsUserInPropertyAsync(int userId, int propertyId)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<bool> IsSubscriptionActiveAsync(int propertyId)
-    {
-        throw new NotImplementedException();
-    }
+   
 
     public async Task<(bool, bool, bool)> CheckTierAllowancesAsync(int userId, string method, string action,
         int? propertyId, int? unitId)
