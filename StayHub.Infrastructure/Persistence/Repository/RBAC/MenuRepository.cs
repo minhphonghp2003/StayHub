@@ -16,9 +16,8 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
         {
             return await GetManyPagedAsync(pageNumber: pageNumber, pageSize: pageSize,
                 filter: e =>
-                    !e.SubMenus.Any() && (string.IsNullOrEmpty(search)
-                        ? true
-                        : e.Name.Contains(search ?? "") || e.Name == search),
+                    e.IsActive == true && !e.SubMenus.Any() && (string.IsNullOrEmpty(search) ||
+                                                                e.Name.Contains(search ?? "") || e.Name == search),
                 include: e => e.Include(j => j.SubMenus),
                 orderBy: e => e.OrderBy(j => j.Order),
                 selector: (e, i) => new MenuDTO
