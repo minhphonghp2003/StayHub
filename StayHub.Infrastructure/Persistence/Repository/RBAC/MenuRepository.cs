@@ -84,7 +84,7 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
 
         public async Task<List<MenuGroupDTO>> GetUserMenu(bool isSystemuser, int userId, int? propertyId)
         {
-            var result = await _dbSet.Where(e => e.IsActive == true && e.MenuActions.All(ma =>
+            var result = (await _dbSet.Where(e => e.IsActive == true && e.MenuActions.All(ma =>
                         ma.Action.AllowAnonymous || (
                             (!ma.Action.RoleActions.Any() ||
                              ma.Action.RoleActions.Any(ra =>
@@ -122,7 +122,7 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
                         }).ToList(),
                         ParentId = e.ParentId
                     }).ToList()
-                }).ToListAsync();
+                }).ToListAsync());
             return result;
         }
 

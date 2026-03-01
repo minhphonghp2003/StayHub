@@ -17,7 +17,7 @@ namespace StayHub.Application.CQRS.RBAC.Command.RoleMenu
         {
 
             var actions = (await actionRepository.GetManyAsync(filter:e=>e.MenuActions.Any(ma=>request.menuIds.Contains(ma.MenuId)),selector:(e,i)=>e.Id)).Distinct().ToList();
-            await roleActionRepository.DeleteWhere(e => e.RoleId == request.roleId, false);
+            await roleActionRepository.DeleteWhere(e => e.RoleId == request.roleId, true);
             var result = await roleActionRepository.AddRangeAsync(actions.Select(aid => new StayHub.Domain.Entity.RBAC.RoleAction
             {
                 ActionId = aid,
