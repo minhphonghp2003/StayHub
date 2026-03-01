@@ -10,7 +10,7 @@ namespace StayHub.Application.DTO.RBAC
     public class MenuDTO :BaseDTO
     {
         public string Name { get; set; }
-        public string Path { get; set; }
+        public string? Path { get; set; }
         public string? Description { get; set; }
         public string? Icon { get; set; }
         public int? ParentId { get; set; }

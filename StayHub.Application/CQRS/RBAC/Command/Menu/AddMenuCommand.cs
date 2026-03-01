@@ -7,7 +7,7 @@ using StayHub.Domain.Entity.RBAC;
 namespace StayHub.Application.CQRS.RBAC.Command.Menu
 {
     // Include properties to be used as input for the command
-    public record AddMenuCommand(string Name, string Path,int GroupId,int? Order, string? Description, string? Icon, int? ParentId) : IRequest<BaseResponse<MenuDTO>>;
+    public record AddMenuCommand(string Name, string? Path,int GroupId,int? Order, string? Description, string? Icon, int? ParentId) : IRequest<BaseResponse<MenuDTO>>;
     public sealed class AddMenuCommandHandler(IMenuRepository menuRepository) : BaseResponseHandler, IRequestHandler<AddMenuCommand, BaseResponse<MenuDTO>>
     {
         public async Task<BaseResponse<MenuDTO>> Handle(AddMenuCommand request, CancellationToken cancellationToken)
