@@ -6,7 +6,6 @@ using StayHub.Application.Middlewares;
 using StayHub.Application.Services;
 using Shared.Services;
 using System.Reflection;
-using Mailtrap;
 
 namespace StayHub.Application
 {
@@ -23,10 +22,10 @@ namespace StayHub.Application
             {
                 cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
             });
-            service.AddMailtrapClient(options =>
-            {
-                options.ApiToken = configuration.GetSection("Email:ApiToken").Value;
-            });
+            //service.AddMailtrapClient(options =>
+            //{
+            //    options.ApiToken = configuration.GetSection("Email:ApiToken").Value;
+            //});
             return service;
         }
     }
