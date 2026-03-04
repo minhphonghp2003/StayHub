@@ -1,0 +1,16 @@
+﻿GENERATION LOG FOR: UnitGroup (Module: PMM)
+--------------------------------------------------
+[CREATED] UnitGroup.cs
+[CREATED] UnitGroupDTO.cs
+[CREATED] IUnitGroupRepository.cs
+[CREATED] UnitGroupRepository.cs
+[SKIPPED] UnitGroupConfiguration.cs (Already exists)
+[CREATED] UnitGroupController.cs
+[CREATED] AddUnitGroupCommand.cs
+[CREATED] UpdateUnitGroupCommand.cs
+[CREATED] DeleteUnitGroupCommand.cs
+[CREATED] GetUnitGroupByIdQuery.cs
+[CREATED] GetAllUnitGroupQuery.cs
+--------------------------------------------------
+Check Solution Explorer. Use "Show All Files" if new files aren't visible.
+
