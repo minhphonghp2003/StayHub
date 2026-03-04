@@ -3,8 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Shared.Response;
 using StayHub.Application.DTO.Catalog;
-using StayHub.Application.DTO.TMS;
-using StayHub.Application.Interfaces.Repository.TMS;
+using StayHub.Application.DTO.PMM;
+using StayHub.Application.Interfaces.Repository.PMM;
 
 namespace StayHub.Application.CQRS.TMS.Query.Property;
 

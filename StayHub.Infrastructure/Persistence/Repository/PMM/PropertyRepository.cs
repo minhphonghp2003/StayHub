@@ -2,12 +2,12 @@ using Microsoft.EntityFrameworkCore;
 using Shared.Common;
 using StayHub.Application.DTO.Catalog;
 using StayHub.Application.DTO.RBAC;
-using StayHub.Application.DTO.TMS;
 using StayHub.Application.Interfaces.Repository.RBAC;
 using StayHub.Domain.Entity.TMS;
-using StayHub.Application.Interfaces.Repository.TMS;
+using StayHub.Application.DTO.PMM;
+using StayHub.Application.Interfaces.Repository.PMM;
 
-namespace StayHub.Infrastructure.Persistence.Repository.TMS;
+namespace StayHub.Infrastructure.Persistence.Repository.PMM;
 
 public class PropertyRepository(AppDbContext context, IRoleRepository roleRepository)
     : PagingAndSortingRepository<Property>(context), IPropertyRepository

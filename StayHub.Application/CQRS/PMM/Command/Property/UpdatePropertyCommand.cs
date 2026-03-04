@@ -3,9 +3,9 @@ using Shared.Response;
 using System.Net;
 using System.Text.Json.Serialization;
 using Shared.Common;
-using StayHub.Application.DTO.TMS;
 using StayHub.Application.Interfaces.Repository.Catalog;
-using StayHub.Application.Interfaces.Repository.TMS;
+using StayHub.Application.DTO.PMM;
+using StayHub.Application.Interfaces.Repository.PMM;
 
 namespace StayHub.Application.CQRS.TMS.Command.Property;
 

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using StayHub.Application.Interfaces.Repository.TMS;
+using StayHub.Application.Interfaces.Repository.PMM;
 
 namespace StayHub.Application.CQRS.TMS.Command.Tier
 {

@@ -2,10 +2,12 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StayHub.Application.Interfaces.Repository.Catalog;
+using StayHub.Application.Interfaces.Repository.PMM;
 using StayHub.Application.Interfaces.Repository.RBAC;
 using StayHub.Application.Interfaces.Repository.TMS;
 using StayHub.Infrastructure.Persistence;
 using StayHub.Infrastructure.Persistence.Repository.Catalog;
+using StayHub.Infrastructure.Persistence.Repository.PMM;
 using StayHub.Infrastructure.Persistence.Repository.RBAC;
 using StayHub.Infrastructure.Persistence.Repository.TMS;
 
@@ -34,8 +36,6 @@ namespace StayHub.Infrastructure
             service.AddScoped<ITierRepository, TierRepository>();
             service.AddScoped<IProvinceRepository, ProvinceRepository>();
             service.AddScoped<IWardRepository, WardRepository>();
-            service.AddScoped<IUnitRepository, UnitRepository>();
-            service.AddScoped<IUnitGroupRepository, UnitGroupRepository>();
             return service;
         }
     }

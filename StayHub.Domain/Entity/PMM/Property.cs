@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Shared.Common;
 using StayHub.Domain.Entity.Catalog;
+using StayHub.Domain.Entity.PMM;
 using StayHub.Domain.Entity.RBAC;
 
 namespace StayHub.Domain.Entity.TMS;

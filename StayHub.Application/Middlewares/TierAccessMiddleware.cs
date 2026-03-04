@@ -2,8 +2,8 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using StayHub.Application.Extension;
+using StayHub.Application.Interfaces.Repository.PMM;
 using StayHub.Application.Interfaces.Repository.RBAC;
-using StayHub.Application.Interfaces.Repository.TMS;
 
 public class TierAccessMiddleware
 {

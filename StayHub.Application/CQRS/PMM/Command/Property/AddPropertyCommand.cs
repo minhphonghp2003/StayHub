@@ -6,8 +6,8 @@ using StayHub.Application.DTO.Catalog;
 using StayHub.Application.DTO.TMS;
 using StayHub.Application.Extension;
 using StayHub.Application.Interfaces.Repository.Catalog;
+using StayHub.Application.Interfaces.Repository.PMM;
 using StayHub.Application.Interfaces.Repository.RBAC;
-using StayHub.Application.Interfaces.Repository.TMS;
 using StayHub.Domain.Entity.RBAC;
 
 namespace StayHub.Application.CQRS.TMS.Command.Property;

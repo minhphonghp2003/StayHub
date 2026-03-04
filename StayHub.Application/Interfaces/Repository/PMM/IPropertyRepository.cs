@@ -1,7 +1,7 @@
-using StayHub.Application.DTO.TMS;
+using StayHub.Application.DTO.PMM;
 using StayHub.Domain.Entity.TMS;
 
-namespace StayHub.Application.Interfaces.Repository.TMS;
+namespace StayHub.Application.Interfaces.Repository.PMM;
 
 public interface IPropertyRepository : IPagingAndSortingRepository<Property>
 {

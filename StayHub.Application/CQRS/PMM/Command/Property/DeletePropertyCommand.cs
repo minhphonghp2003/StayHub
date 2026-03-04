@@ -1,6 +1,6 @@
 using MediatR;
 using Shared.Response;
-using StayHub.Application.Interfaces.Repository.TMS;
+using StayHub.Application.Interfaces.Repository.PMM;
 
 namespace StayHub.Application.CQRS.TMS.Command.Property;
 

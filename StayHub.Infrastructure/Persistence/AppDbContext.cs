@@ -14,7 +14,7 @@ namespace StayHub.Infrastructure.Persistence
             modelBuilder.ApplyRBACConfiguration();
             modelBuilder.ApplyCatalogConfiguration();
             modelBuilder.ApplyTMSConfiguration();
-            ;
+            modelBuilder.ApplyPMMConfiguration();
         }
         public override int SaveChanges()
         {

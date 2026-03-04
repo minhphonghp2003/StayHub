@@ -1,4 +1,6 @@
-namespace StayHub.Domain.Entity.TMS;
+using StayHub.Domain.Entity.TMS;
+
+namespace StayHub.Domain.Entity.PMM;
 
 public class UnitGroup : BaseEntity
 {

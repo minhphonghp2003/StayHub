@@ -2,7 +2,7 @@ using Shared.Common;
 using StayHub.Application.DTO.Catalog;
 using StayHub.Domain.Entity.Catalog;
 
-namespace StayHub.Application.DTO.TMS;
+namespace StayHub.Application.DTO.PMM;
 
 public class PropertyDTO : BaseDTO
 {

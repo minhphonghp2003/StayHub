@@ -1,7 +1,7 @@
 using Shared.Common;
 using StayHub.Domain.Entity.Catalog;
 
-namespace StayHub.Domain.Entity.TMS;
+namespace StayHub.Domain.Entity.PMM;
 
 public class Unit : BaseEntity
 {
