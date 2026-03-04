@@ -1,0 +1,22 @@
+using MediatR;
+using Shared.Response;
+using Microsoft.Extensions.Configuration;
+using StayHub.Application.DTO.PMM;
+using StayHub.Application.Interfaces.Repository.PMM;
+namespace StayHub.Application.CQRS.PMM.Query.Asset;
+public record GetAllAssetQuery(int? pageNumber, int? pageSize, string? searchKey) : IRequest<Response<AssetDTO>>;
+public sealed class GetAllAssetQueryHandler(IAssetRepository repository, IConfiguration config) 
+    : BaseResponseHandler, IRequestHandler<GetAllAssetQuery, Response<AssetDTO>> 
+{
+    public async Task<Response<AssetDTO>> Handle(GetAllAssetQuery request, CancellationToken ct) 
+    {
+        var size = request.pageSize ?? config.GetValue<int>("PageSize");
+        var (result, count) = await repository.GetManyPagedAsync(
+            pageNumber: request.pageNumber ?? 1,
+            pageSize: size,
+            filter: x => request.searchKey == null || x.Name.Contains(request.searchKey),
+            selector: (x, i) => new AssetDTO { Id = x.Id, Name = x.Name }
+        );
+        return SuccessPaginated(result.ToList(), count, request.pageNumber ?? 1, size);
+    }
+}

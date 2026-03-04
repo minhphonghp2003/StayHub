@@ -1,16 +1,16 @@
-﻿GENERATION LOG FOR: UnitGroup (Module: PMM)
+﻿GENERATION LOG FOR: Job (Module: PMM)
 --------------------------------------------------
-[CREATED] UnitGroup.cs
-[CREATED] UnitGroupDTO.cs
-[CREATED] IUnitGroupRepository.cs
-[CREATED] UnitGroupRepository.cs
-[SKIPPED] UnitGroupConfiguration.cs (Already exists)
-[CREATED] UnitGroupController.cs
-[CREATED] AddUnitGroupCommand.cs
-[CREATED] UpdateUnitGroupCommand.cs
-[CREATED] DeleteUnitGroupCommand.cs
-[CREATED] GetUnitGroupByIdQuery.cs
-[CREATED] GetAllUnitGroupQuery.cs
+[CREATED] Job.cs
+[CREATED] JobDTO.cs
+[CREATED] IJobRepository.cs
+[CREATED] JobRepository.cs
+[CREATED] JobConfiguration.cs
+[CREATED] JobController.cs
+[CREATED] AddJobCommand.cs
+[CREATED] UpdateJobCommand.cs
+[CREATED] DeleteJobCommand.cs
+[CREATED] GetJobByIdQuery.cs
+[CREATED] GetAllJobQuery.cs
 --------------------------------------------------
 Check Solution Explorer. Use "Show All Files" if new files aren't visible.
 

@@ -6,7 +6,7 @@
 <#
     // 1. SETTINGS: Change these for your new entity
     string Module = "PMM"; 
-    string EntityName = "UnitGroup"; 
+    string EntityName = "Job"; 
     string Namespace = "StayHub";
 
     // 2. PATH RESOLUTION

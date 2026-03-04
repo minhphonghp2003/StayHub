@@ -38,6 +38,9 @@ namespace StayHub.Infrastructure
             service.AddScoped<IWardRepository, WardRepository>();
             service.AddScoped<IUnitGroupRepository, UnitGroupRepository>();
             service.AddScoped<IUnitRepository, UnitRepository>();
+            service.AddScoped<IServiceRepository, ServiceRepository>();
+            service.AddScoped<IAssetRepository, AssetRepository>();
+            service.AddScoped<IJobRepository, JobRepository>();
             return service;
         }
     }
