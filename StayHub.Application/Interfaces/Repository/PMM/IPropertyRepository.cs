@@ -6,8 +6,6 @@ namespace StayHub.Application.Interfaces.Repository.PMM;
 public interface IPropertyRepository : IPagingAndSortingRepository<Property>
 {
     Task<PropertyDTO?> GetPropertyByIdAsync(int id);
-    Task<bool> IsUserInPropertyAsync(int userId, int propertyId);
-    
-    Task<bool> IsSubscriptionActiveAsync(int propertyId);
+  
     Task<(bool,bool,bool)> CheckTierAllowancesAsync(int userId, string method,string action, int? propertyId, int? unitId);
 }

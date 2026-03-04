@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Shared.Response;
 using StayHub.Application.DTO.Catalog;
@@ -11,32 +12,42 @@ namespace StayHub.Application.CQRS.Catalog.Query.CategoryItem
         : IRequest<Response<CategoryItemDTO>>;
 
     // Handler
-    public sealed class GetCategoryItemByCategoryIdQueryHandler(ICategoryItemRepository categoryItemRepository, IConfiguration configuration)
+    public sealed class GetCategoryItemByCategoryIdQueryHandler(
+        ICategoryItemRepository categoryItemRepository,
+        IConfiguration configuration)
         : BaseResponseHandler, IRequestHandler<GetCategoryItemByCategoryIdQuery, Response<CategoryItemDTO>>
     {
-        public async Task<Response<CategoryItemDTO>> Handle(GetCategoryItemByCategoryIdQuery request, CancellationToken cancellationToken)
+        public async Task<Response<CategoryItemDTO>> Handle(GetCategoryItemByCategoryIdQuery request,
+            CancellationToken cancellationToken)
         {
             var pageSize = request.pageSize ?? configuration.GetValue<int>("pageSize");
 
             var (items, count) = await categoryItemRepository.GetManyPagedAsync<CategoryItemDTO>(
                 pageNumber: request.pageNumber ?? 1,
                 pageSize: pageSize,
-                filter: e => (request.categoryId == 0 || e.CategoryId == request.categoryId) && (string.IsNullOrEmpty(request.search) || e.Code.Contains(request.search) || e.Name.Contains(request.search) || e.Value.Contains(request.search)),
+                filter: e =>
+                    (request.categoryId == 0 || e.CategoryId == request.categoryId) &&
+                    (string.IsNullOrEmpty(request.search) || e.Code.Contains(request.search) ||
+                     e.Name.Contains(request.search) || e.Value.Contains(request.search)),
                 selector: (e, i) => new CategoryItemDTO
                 {
                     Id = e.Id,
                     Name = e.Name,
                     Code = e.Code,
                     Value = e.Value,
+                    Category = e.Category != null
+                        ? new CategoryDTO { Id = e.Category.Id, Name = e.Category.Name }
+                        : null,
                     CreatedAt = e.CreatedAt,
                     UpdatedAt = e.UpdatedAt
-                });
+                }, include: e => e.Include(j => j.Category));
 
             if (items == null || !items.Any())
-                return FailurePaginated<CategoryItemDTO>(message: "No category items found for the specified CategoryId", code: System.Net.HttpStatusCode.BadRequest);
+                return FailurePaginated<CategoryItemDTO>(
+                    message: "No category items found for the specified CategoryId",
+                    code: System.Net.HttpStatusCode.BadRequest);
 
             return SuccessPaginated<CategoryItemDTO>(items.ToList(), count, pageSize, request.pageNumber ?? 1);
         }
     }
 }
-

@@ -10,37 +10,98 @@ using StayHub.Domain.Entity.RBAC;
 
 namespace StayHub.Application.CQRS.RBAC.Command.Action
 {
-    // Include properties to be used as input for the command
     public record GenerateAllActionCommand() : IRequest<BaseResponse<bool>>;
-    public sealed class GenerateAllActionCommandHandler(IEnumerable<EndpointDataSource> endpointSources, IActionRepository actionRepository) : BaseResponseHandler, IRequestHandler<GenerateAllActionCommand, BaseResponse<bool>>
-    {
-        public async Task<BaseResponse<bool>> Handle(GenerateAllActionCommand request, CancellationToken cancellationToken)
-        {
-            var endpoints = endpointSources.SelectMany(s => s.Endpoints).OfType<RouteEndpoint>().Where(e => e.Metadata.OfType<HttpMethodMetadata>().Any()).Select(e =>
-           new StayHub.Domain.Entity.RBAC.Action
-           {
-               Path = e.RoutePattern.RawText,
-               AllowAnonymous = e.Metadata.GetMetadata<AllowAnonymousAttribute>() != null,
-               Method = e.Metadata
-                    .OfType<HttpMethodMetadata>()
-                    .FirstOrDefault()?.HttpMethods.FirstOrDefault().ToUpper() ?? "GET"
-           }).ToList();
-            var paths = endpoints.Select(e => e.Path);
-            var methods = endpoints.Select(e => e.Method);
 
-            var existEndpoints =( await actionRepository.GetManyAsync(filter: e => paths.Contains(e.Path) && methods.Contains(e.Method), selector: (e, i) => new StayHub.Domain.Entity.RBAC.Action
+    public sealed class GenerateAllActionCommandHandler(
+        IEnumerable<EndpointDataSource> endpointSources,
+        IActionRepository actionRepository)
+        : BaseResponseHandler, IRequestHandler<GenerateAllActionCommand, BaseResponse<bool>>
+    {
+        public async Task<BaseResponse<bool>> Handle(GenerateAllActionCommand request,
+            CancellationToken cancellationToken)
+        {
+            // 1. Quét toàn bộ endpoints hiện tại từ hệ thống code (App Endpoints)
+            var appEndpoints = endpointSources
+                .SelectMany(s => s.Endpoints)
+                .OfType<RouteEndpoint>()
+                .Where(e => e.Metadata.OfType<HttpMethodMetadata>().Any())
+                .Select(e => new
+                {
+                    Path = e.RoutePattern.RawText,
+                    AllowAnonymous = e.Metadata.GetMetadata<AllowAnonymousAttribute>() != null,
+                    Method = e.Metadata
+                        .OfType<HttpMethodMetadata>()
+                        .FirstOrDefault()?.HttpMethods.FirstOrDefault()?.ToUpper() ?? "GET"
+                }).ToList();
+
+            if (!appEndpoints.Any())
             {
-                Path = e.Path,
-                Method = e.Method
-            })).ToList();
-            var newEndpoints = endpoints.Where(ep => !existEndpoints.Any(e => e.Path == ep.Path && e.Method == ep.Method)).ToList();
-            var result = await actionRepository.AddRangeAsync(newEndpoints);
-            if (result.Any())
-            {
-                return Success<bool>(data: true);
+                return Success<bool>(data: false, message: "Không tìm thấy endpoint nào trong hệ thống.");
             }
-            return Success<bool>(data: false, message: "No new actions were generated.");
+
+            var dbActions = await actionRepository.GetManyAsync(
+                filter: e => true, 
+                selector: (e, i) => e,
+                tracking: true
+            );
+
+            var dbActionsList = dbActions.ToList();
+
+            var newActions = appEndpoints
+                .Where(app => !dbActionsList.Any(db => db.Path == app.Path && db.Method == app.Method))
+                .Select(app => new StayHub.Domain.Entity.RBAC.Action
+                {
+                    Path = app.Path,
+                    Method = app.Method,
+                    AllowAnonymous = app.AllowAnonymous
+                }).ToList();
+
+            var obsoleteActions = dbActionsList
+                .Where(db => !appEndpoints.Any(app => app.Path == db.Path && app.Method == db.Method))
+                .ToList();
+
+            var existingActionsToUpdate = dbActionsList
+                .Where(db => appEndpoints.Any(app =>
+                    app.Path == db.Path &&
+                    app.Method == db.Method &&
+                    app.AllowAnonymous != db.AllowAnonymous))
+                .ToList();
+
+            bool hasChanges = false;
+
+            if (newActions.Any())
+            {
+                await actionRepository.AddRangeAsync(newActions);
+                hasChanges = true;
+            }
+
+            if (obsoleteActions.Any())
+            {
+                await actionRepository.DeleteWhere(e => obsoleteActions.Select(j=>j.Id).Contains(e.Id), false);
+                hasChanges = true;
+            }
+
+            if (existingActionsToUpdate.Any())
+            {
+                foreach (var action in existingActionsToUpdate)
+                {
+                    var appEq = appEndpoints.First(app => app.Path == action.Path && app.Method == action.Method);
+                    action.AllowAnonymous = appEq.AllowAnonymous;
+                }
+
+                hasChanges = true;
+            }
+
+            if (hasChanges)
+            {
+                await actionRepository.SaveAsync();
+
+                var message =
+                    $"Đồng bộ thành công: Thêm {newActions.Count}, Xóa {obsoleteActions.Count}, Cập nhật {existingActionsToUpdate.Count}.";
+                return Success<bool>(data: true, message: message);
+            }
+
+            return Success<bool>(data: false, message: "Mọi thứ đã được đồng bộ, không có API nào bị thay đổi.");
         }
     }
-
 }

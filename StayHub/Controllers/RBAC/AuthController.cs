@@ -8,35 +8,25 @@ using StayHub.Domain.Entity.RBAC;
 
 namespace StayHub.API.Controllers.RBAC
 {
-    [AllowAnonymous]
     public class AuthController : BaseController
     {
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginCommand command)
         {
             var result = await Mediator.Send(command);
-           
+
             if (result.Success)
             {
                 SetCookie("refresh", result.Data.RefreshToken, result.Data.ExpiresDate);
                 SetCookie("access_token", result.Data.Token);
-              
             }
+
             return GenerateResponse(result);
         }
-        // [HttpPost("register")]
-        // public async Task<IActionResult> Register(RegisterCommand command)
-        // {
-        //     var result = await Mediator.Send(command);
-        //     if (result.Success)
-        //     {
-        //
-        //         SetCookie("refresh", result.Data.RefreshToken, result.Data.ExpiresDate);
-        //         SetCookie("access_token", result.Data.Token);
-        //     }
-        //     return GenerateResponse(result);
-        // }
+
         [HttpPost("logout")]
+        [AllowAnonymous]
         public async Task<IActionResult> Logout(RevokeTokenCommand command)
         {
             var result = await Mediator.Send(command);
@@ -45,8 +35,8 @@ namespace StayHub.API.Controllers.RBAC
                 DeleteCookie("refresh");
                 DeleteCookie("access_token");
             }
-            return GenerateResponse(result);
 
+            return GenerateResponse(result);
         }
 
         [HttpPost("revoke-all-token/{id}")]
@@ -54,41 +44,38 @@ namespace StayHub.API.Controllers.RBAC
         {
             var result = await Mediator.Send(new RevokeAllUserTokenCommand(id));
             return GenerateResponse(result);
-
         }
+
         [HttpPost("forget-password")]
         [AllowAnonymous]
         public async Task<IActionResult> ForgetPassword(ForgetPasswordCommand command)
         {
             var result = await Mediator.Send(command);
             return GenerateResponse(result);
-
         }
-        
+
         [HttpPost("new-password")]
         [AllowAnonymous]
         public async Task<IActionResult> NewPassword(NewPasswordCommand command)
         {
             var result = await Mediator.Send(command);
             return GenerateResponse(result);
-
         }
+
         [HttpPost("change-password")]
         public async Task<IActionResult> ChangePassword(ChangePasswordCommand command)
         {
             command.userId = HttpContext.GetUserId() ?? 0;
             var result = await Mediator.Send(command);
             return GenerateResponse(result);
-
         }
-      
+
         [HttpPost("change-tenant-password")]
         [AllowAnonymous]
         public async Task<IActionResult> ChangeTenantPassword(ChangeTenantPasswordCommand command)
         {
             var result = await Mediator.Send(command);
             return GenerateResponse(result);
-
         }
     }
 }

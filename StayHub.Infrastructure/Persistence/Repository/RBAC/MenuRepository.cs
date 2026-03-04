@@ -16,9 +16,8 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
         {
             return await GetManyPagedAsync(pageNumber: pageNumber, pageSize: pageSize,
                 filter: e =>
-                    !e.SubMenus.Any() && (string.IsNullOrEmpty(search)
-                        ? true
-                        : e.Name.Contains(search ?? "") || e.Name == search),
+                    e.IsActive == true && !e.SubMenus.Any() && (string.IsNullOrEmpty(search) ||
+                                                                e.Name.Contains(search ?? "") || e.Name == search),
                 include: e => e.Include(j => j.SubMenus),
                 orderBy: e => e.OrderBy(j => j.Order),
                 selector: (e, i) => new MenuDTO
@@ -85,45 +84,52 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
 
         public async Task<List<MenuGroupDTO>> GetUserMenu(bool isSystemuser, int userId, int? propertyId)
         {
-            var result = await _dbSet.Where(e => e.IsActive == true && e.MenuActions.All(ma =>
-                        ma.Action.AllowAnonymous || (
-                            (!ma.Action.RoleActions.Any() ||
-                             ma.Action.RoleActions.Any(ra =>
-                                 ra.Role.UserRoles.Any(ur => ur.UserId == userId)
-                             )
-                            ) &&
-                            (propertyId == null || isSystemuser ||
-                             ma.Action.Tiers.Any(t =>
-                                 t.Properties.Any(p => p.Id == propertyId)
-                             )
-                            )
-                        )
+            var flatMenus = await GetManyEntityAsync(e => e.IsActive == true && e.Path!=null && e.MenuActions.All(ma =>
+                ma.Action.AllowAnonymous || (
+                    (!ma.Action.RoleActions.Any() ||
+                     ma.Action.RoleActions.Any(ra =>
+                         ra.Role.UserRoles.Any(ur => ur.UserId == userId)
+                     )
+                    ) &&
+                    (propertyId == null || isSystemuser ||
+                     ma.Action.Tiers.Any(t =>
+                         t.Properties.Any(p => p.Id == propertyId)
+                     )
                     )
                 )
-                .GroupBy(e => new { GroupId = e.MenuGroupId, GroupName = e.MenuGroup.Name })
-                .OrderBy(e => e.Min(j => j.Order))
+            ));
+
+
+            var result = flatMenus
+                .GroupBy(e => new { GroupId = e.MenuGroupId, GroupName = e.MenuGroup?.Name })
+                .OrderBy(g => g.Min(e => e.Order))
                 .Select(g => new MenuGroupDTO
                 {
                     Name = g.Key.GroupName,
-                    Items = g.Where(e => e.ParentId == null).OrderBy(e => e.Order).Select(e => new MenuDTO
-                    {
-                        Id = e.Id,
-                        Name = e.Name,
-                        Path = e.Path,
-                        Icon = e.Icon,
-                        GroupId = e.MenuGroupId,
-                        Children = g.Where(c => c.ParentId == e.Id).Select(c => new MenuDTO
+                    Items = g.Where(e => e.ParentId == null) 
+                        .OrderBy(e => e.Order)
+                        .Select(e => new MenuDTO
                         {
-                            Id = c.Id,
-                            Name = c.Name,
-                            Path = c.Path,
-                            Icon = c.Icon,
-                            GroupId = c.MenuGroupId,
-                            ParentId = c.ParentId
-                        }).ToList(),
-                        ParentId = e.ParentId
-                    }).ToList()
-                }).ToListAsync();
+                            Id = e.Id,
+                            Name = e.Name,
+                            Path = e.Path,
+                            Icon = e.Icon,
+                            GroupId = e.MenuGroupId,
+                            ParentId = e.ParentId,
+
+                            Children = g.Where(c => c.ParentId == e.Id)
+                                .OrderBy(c => c.Order)
+                                .Select(c => new MenuDTO
+                                {
+                                    Id = c.Id,
+                                    Name = c.Name,
+                                    Path = c.Path,
+                                    Icon = c.Icon,
+                                    GroupId = c.MenuGroupId,
+                                    ParentId = c.ParentId
+                                }).ToList()
+                        }).ToList()
+                }).ToList();
             return result;
         }
 

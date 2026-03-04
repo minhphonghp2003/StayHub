@@ -17,14 +17,15 @@ public sealed class DeleteEmployeeCommandHandler(IUserRepository userRepository,
     {
         var user = await userRepository.FindOneEntityAsync(
             filter: e => e.Id == request.Id ,
-            include: e => e.Include(j => j.Properties));
+            include: e => e.Include(j => j.Properties),trackChange:true);
         if (user == null)
         {
             return Failure<bool>("Employee not found", System.Net.HttpStatusCode.BadRequest);
         }
 
         user.Properties.RemoveAll(p => p.Id == request.propertyId);
-        userRepository.Update(user);
+        await userRepository.SaveAsync();
         return Success(true);
+        
     }
 }
