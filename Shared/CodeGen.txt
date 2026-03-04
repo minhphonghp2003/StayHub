@@ -1,16 +1,16 @@
-﻿GENERATION LOG FOR: Job (Module: PMM)
+﻿GENERATION LOG FOR: Asset (Module: PMM)
 --------------------------------------------------
-[CREATED] Job.cs
-[CREATED] JobDTO.cs
-[CREATED] IJobRepository.cs
-[CREATED] JobRepository.cs
-[CREATED] JobConfiguration.cs
-[CREATED] JobController.cs
-[CREATED] AddJobCommand.cs
-[CREATED] UpdateJobCommand.cs
-[CREATED] DeleteJobCommand.cs
-[CREATED] GetJobByIdQuery.cs
-[CREATED] GetAllJobQuery.cs
+[CREATED] Asset.cs
+[SKIPPED] AssetDTO.cs (Already exists)
+[SKIPPED] IAssetRepository.cs (Already exists)
+[SKIPPED] AssetRepository.cs (Already exists)
+[SKIPPED] AssetConfiguration.cs (Already exists)
+[SKIPPED] AssetController.cs (Already exists)
+[SKIPPED] AddAssetCommand.cs (Already exists)
+[SKIPPED] UpdateAssetCommand.cs (Already exists)
+[SKIPPED] DeleteAssetCommand.cs (Already exists)
+[SKIPPED] GetAssetByIdQuery.cs (Already exists)
+[SKIPPED] GetAllAssetQuery.cs (Already exists)
 --------------------------------------------------
 Check Solution Explorer. Use "Show All Files" if new files aren't visible.
 

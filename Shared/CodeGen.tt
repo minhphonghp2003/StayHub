@@ -6,7 +6,7 @@
 <#
     // 1. SETTINGS: Change these for your new entity
     string Module = "PMM"; 
-    string EntityName = "Job"; 
+    string EntityName = "Asset"; 
     string Namespace = "StayHub";
 
     // 2. PATH RESOLUTION
@@ -22,7 +22,7 @@
     // 4. DEFINE TARGET FOLDERS
     // Using Path.Combine for cleaner cross-platform support
     var paths = new {
-        Domain = Path.Combine(solutionRoot, Namespace + ".Domain", "Entity", Module),
+        Domain = Path.Combine(solutionRoot,Namespace, Namespace + ".Domain", "Entity", Module),
         ApplicationDto = Path.Combine(solutionRoot,Namespace, Namespace + ".Application", "DTO", Module),
         ApplicationCqrs = Path.Combine(solutionRoot,Namespace, Namespace + ".Application", "CQRS", Module),
         ApplicationRepo = Path.Combine(solutionRoot,Namespace, Namespace + ".Application", "Interfaces", "Repository", Module),
