@@ -1,14 +1,14 @@
-﻿GENERATION LOG FOR: ContractService
+﻿GENERATION LOG FOR: Vehicle
 --------------------------------------------------
-[SKIPPED] ContractService.cs
-[SKIPPED] ContractServiceDTO.cs
-[SKIPPED] IContractServiceRepository.cs
-[SKIPPED] ContractServiceRepository.cs
-[SKIPPED] ContractServiceConfiguration.cs
-[SKIPPED] ContractServiceController.cs
-[SKIPPED] AddContractServiceCommand.cs
-[SKIPPED] UpdateContractServiceCommand.cs
-[SKIPPED] DeleteContractServiceCommand.cs
-[SKIPPED] GetContractServiceByIdQuery.cs
-[SKIPPED] GetAllContractServiceQuery.cs
+[CREATED] Vehicle.cs
+[CREATED] VehicleDTO.cs
+[CREATED] IVehicleRepository.cs
+[CREATED] VehicleRepository.cs
+[CREATED] VehicleConfiguration.cs
+[CREATED] VehicleController.cs
+[CREATED] AddVehicleCommand.cs
+[CREATED] UpdateVehicleCommand.cs
+[CREATED] DeleteVehicleCommand.cs
+[CREATED] GetVehicleByIdQuery.cs
+[CREATED] GetAllVehicleQuery.cs
 
