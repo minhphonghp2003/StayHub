@@ -1,14 +1,14 @@
-﻿GENERATION LOG FOR: Vehicle
+﻿GENERATION LOG FOR: Notification
 --------------------------------------------------
-[CREATED] Vehicle.cs
-[CREATED] VehicleDTO.cs
-[CREATED] IVehicleRepository.cs
-[CREATED] VehicleRepository.cs
-[CREATED] VehicleConfiguration.cs
-[CREATED] VehicleController.cs
-[CREATED] AddVehicleCommand.cs
-[CREATED] UpdateVehicleCommand.cs
-[CREATED] DeleteVehicleCommand.cs
-[CREATED] GetVehicleByIdQuery.cs
-[CREATED] GetAllVehicleQuery.cs
+[CREATED] Notification.cs
+[CREATED] NotificationDTO.cs
+[CREATED] INotificationRepository.cs
+[CREATED] NotificationRepository.cs
+[CREATED] NotificationConfiguration.cs
+[CREATED] NotificationController.cs
+[CREATED] AddNotificationCommand.cs
+[CREATED] UpdateNotificationCommand.cs
+[CREATED] DeleteNotificationCommand.cs
+[CREATED] GetNotificationByIdQuery.cs
+[CREATED] GetAllNotificationQuery.cs
 

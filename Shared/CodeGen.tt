@@ -7,18 +7,24 @@
 <#@ output extension=".txt" #>
 <#
     // 1. SETTINGS
-    string Module = "CRM"; 
-    string EntityName = "Vehicle"; 
+    string Module = "PMM"; 
+    string EntityName = "Notification"; 
     string Namespace = "StayHub";
 
     // 2. DEFINE PROPERTIES HERE
     //Users, Status
 var Properties = new List<PropertyDefinition> {
-    new("int", "CustomerId"),
-    new("string", "Name"),
-    new("string", "LicensePlate"),
-    new("string?", "Image"),
-    };
+    new("string", "Title"),
+    new("string", "Body"),
+    new("int?", "PayloadId"),
+    new("string?", "PayloadType"),
+    new("string?", "Icon"),
+    new("string?", "Avatar"),
+    new("bool", "IsRead"),
+    new("int?", "UnitId"),
+    new("int", "OwnerId"),
+    
+};
 
     // 3. PATH RESOLUTION
     string templateFile = Host.TemplateFile;
