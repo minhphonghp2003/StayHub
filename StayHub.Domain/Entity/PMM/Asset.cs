@@ -14,5 +14,7 @@ public class Asset : BaseEntity
     public string? Image { get; set; }
     //Nav
     public virtual CategoryItem Type { get; set; }
+    public virtual Property Property { get; set; }
     public virtual List<ContractAsset> ContractAssets { get; set; }
+
 }

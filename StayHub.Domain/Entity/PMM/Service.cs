@@ -14,4 +14,5 @@ public class Service : BaseEntity
     //Nav
     public virtual List<ContractService> ContractServices { get; set; }
     public virtual CategoryItem UnitType { get; set; }
+    public virtual Property Property { get; set; }
 }
