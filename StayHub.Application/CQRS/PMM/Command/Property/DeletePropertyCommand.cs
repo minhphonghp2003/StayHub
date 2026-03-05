@@ -11,7 +11,7 @@ public sealed class DeletePropertyCommandHandler(IPropertyRepository repository)
 {
     public async Task<BaseResponse<bool>> Handle(DeletePropertyCommand request, CancellationToken cancellationToken)
     {
-        await repository.Delete(new Domain.Entity.TMS.Property { Id = request.Id });
+        await repository.Delete(new Domain.Entity.PMM.Property { Id = request.Id });
         return Success(true);
     }
 }

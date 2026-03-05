@@ -1,5 +1,5 @@
 ﻿using StayHub.Domain.Entity.Catalog;
-using StayHub.Domain.Entity.TMS;
+using StayHub.Domain.Entity.PMM;
 
 namespace StayHub.Domain.Entity.RBAC
 {

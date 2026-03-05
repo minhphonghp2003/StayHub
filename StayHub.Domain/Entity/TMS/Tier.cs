@@ -1,3 +1,5 @@
+using StayHub.Domain.Entity.PMM;
+
 namespace StayHub.Domain.Entity.TMS;
 
 public class Tier :BaseEntity

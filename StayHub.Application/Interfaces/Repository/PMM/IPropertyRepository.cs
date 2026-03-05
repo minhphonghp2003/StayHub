@@ -1,5 +1,5 @@
 using StayHub.Application.DTO.PMM;
-using StayHub.Domain.Entity.TMS;
+using StayHub.Domain.Entity.PMM;
 
 namespace StayHub.Application.Interfaces.Repository.PMM;
 

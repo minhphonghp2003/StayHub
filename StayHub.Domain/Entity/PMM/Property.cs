@@ -3,8 +3,9 @@ using Shared.Common;
 using StayHub.Domain.Entity.Catalog;
 using StayHub.Domain.Entity.PMM;
 using StayHub.Domain.Entity.RBAC;
+using StayHub.Domain.Entity.TMS;
 
-namespace StayHub.Domain.Entity.TMS;
+namespace StayHub.Domain.Entity.PMM;
 
 public class Property: BaseEntity
 {
@@ -24,6 +25,9 @@ public class Property: BaseEntity
     // Nav
     public virtual List<User> Users { get; set; }
     public virtual List<UnitGroup> UnitGroups { get; set; }
+    public virtual List<Service> Services { get; set; }
+    public virtual List<Asset> Assets { get; set; }
+    public virtual List<Job> Jobs  { get; set; }
     public virtual CategoryItem Type {  get; set; }
     public virtual CategoryItem? SubscriptionStatus { get; set; }
     [DeleteBehavior(DeleteBehavior.SetNull)]

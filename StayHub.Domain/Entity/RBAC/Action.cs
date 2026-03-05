@@ -1,5 +1,6 @@
 ﻿using Shared.Common;
 using StayHub.Domain.Entity.Catalog;
+using StayHub.Domain.Entity.PMM;
 using StayHub.Domain.Entity.TMS;
 
 namespace StayHub.Domain.Entity.RBAC

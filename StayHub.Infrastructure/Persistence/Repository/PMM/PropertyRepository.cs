@@ -6,6 +6,7 @@ using StayHub.Application.Interfaces.Repository.RBAC;
 using StayHub.Domain.Entity.TMS;
 using StayHub.Application.DTO.PMM;
 using StayHub.Application.Interfaces.Repository.PMM;
+using StayHub.Domain.Entity.PMM;
 
 namespace StayHub.Infrastructure.Persistence.Repository.PMM;
 

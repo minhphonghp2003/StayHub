@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Shared.Common;
 using Shared.Response;
 using StayHub.Application.DTO.Catalog;
-using StayHub.Application.DTO.TMS;
+using StayHub.Application.DTO.PMM;
 using StayHub.Application.Extension;
 using StayHub.Application.Interfaces.Repository.Catalog;
 using StayHub.Application.Interfaces.Repository.PMM;
@@ -45,7 +45,7 @@ public sealed class AddPropertyCommandHandler(IPropertyRepository repository,ICa
         {
             return Failure<bool>(message: "Start subscription date cannot be after end subscription date.", code: System.Net.HttpStatusCode.BadRequest);
         }
-        var entity = new Domain.Entity.TMS.Property
+        var entity = new Domain.Entity.PMM.Property
         {
             
             Name = request.Name,

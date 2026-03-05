@@ -10,7 +10,7 @@ using StayHub.Application.Interfaces.Repository.HRM;
 using StayHub.Application.Interfaces.Repository.PMM;
 using StayHub.Application.Interfaces.Repository.RBAC;
 using StayHub.Domain.Entity.RBAC;
-using StayHub.Domain.Entity.TMS;
+using StayHub.Domain.Entity.PMM;
 
 namespace StayHub.Application.CQRS.HRM.Command.Employee;
 
