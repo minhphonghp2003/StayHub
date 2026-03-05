@@ -13,7 +13,7 @@ public sealed class GetAllContractAssetQueryHandler(IContractAssetRepository rep
         var (result, count) = await repository.GetManyPagedAsync(
             pageNumber: request.pageNumber ?? 1,
             pageSize: size,
-            filter: x => request.searchKey == null || x.Name.Contains(request.searchKey),
+            filter: x => request.searchKey == null,
             selector: (x, i) => new ContractAssetDTO 
             { 
                 Id = x.Id, 

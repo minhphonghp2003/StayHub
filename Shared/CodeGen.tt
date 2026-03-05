@@ -8,15 +8,15 @@
 <#
     // 1. SETTINGS
     string Module = "CRM"; 
-    string EntityName = "ContractAsset"; 
+    string EntityName = "ContractService"; 
     string Namespace = "StayHub";
 
     // 2. DEFINE PROPERTIES HERE
     //Users, Status
 var Properties = new List<PropertyDefinition> {
     new("int", "ContractId"),
-    new("int", "AssetId"),
-    new("int", "Quantity"),
+    new("int", "ServiceId"),
+    new("string", "Value"),
     };
 
     // 3. PATH RESOLUTION

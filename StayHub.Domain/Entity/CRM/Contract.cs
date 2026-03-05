@@ -8,6 +8,7 @@ public class Contract : BaseEntity
 {
     public int UnitId { get; set; }
     public int? SaleId { get; set; }
+    public int VehicleNumber { get; set; }
     public long Price { get; set; }
     public long Deposit { get; set; }
     public long? DepositRemain { get; set; }
@@ -23,7 +24,7 @@ public class Contract : BaseEntity
     public ContractStatus Status { get; set; }
     // Nav
     public virtual List<User> Customers { get; set; }
-    public virtual List<Service> Services { get; set; }
+    public virtual List<ContractService> ContractServices { get; set; }
     public virtual List<ContractAsset> ContractAssets { get; set; }
     public virtual CategoryItem PaymentPeriod { get; set; }
     public virtual Unit Unit { get; set; }

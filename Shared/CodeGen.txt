@@ -1,14 +1,14 @@
-﻿GENERATION LOG FOR: ContractAsset
+﻿GENERATION LOG FOR: ContractService
 --------------------------------------------------
-[CREATED] ContractAsset.cs
-[CREATED] ContractAssetDTO.cs
-[CREATED] IContractAssetRepository.cs
-[CREATED] ContractAssetRepository.cs
-[CREATED] ContractAssetConfiguration.cs
-[CREATED] ContractAssetController.cs
-[CREATED] AddContractAssetCommand.cs
-[CREATED] UpdateContractAssetCommand.cs
-[CREATED] DeleteContractAssetCommand.cs
-[CREATED] GetContractAssetByIdQuery.cs
-[CREATED] GetAllContractAssetQuery.cs
+[SKIPPED] ContractService.cs
+[SKIPPED] ContractServiceDTO.cs
+[SKIPPED] IContractServiceRepository.cs
+[SKIPPED] ContractServiceRepository.cs
+[SKIPPED] ContractServiceConfiguration.cs
+[SKIPPED] ContractServiceController.cs
+[SKIPPED] AddContractServiceCommand.cs
+[SKIPPED] UpdateContractServiceCommand.cs
+[SKIPPED] DeleteContractServiceCommand.cs
+[SKIPPED] GetContractServiceByIdQuery.cs
+[SKIPPED] GetAllContractServiceQuery.cs
 
