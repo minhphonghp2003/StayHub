@@ -6,4 +6,6 @@ public class Vehicle : BaseEntity
     public string Name { get; set; }
     public string LicensePlate { get; set; }
     public string? Image { get; set; }
+    //Nav
+    public virtual Customer Customer { get; set; }
 }

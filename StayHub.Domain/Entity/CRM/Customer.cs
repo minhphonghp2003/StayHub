@@ -22,5 +22,6 @@ public class Customer : BaseEntity
     //Nav
     public virtual User User { get; set; }
     public virtual Unit? Unit { get; set; }
+    public virtual List<Vehicle>? Vehicles { get; set; }
     
 }
