@@ -7,19 +7,24 @@
 <#@ output extension=".txt" #>
 <#
     // 1. SETTINGS
-    string Module = "PMM"; 
-    string EntityName = "Service"; 
+    string Module = "CRM"; 
+    string EntityName = "Customer"; 
     string Namespace = "StayHub";
 
     // 2. DEFINE PROPERTIES HERE
    var Properties = new List<PropertyDefinition> {
     new("string", "Name"),
-    new("int", "FeeCategoryId"),
-    new("int", "TypeId"),
-    new("int", "VatTypeId"),
-    new("int", "PropertyId"),
-    new("bool", "IsActive"),
-    new("string?", "Description")
+    new("string", "Phone"),
+    new("string?", "Email"),
+    new("string?", "CCCD"),
+    new("int?", "GenderId"),
+    new("int?", "ProvinceId"),
+    new("int?", "WardId"),
+    new("int?", "UnitId"),
+    new("DateTime?", "DateOfBirth"),
+    new("string?", "Address"),
+    new("string?", "Image"),
+    new("string?", "Job"),
 };
 
     // 3. PATH RESOLUTION

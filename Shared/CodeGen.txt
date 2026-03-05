@@ -1,14 +1,14 @@
-﻿GENERATION LOG FOR: Service
+﻿GENERATION LOG FOR: Customer
 --------------------------------------------------
-[SKIPPED] Service.cs
-[SKIPPED] ServiceDTO.cs
-[SKIPPED] IServiceRepository.cs
-[SKIPPED] ServiceRepository.cs
-[SKIPPED] ServiceConfiguration.cs
-[SKIPPED] ServiceController.cs
-[SKIPPED] AddServiceCommand.cs
-[SKIPPED] UpdateServiceCommand.cs
-[SKIPPED] DeleteServiceCommand.cs
-[SKIPPED] GetServiceByIdQuery.cs
-[SKIPPED] GetAllServiceQuery.cs
+[CREATED] Customer.cs
+[CREATED] CustomerDTO.cs
+[CREATED] ICustomerRepository.cs
+[CREATED] CustomerRepository.cs
+[CREATED] CustomerConfiguration.cs
+[CREATED] CustomerController.cs
+[CREATED] AddCustomerCommand.cs
+[CREATED] UpdateCustomerCommand.cs
+[CREATED] DeleteCustomerCommand.cs
+[CREATED] GetCustomerByIdQuery.cs
+[CREATED] GetAllCustomerQuery.cs
 
