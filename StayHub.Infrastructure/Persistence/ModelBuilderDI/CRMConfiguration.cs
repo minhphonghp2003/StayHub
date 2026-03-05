@@ -15,6 +15,10 @@ namespace StayHub.Infrastructure.Persistence.ModelBuilderDI
         {
 
             modelbuilder.ApplyConfiguration(new CustomerConfiguration());
+            modelbuilder.ApplyConfiguration(new VehicleConfiguration());
+            modelbuilder.ApplyConfiguration(new ContractServiceConfiguration());
+            modelbuilder.ApplyConfiguration(new ContractAssetConfiguration());
+            modelbuilder.ApplyConfiguration(new ContractConfiguration());
             return modelbuilder;
         }
     }

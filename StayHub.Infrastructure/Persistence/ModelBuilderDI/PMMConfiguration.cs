@@ -13,6 +13,7 @@ namespace StayHub.Infrastructure.Persistence.ModelBuilderDI
             modelbuilder.ApplyConfiguration(new AssetConfiguration());
             modelbuilder.ApplyConfiguration(new JobConfiguration());
             modelbuilder.ApplyConfiguration(new ServiceConfiguration());
+            modelbuilder.ApplyConfiguration(new NotificationConfiguration());
             return modelbuilder;
         }
     }
