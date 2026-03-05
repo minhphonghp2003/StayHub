@@ -5,8 +5,7 @@ using StayHub.Application.DTO.PMM;
 using StayHub.Application.Interfaces.Repository.PMM;
 namespace StayHub.Application.CQRS.PMM.Query.Service;
 public record GetAllServiceQuery(int? pageNumber, int? pageSize, string? searchKey) : IRequest<Response<ServiceDTO>>;
-public sealed class GetAllServiceQueryHandler(IServiceRepository repository, IConfiguration config) 
-    : BaseResponseHandler, IRequestHandler<GetAllServiceQuery, Response<ServiceDTO>> 
+public sealed class GetAllServiceQueryHandler(IServiceRepository repository, IConfiguration config) : BaseResponseHandler, IRequestHandler<GetAllServiceQuery, Response<ServiceDTO>> 
 {
     public async Task<Response<ServiceDTO>> Handle(GetAllServiceQuery request, CancellationToken ct) 
     {
@@ -15,7 +14,17 @@ public sealed class GetAllServiceQueryHandler(IServiceRepository repository, ICo
             pageNumber: request.pageNumber ?? 1,
             pageSize: size,
             filter: x => request.searchKey == null || x.Name.Contains(request.searchKey),
-            selector: (x, i) => new ServiceDTO { Id = x.Id, Name = x.Name }
+            selector: (x, i) => new ServiceDTO 
+            { 
+                Id = x.Id, 
+                Name = x.Name,
+                FeeCategoryId = x.FeeCategoryId,
+                TypeId = x.TypeId,
+                VatTypeId = x.VatTypeId,
+                PropertyId = x.PropertyId,
+                IsActive = x.IsActive,
+                Description = x.Description
+            }
         );
         return SuccessPaginated(result.ToList(), count, request.pageNumber ?? 1, size);
     }

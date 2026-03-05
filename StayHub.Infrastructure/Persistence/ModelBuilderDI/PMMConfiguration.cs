@@ -10,6 +10,9 @@ namespace StayHub.Infrastructure.Persistence.ModelBuilderDI
             modelbuilder.ApplyConfiguration(new PropertyConfiguration());
             modelbuilder.ApplyConfiguration(new UnitConfiguration());
             modelbuilder.ApplyConfiguration(new UnitGroupConfiguration());
+            modelbuilder.ApplyConfiguration(new AssetConfiguration());
+            modelbuilder.ApplyConfiguration(new JobConfiguration());
+            modelbuilder.ApplyConfiguration(new ServiceConfiguration());
             return modelbuilder;
         }
     }

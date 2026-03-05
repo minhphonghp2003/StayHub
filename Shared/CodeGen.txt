@@ -1,14 +1,14 @@
-﻿GENERATION LOG FOR: Test
+﻿GENERATION LOG FOR: Service
 --------------------------------------------------
-[CREATED] Test.cs
-[CREATED] TestDTO.cs
-[CREATED] ITestRepository.cs
-[CREATED] TestRepository.cs
-[CREATED] TestConfiguration.cs
-[CREATED] TestController.cs
-[CREATED] AddTestCommand.cs
-[CREATED] UpdateTestCommand.cs
-[CREATED] DeleteTestCommand.cs
-[CREATED] GetTestByIdQuery.cs
-[CREATED] GetAllTestQuery.cs
+[CREATED] Service.cs
+[CREATED] ServiceDTO.cs
+[CREATED] IServiceRepository.cs
+[CREATED] ServiceRepository.cs
+[CREATED] ServiceConfiguration.cs
+[CREATED] ServiceController.cs
+[CREATED] AddServiceCommand.cs
+[CREATED] UpdateServiceCommand.cs
+[CREATED] DeleteServiceCommand.cs
+[CREATED] GetServiceByIdQuery.cs
+[CREATED] GetAllServiceQuery.cs
 
