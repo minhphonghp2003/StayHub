@@ -1,16 +1,14 @@
-﻿GENERATION LOG FOR: Asset (Module: PMM)
+﻿GENERATION LOG FOR: Test
 --------------------------------------------------
-[CREATED] Asset.cs
-[SKIPPED] AssetDTO.cs (Already exists)
-[SKIPPED] IAssetRepository.cs (Already exists)
-[SKIPPED] AssetRepository.cs (Already exists)
-[SKIPPED] AssetConfiguration.cs (Already exists)
-[SKIPPED] AssetController.cs (Already exists)
-[SKIPPED] AddAssetCommand.cs (Already exists)
-[SKIPPED] UpdateAssetCommand.cs (Already exists)
-[SKIPPED] DeleteAssetCommand.cs (Already exists)
-[SKIPPED] GetAssetByIdQuery.cs (Already exists)
-[SKIPPED] GetAllAssetQuery.cs (Already exists)
---------------------------------------------------
-Check Solution Explorer. Use "Show All Files" if new files aren't visible.
+[CREATED] Test.cs
+[CREATED] TestDTO.cs
+[CREATED] ITestRepository.cs
+[CREATED] TestRepository.cs
+[CREATED] TestConfiguration.cs
+[CREATED] TestController.cs
+[CREATED] AddTestCommand.cs
+[CREATED] UpdateTestCommand.cs
+[CREATED] DeleteTestCommand.cs
+[CREATED] GetTestByIdQuery.cs
+[CREATED] GetAllTestQuery.cs
 

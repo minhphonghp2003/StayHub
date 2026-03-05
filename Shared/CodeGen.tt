@@ -2,25 +2,32 @@
 <#@ assembly name="System.Core" #>
 <#@ import namespace="System.IO" #>
 <#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
 <#@ output extension=".txt" #>
 <#
-    // 1. SETTINGS: Change these for your new entity
-    string Module = "PMM"; 
-    string EntityName = "Asset"; 
+    // 1. SETTINGS
+    string Module = "Test"; 
+    string EntityName = "Test"; 
     string Namespace = "StayHub";
 
-    // 2. PATH RESOLUTION
+    // 2. DEFINE PROPERTIES HERE
+    var Properties = new List<PropertyDefinition> {
+        new("string", "Name"),
+        new("string", "Description"),
+        new("decimal", "Value"),
+        new("DateTime?", "PurchaseDate"),
+        new("int", "CategoryId")
+    };
+
+    // 3. PATH RESOLUTION
     string templateFile = Host.TemplateFile;
     string templateDir = Path.GetDirectoryName(templateFile);
-    // Climbs out of "StayHub.Shared/Scaffolding" to the Solution Root
     string solutionRoot = Directory.GetParent(templateDir).Parent.FullName;
 
-    // 3. CLEANUP: Delete the auto-generated .cs file that causes debug/build errors
     string autoGenCsPath = Path.ChangeExtension(templateFile, ".cs");
     if (File.Exists(autoGenCsPath)) File.Delete(autoGenCsPath);
 
-    // 4. DEFINE TARGET FOLDERS
-    // Using Path.Combine for cleaner cross-platform support
     var paths = new {
         Domain = Path.Combine(solutionRoot,Namespace, Namespace + ".Domain", "Entity", Module),
         ApplicationDto = Path.Combine(solutionRoot,Namespace, Namespace + ".Application", "DTO", Module),
@@ -31,61 +38,66 @@
         Api = Path.Combine(solutionRoot,Namespace, Namespace , "Controllers", Module)
     };
 #>
-GENERATION LOG FOR: <#= EntityName #> (Module: <#= Module #>)
+GENERATION LOG FOR: <#= EntityName #>
 --------------------------------------------------
 <#
-    // 5. TRIGGER FILE CREATION (Skips if exists)
-    CreateFile(paths.Domain, $"{EntityName}.cs", GenerateDomain(EntityName, Module, Namespace));
-    CreateFile(paths.ApplicationDto, $"{EntityName}DTO.cs", GenerateDto(EntityName, Module, Namespace));
+    // 4. TRIGGER FILE CREATION
+    CreateFile(paths.Domain, $"{EntityName}.cs", GenerateDomain(EntityName, Module, Namespace, Properties));
+    CreateFile(paths.ApplicationDto, $"{EntityName}DTO.cs", GenerateDto(EntityName, Module, Namespace, Properties));
     CreateFile(paths.ApplicationRepo, $"I{EntityName}Repository.cs", GenerateIRepo(EntityName, Module, Namespace));
     CreateFile(paths.InfraRepo, $"{EntityName}Repository.cs", GenerateRepo(EntityName, Module, Namespace));
     CreateFile(paths.InfraConfig, $"{EntityName}Configuration.cs", GenerateConfig(EntityName, Module, Namespace));
     CreateFile(paths.Api, $"{EntityName}Controller.cs", GenerateController(EntityName, Module, Namespace));
 
-    // CQRS Folders: stayhub.Application.CQRS.{Module}.{Type}.{Entity}
     string commandPath = Path.Combine(paths.ApplicationCqrs, "Command", EntityName);
     string queryPath = Path.Combine(paths.ApplicationCqrs, "Query", EntityName);
 
-    CreateFile(commandPath, $"Add{EntityName}Command.cs", GenerateAddCommand(EntityName, Module, Namespace));
-    CreateFile(commandPath, $"Update{EntityName}Command.cs", GenerateUpdateCommand(EntityName, Module, Namespace));
+    CreateFile(commandPath, $"Add{EntityName}Command.cs", GenerateAddCommand(EntityName, Module, Namespace, Properties));
+    CreateFile(commandPath, $"Update{EntityName}Command.cs", GenerateUpdateCommand(EntityName, Module, Namespace, Properties));
     CreateFile(commandPath, $"Delete{EntityName}Command.cs", GenerateDeleteCommand(EntityName, Module, Namespace));
-    CreateFile(queryPath, $"Get{EntityName}ByIdQuery.cs", GenerateGetByIdQuery(EntityName, Module, Namespace));
-    CreateFile(queryPath, $"GetAll{EntityName}Query.cs", GenerateGetAllQuery(EntityName, Module, Namespace));
+    CreateFile(queryPath, $"Get{EntityName}ByIdQuery.cs", GenerateGetByIdQuery(EntityName, Module, Namespace, Properties));
+    CreateFile(queryPath, $"GetAll{EntityName}Query.cs", GenerateGetAllQuery(EntityName, Module, Namespace, Properties));
 #>
---------------------------------------------------
-Check Solution Explorer. Use "Show All Files" if new files aren't visible.
 
 <#+ 
-// --- HELPER METHODS ---
+// --- DATA STRUCTURE ---
+public class PropertyDefinition {
+    public string Type { get; set; }
+    public string Name { get; set; }
+    public PropertyDefinition(string type, string name) {
+        Type = type;
+        Name = name;
+    }
+}
 
+// --- HELPER METHODS ---
 void CreateFile(string folder, string fileName, string content) {
     if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
     string fullPath = Path.Combine(folder, fileName);
-
     if (File.Exists(fullPath)) {
-        WriteLine($"[SKIPPED] {fileName} (Already exists)");
+        WriteLine($"[SKIPPED] {fileName}");
     } else {
         File.WriteAllText(fullPath, content);
         WriteLine($"[CREATED] {fileName}");
     }
 }
 
-// --- TEMPLATES (Refactored for C# 12 / Primary Constructors) ---
+// --- TEMPLATES ---
 
-string GenerateDomain(string E, string M, string ns) => 
+string GenerateDomain(string E, string M, string ns, List<PropertyDefinition> props) => 
 $@"using Shared.Common;
 namespace {ns}.Domain.Entity.{M};
 public class {E} : BaseEntity 
 {{ 
-    public string Name {{ get; set; }} = string.Empty;
+{string.Join("\n", props.Select(p => $"    public {p.Type} {p.Name} {{ get; set; }}"))}
 }}";
 
-string GenerateDto(string E, string M, string ns) => 
+string GenerateDto(string E, string M, string ns, List<PropertyDefinition> props) => 
 $@"using Shared.Common;
 namespace {ns}.Application.DTO.{M};
 public class {E}DTO : BaseDTO 
 {{ 
-    public string Name {{ get; set; }} = string.Empty;
+{string.Join("\n", props.Select(p => $"    public {p.Type} {p.Name} {{ get; set; }}"))}
 }}";
 
 string GenerateIRepo(string E, string M, string ns) => 
@@ -97,32 +109,33 @@ string GenerateRepo(string E, string M, string ns) =>
 $@"using {ns}.Application.Interfaces.Repository.{M};
 using {E} = {ns}.Domain.Entity.{M}.{E};
 namespace {ns}.Infrastructure.Persistence.Repository.{M};
-public class {E}Repository(AppDbContext context) 
-    : PagingAndSortingRepository<{E}>(context), I{E}Repository {{ }}";
+public class {E}Repository(AppDbContext context) : PagingAndSortingRepository<{E}>(context), I{E}Repository {{ }}";
 
 string GenerateConfig(string E, string M, string ns) => 
 $@"using {E} = {ns}.Domain.Entity.{M}.{E};
 namespace {ns}.Infrastructure.Persistence.EntityConfiguration.{M};
 public class {E}Configuration : BaseEntityConfiguration<{E}> {{ }}";
 
-string GenerateAddCommand(string E, string M, string ns) => 
+string GenerateAddCommand(string E, string M, string ns, List<PropertyDefinition> props) => 
 $@"using MediatR;
 using Shared.Response;
 using {ns}.Application.Interfaces.Repository.{M};
 namespace {ns}.Application.CQRS.{M}.Command.{E};
-public record Add{E}Command(string Name) : IRequest<BaseResponse<bool>>;
-public sealed class Add{E}CommandHandler(I{E}Repository repository) 
-    : BaseResponseHandler, IRequestHandler<Add{E}Command, BaseResponse<bool>> 
+public record Add{E}Command({string.Join(", ", props.Select(p => $"{p.Type} {p.Name}"))}) : IRequest<BaseResponse<bool>>;
+public sealed class Add{E}CommandHandler(I{E}Repository repository) : BaseResponseHandler, IRequestHandler<Add{E}Command, BaseResponse<bool>> 
 {{
     public async Task<BaseResponse<bool>> Handle(Add{E}Command request, CancellationToken ct) 
     {{
-        var entity = new {ns}.Domain.Entity.{M}.{E} {{ Name = request.Name }};
+        var entity = new {ns}.Domain.Entity.{M}.{E} 
+        {{ 
+{string.Join(",\n", props.Select(p => $"            {p.Name} = request.{p.Name}"))}
+        }};
         await repository.AddAsync(entity);
         return Success(true);
     }}
 }}";
 
-string GenerateUpdateCommand(string E, string M, string ns) => 
+string GenerateUpdateCommand(string E, string M, string ns, List<PropertyDefinition> props) => 
 $@"using MediatR;
 using Shared.Response;
 using System.Net;
@@ -133,18 +146,23 @@ namespace {ns}.Application.CQRS.{M}.Command.{E};
 public class Update{E}Command : IRequest<BaseResponse<{E}DTO>> 
 {{
     [JsonIgnore] public int Id {{ get; set; }}
-    public string? Name {{ get; set; }}
+{string.Join("\n", props.Select(p => $"    public {p.Type} {p.Name} {{ get; set; }}"))}
 }}
-public sealed class Update{E}CommandHandler(I{E}Repository repository) 
-    : BaseResponseHandler, IRequestHandler<Update{E}Command, BaseResponse<{E}DTO>> 
+public sealed class Update{E}CommandHandler(I{E}Repository repository) : BaseResponseHandler, IRequestHandler<Update{E}Command, BaseResponse<{E}DTO>> 
 {{
     public async Task<BaseResponse<{E}DTO>> Handle(Update{E}Command request, CancellationToken ct) 
     {{
         var entity = await repository.FindOneEntityAsync(e => e.Id == request.Id);
         if (entity == null) return Failure<{E}DTO>(""Not found"", HttpStatusCode.BadRequest);
-        entity.Name = request.Name ?? entity.Name;
+        
+{string.Join("\n", props.Select(p => $"        entity.{p.Name} = request.{p.Name};"))}
+
         repository.Update(entity);
-        return Success(new {E}DTO {{ Id = entity.Id, Name = entity.Name }});
+        return Success(new {E}DTO 
+        {{ 
+            Id = entity.Id, 
+{string.Join(",\n", props.Select(p => $"            {p.Name} = entity.{p.Name}"))}
+        }});
     }}
 }}";
 
@@ -154,8 +172,7 @@ using Shared.Response;
 using {ns}.Application.Interfaces.Repository.{M};
 namespace {ns}.Application.CQRS.{M}.Command.{E};
 public record Delete{E}Command(int Id) : IRequest<BaseResponse<bool>>;
-public sealed class Delete{E}CommandHandler(I{E}Repository repository) 
-    : BaseResponseHandler, IRequestHandler<Delete{E}Command, BaseResponse<bool>> 
+public sealed class Delete{E}CommandHandler(I{E}Repository repository) : BaseResponseHandler, IRequestHandler<Delete{E}Command, BaseResponse<bool>> 
 {{
     public async Task<BaseResponse<bool>> Handle(Delete{E}Command request, CancellationToken ct) 
     {{
@@ -164,7 +181,7 @@ public sealed class Delete{E}CommandHandler(I{E}Repository repository)
     }}
 }}";
 
-string GenerateGetByIdQuery(string E, string M, string ns) => 
+string GenerateGetByIdQuery(string E, string M, string ns, List<PropertyDefinition> props) => 
 $@"using MediatR;
 using Shared.Response;
 using System.Net;
@@ -172,17 +189,20 @@ using {ns}.Application.DTO.{M};
 using {ns}.Application.Interfaces.Repository.{M};
 namespace {ns}.Application.CQRS.{M}.Query.{E};
 public record Get{E}ByIdQuery(int Id) : IRequest<BaseResponse<{E}DTO>>;
-public sealed class Get{E}ByIdQueryHandler(I{E}Repository repository) 
-    : BaseResponseHandler, IRequestHandler<Get{E}ByIdQuery, BaseResponse<{E}DTO>> 
+public sealed class Get{E}ByIdQueryHandler(I{E}Repository repository) : BaseResponseHandler, IRequestHandler<Get{E}ByIdQuery, BaseResponse<{E}DTO>> 
 {{
     public async Task<BaseResponse<{E}DTO>> Handle(Get{E}ByIdQuery request, CancellationToken ct) 
     {{
-        var result = await repository.FindOneAsync(x => x.Id == request.Id, (x) => new {E}DTO {{ Id = x.Id, Name = x.Name }});
+        var result = await repository.FindOneAsync(x => x.Id == request.Id, (x, i) => new {E}DTO 
+        {{ 
+            Id = x.Id, 
+{string.Join(",\n", props.Select(p => $"            {p.Name} = x.{p.Name}"))}
+        }});
         return result == null ? Failure<{E}DTO>(""Not found"", HttpStatusCode.BadRequest) : Success(result);
     }}
 }}";
 
-string GenerateGetAllQuery(string E, string M, string ns) => 
+string GenerateGetAllQuery(string E, string M, string ns, List<PropertyDefinition> props) => 
 $@"using MediatR;
 using Shared.Response;
 using Microsoft.Extensions.Configuration;
@@ -190,8 +210,7 @@ using {ns}.Application.DTO.{M};
 using {ns}.Application.Interfaces.Repository.{M};
 namespace {ns}.Application.CQRS.{M}.Query.{E};
 public record GetAll{E}Query(int? pageNumber, int? pageSize, string? searchKey) : IRequest<Response<{E}DTO>>;
-public sealed class GetAll{E}QueryHandler(I{E}Repository repository, IConfiguration config) 
-    : BaseResponseHandler, IRequestHandler<GetAll{E}Query, Response<{E}DTO>> 
+public sealed class GetAll{E}QueryHandler(I{E}Repository repository, IConfiguration config) : BaseResponseHandler, IRequestHandler<GetAll{E}Query, Response<{E}DTO>> 
 {{
     public async Task<Response<{E}DTO>> Handle(GetAll{E}Query request, CancellationToken ct) 
     {{
@@ -200,7 +219,11 @@ public sealed class GetAll{E}QueryHandler(I{E}Repository repository, IConfigurat
             pageNumber: request.pageNumber ?? 1,
             pageSize: size,
             filter: x => request.searchKey == null || x.Name.Contains(request.searchKey),
-            selector: (x, i) => new {E}DTO {{ Id = x.Id, Name = x.Name }}
+            selector: (x, i) => new {E}DTO 
+            {{ 
+                Id = x.Id, 
+{string.Join(",\n", props.Select(p => $"                {p.Name} = x.{p.Name}"))}
+            }}
         );
         return SuccessPaginated(result.ToList(), count, request.pageNumber ?? 1, size);
     }}
