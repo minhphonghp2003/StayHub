@@ -23,7 +23,7 @@ public class Contract : BaseEntity
     public int? TemplateId { get; set; }
     public ContractStatus Status { get; set; }
     // Nav
-    public virtual List<User> Customers { get; set; }
+    public virtual List<Customer> Customers { get; set; }
     public virtual List<ContractService> ContractServices { get; set; }
     public virtual List<ContractAsset> ContractAssets { get; set; }
     public virtual CategoryItem PaymentPeriod { get; set; }

@@ -10,7 +10,7 @@ public class UpdateContractServiceCommand : IRequest<BaseResponse<ContractServic
     [JsonIgnore] public int Id { get; set; }
     public int ContractId { get; set; }
     public int ServiceId { get; set; }
-    public int Value { get; set; }
+    public string Value { get; set; }
 }
 public sealed class UpdateContractServiceCommandHandler(IContractServiceRepository repository) : BaseResponseHandler, IRequestHandler<UpdateContractServiceCommand, BaseResponse<ContractServiceDTO>> 
 {

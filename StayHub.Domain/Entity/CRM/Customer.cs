@@ -1,4 +1,6 @@
 using Shared.Common;
+using StayHub.Domain.Entity.PMM;
+using StayHub.Domain.Entity.RBAC;
 namespace StayHub.Domain.Entity.CRM;
 public class Customer : BaseEntity 
 { 
@@ -14,4 +16,11 @@ public class Customer : BaseEntity
     public string? Address { get; set; }
     public string? Image { get; set; }
     public string? Job { get; set; }
+    public bool IsRepresentative { get; set; }
+    public int? UserId { get; set; }
+
+    //Nav
+    public virtual User User { get; set; }
+    public virtual Unit? Unit { get; set; }
+    
 }

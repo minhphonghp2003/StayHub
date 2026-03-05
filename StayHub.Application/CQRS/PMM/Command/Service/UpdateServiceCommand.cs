@@ -24,9 +24,6 @@ public sealed class UpdateServiceCommandHandler(IServiceRepository repository) :
         if (entity == null) return Failure<ServiceDTO>("Not found", HttpStatusCode.BadRequest);
         
         entity.Name = request.Name;
-        entity.FeeCategoryId = request.FeeCategoryId;
-        entity.TypeId = request.TypeId;
-        entity.VatTypeId = request.VatTypeId;
         entity.PropertyId = request.PropertyId;
         entity.IsActive = request.IsActive;
         entity.Description = request.Description;
@@ -36,9 +33,6 @@ public sealed class UpdateServiceCommandHandler(IServiceRepository repository) :
         { 
             Id = entity.Id, 
             Name = entity.Name,
-            FeeCategoryId = entity.FeeCategoryId,
-            TypeId = entity.TypeId,
-            VatTypeId = entity.VatTypeId,
             PropertyId = entity.PropertyId,
             IsActive = entity.IsActive,
             Description = entity.Description

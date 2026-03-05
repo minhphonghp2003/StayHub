@@ -13,9 +13,6 @@ public sealed class GetServiceByIdQueryHandler(IServiceRepository repository) : 
         { 
             Id = x.Id, 
             Name = x.Name,
-            FeeCategoryId = x.FeeCategoryId,
-            TypeId = x.TypeId,
-            VatTypeId = x.VatTypeId,
             PropertyId = x.PropertyId,
             IsActive = x.IsActive,
             Description = x.Description

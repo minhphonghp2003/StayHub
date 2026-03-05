@@ -33,7 +33,6 @@ public sealed class UpdateJobCommandHandler(IJobRepository repository) : BaseRes
             Id = entity.Id, 
             Name = entity.Name,
             PropertyId = entity.PropertyId,
-            UnitId = entity.UnitId,
             Description = entity.Description,
             IsActive = entity.IsActive
         });

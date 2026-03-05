@@ -19,7 +19,6 @@ public sealed class GetAllJobQueryHandler(IJobRepository repository, IConfigurat
                 Id = x.Id, 
                 Name = x.Name,
                 PropertyId = x.PropertyId,
-                UnitId = x.UnitId,
                 Description = x.Description,
                 IsActive = x.IsActive
             }

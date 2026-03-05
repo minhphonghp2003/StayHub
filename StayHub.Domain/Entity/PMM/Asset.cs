@@ -1,4 +1,6 @@
 using Shared.Common;
+using StayHub.Domain.Entity.Catalog;
+using StayHub.Domain.Entity.CRM;
 namespace StayHub.Domain.Entity.PMM;
 public class Asset : BaseEntity 
 { 
@@ -9,5 +11,8 @@ public class Asset : BaseEntity
     public int PropertyId { get; set; }
     public int? UnitId { get; set; }
     public string? Note { get; set; }
-    public string Image { get; set; }
+    public string? Image { get; set; }
+    //Nav
+    public virtual CategoryItem Type { get; set; }
+    public virtual List<ContractAsset> ContractAssets { get; set; }
 }

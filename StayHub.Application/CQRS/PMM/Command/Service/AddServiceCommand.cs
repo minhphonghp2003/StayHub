@@ -10,9 +10,6 @@ public sealed class AddServiceCommandHandler(IServiceRepository repository) : Ba
         var entity = new StayHub.Domain.Entity.PMM.Service 
         { 
             Name = request.Name,
-            FeeCategoryId = request.FeeCategoryId,
-            TypeId = request.TypeId,
-            VatTypeId = request.VatTypeId,
             PropertyId = request.PropertyId,
             IsActive = request.IsActive,
             Description = request.Description

@@ -4,5 +4,5 @@ public class ContractServiceDTO : BaseDTO
 { 
     public int ContractId { get; set; }
     public int ServiceId { get; set; }
-    public int Value { get; set; }
+    public string Value { get; set; }
 }

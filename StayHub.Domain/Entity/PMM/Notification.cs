@@ -1,4 +1,5 @@
 using Shared.Common;
+using StayHub.Domain.Entity.RBAC;
 namespace StayHub.Domain.Entity.PMM;
 public class Notification : BaseEntity 
 { 
@@ -11,4 +12,6 @@ public class Notification : BaseEntity
     public bool IsRead { get; set; }
     public int? UnitId { get; set; }
     public int OwnerId { get; set; }
+    //Nav
+    public virtual User Owner { get; set; }
 }
