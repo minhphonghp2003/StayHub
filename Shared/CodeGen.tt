@@ -8,27 +8,16 @@
 <#
     // 1. SETTINGS
     string Module = "CRM"; 
-    string EntityName = "Contract"; 
+    string EntityName = "ContractAsset"; 
     string Namespace = "StayHub";
 
     // 2. DEFINE PROPERTIES HERE
     //Users, Status
 var Properties = new List<PropertyDefinition> {
-    new("int", "RoomId"),
-    new("long", "Price"),
-    new("long", "Deposit"),
-    new("long?", "DepositRemain"),
-    new("DateTime?", "DepositRemainEndDate"),
-    new("DateTime", "StartDate"),
-    new("DateTime", "EndDate"),
-    new("int", "PaymentPeriodId"),
-    new("string?", "Note"),
-    new("string?", "Attachment"),
-    new("string", "Code"),
-    new("bool", "IsSigned"),
-    new("int?", "TemplateId"),
-
-};
+    new("int", "ContractId"),
+    new("int", "AssetId"),
+    new("int", "Quantity"),
+    };
 
     // 3. PATH RESOLUTION
     string templateFile = Host.TemplateFile;
