@@ -2,12 +2,15 @@ using Shared.Common;
 using StayHub.Domain.Entity.PMM;
 using StayHub.Domain.Entity.RBAC;
 namespace StayHub.Domain.Entity.CRM;
-public class Customer : BaseEntity 
-{ 
+
+public class Customer : BaseEntity
+{
     public string Name { get; set; }
     public string Phone { get; set; }
     public string? Email { get; set; }
     public string? CCCD { get; set; }
+    public int PropertyId { get; set; }
+    public int? ContractId { get; set; }
     public int? GenderId { get; set; }
     public int? ProvinceId { get; set; }
     public int? WardId { get; set; }
@@ -20,8 +23,10 @@ public class Customer : BaseEntity
     public int? UserId { get; set; }
 
     //Nav
-    public virtual User User { get; set; }
+    public virtual User? User { get; set; }
+    public virtual Property Property { get; set; }
     public virtual Unit? Unit { get; set; }
+    public virtual Contract? Contract { get; set; }
     public virtual List<Vehicle>? Vehicles { get; set; }
-    
+
 }
