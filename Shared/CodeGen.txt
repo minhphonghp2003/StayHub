@@ -1,14 +1,14 @@
-﻿GENERATION LOG FOR: Customer
+﻿GENERATION LOG FOR: Contract
 --------------------------------------------------
-[CREATED] Customer.cs
-[CREATED] CustomerDTO.cs
-[CREATED] ICustomerRepository.cs
-[CREATED] CustomerRepository.cs
-[CREATED] CustomerConfiguration.cs
-[CREATED] CustomerController.cs
-[CREATED] AddCustomerCommand.cs
-[CREATED] UpdateCustomerCommand.cs
-[CREATED] DeleteCustomerCommand.cs
-[CREATED] GetCustomerByIdQuery.cs
-[CREATED] GetAllCustomerQuery.cs
+[CREATED] Contract.cs
+[CREATED] ContractDTO.cs
+[CREATED] IContractRepository.cs
+[CREATED] ContractRepository.cs
+[CREATED] ContractConfiguration.cs
+[CREATED] ContractController.cs
+[CREATED] AddContractCommand.cs
+[CREATED] UpdateContractCommand.cs
+[CREATED] DeleteContractCommand.cs
+[CREATED] GetContractByIdQuery.cs
+[CREATED] GetAllContractQuery.cs
 

@@ -8,23 +8,26 @@
 <#
     // 1. SETTINGS
     string Module = "CRM"; 
-    string EntityName = "Customer"; 
+    string EntityName = "Contract"; 
     string Namespace = "StayHub";
 
     // 2. DEFINE PROPERTIES HERE
-   var Properties = new List<PropertyDefinition> {
-    new("string", "Name"),
-    new("string", "Phone"),
-    new("string?", "Email"),
-    new("string?", "CCCD"),
-    new("int?", "GenderId"),
-    new("int?", "ProvinceId"),
-    new("int?", "WardId"),
-    new("int?", "UnitId"),
-    new("DateTime?", "DateOfBirth"),
-    new("string?", "Address"),
-    new("string?", "Image"),
-    new("string?", "Job"),
+    //Users, Status
+var Properties = new List<PropertyDefinition> {
+    new("int", "RoomId"),
+    new("long", "Price"),
+    new("long", "Deposit"),
+    new("long?", "DepositRemain"),
+    new("DateTime?", "DepositRemainEndDate"),
+    new("DateTime", "StartDate"),
+    new("DateTime", "EndDate"),
+    new("int", "PaymentPeriodId"),
+    new("string?", "Note"),
+    new("string?", "Attachment"),
+    new("string", "Code"),
+    new("bool", "IsSigned"),
+    new("int?", "TemplateId"),
+
 };
 
     // 3. PATH RESOLUTION
