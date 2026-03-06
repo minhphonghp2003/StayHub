@@ -9,7 +9,6 @@ public class Service : BaseEntity
     public int UnitTypeId { get; set; }
     public bool IsActive { get; set; }
     public string? Description { get; set; }
-    public string UnitName { get; set; }
     public long Price { get; set; }
     //Nav
     public virtual List<ContractService> ContractServices { get; set; }

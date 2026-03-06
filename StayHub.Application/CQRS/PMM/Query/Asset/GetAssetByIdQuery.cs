@@ -15,7 +15,10 @@ public sealed class GetAssetByIdQueryHandler(IAssetRepository repository) : Base
             Name = x.Name,
             Quantity = x.Quantity,
             Price = x.Price,
-            TypeId = x.TypeId,
+            Type = new DTO.Catalog.CategoryItemDTO
+            {
+                Name = x.Type.Name,
+            },
             PropertyId = x.PropertyId,
             UnitId = x.UnitId,
             Note = x.Note,

@@ -9,6 +9,11 @@ public class UpdateUnitCommand : IRequest<BaseResponse<UnitDTO>>
 {
     [JsonIgnore] public int Id { get; set; }
     public string? Name { get; set; }
+    public int UnitGroupId { get; set; }
+    public decimal BasePrice { get; set; }
+    public int MaximumCustomer { get; set; }
+    public bool IsActive { get; set; }
+
 }
 public sealed class UpdateUnitCommandHandler(IUnitRepository repository) 
     : BaseResponseHandler, IRequestHandler<UpdateUnitCommand, BaseResponse<UnitDTO>> 
@@ -18,6 +23,10 @@ public sealed class UpdateUnitCommandHandler(IUnitRepository repository)
         var entity = await repository.FindOneEntityAsync(e => e.Id == request.Id);
         if (entity == null) return Failure<UnitDTO>("Not found", HttpStatusCode.BadRequest);
         entity.Name = request.Name ?? entity.Name;
+        entity.UnitGroupId = request.UnitGroupId;
+        entity.BasePrice = request.BasePrice;
+        entity.MaximumCustomer = request.MaximumCustomer;
+        entity.IsActive = request.IsActive;
         repository.Update(entity);
         return Success(new UnitDTO { Id = entity.Id, Name = entity.Name });
     }

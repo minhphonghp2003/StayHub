@@ -4,6 +4,7 @@ using System.Net;
 using System.Text.Json.Serialization;
 using StayHub.Application.DTO.PMM;
 using StayHub.Application.Interfaces.Repository.PMM;
+using Microsoft.EntityFrameworkCore;
 namespace StayHub.Application.CQRS.PMM.Command.Asset;
 public class UpdateAssetCommand : IRequest<BaseResponse<AssetDTO>> 
 {
@@ -21,7 +22,7 @@ public sealed class UpdateAssetCommandHandler(IAssetRepository repository) : Bas
 {
     public async Task<BaseResponse<AssetDTO>> Handle(UpdateAssetCommand request, CancellationToken ct) 
     {
-        var entity = await repository.FindOneEntityAsync(e => e.Id == request.Id);
+        var entity = await repository.FindOneEntityAsync(e => e.Id == request.Id,include:e=>e.Include(j=>j.Type));
         if (entity == null) return Failure<AssetDTO>("Not found", HttpStatusCode.BadRequest);
         
         entity.Name = request.Name;
@@ -40,7 +41,10 @@ public sealed class UpdateAssetCommandHandler(IAssetRepository repository) : Bas
             Name = entity.Name,
             Quantity = entity.Quantity,
             Price = entity.Price,
-            TypeId = entity.TypeId,
+            Type = new DTO.Catalog.CategoryItemDTO
+            {
+                Name = entity.Type.Name,
+            },
             PropertyId = entity.PropertyId,
             UnitId = entity.UnitId,
             Note = entity.Note,

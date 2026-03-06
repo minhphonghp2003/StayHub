@@ -9,9 +9,8 @@ public class UpdateServiceCommand : IRequest<BaseResponse<ServiceDTO>>
 {
     [JsonIgnore] public int Id { get; set; }
     public string Name { get; set; }
-    public int FeeCategoryId { get; set; }
-    public int TypeId { get; set; }
-    public int VatTypeId { get; set; }
+    public int UnitTypeId { get; set; }
+    public long Price { get; set; }
     public int PropertyId { get; set; }
     public bool IsActive { get; set; }
     public string? Description { get; set; }
@@ -27,6 +26,8 @@ public sealed class UpdateServiceCommandHandler(IServiceRepository repository) :
         entity.PropertyId = request.PropertyId;
         entity.IsActive = request.IsActive;
         entity.Description = request.Description;
+        entity.Price = request.Price;
+        entity.UnitTypeId = request.UnitTypeId;
 
         repository.Update(entity);
         return Success(new ServiceDTO 

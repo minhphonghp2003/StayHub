@@ -9,7 +9,8 @@ public class Unit : BaseEntity
     public int UnitGroupId { get; set; }
     public UnitStatus Status{ get; set; }
     public decimal BasePrice { get; set; }
-    public bool IsDeleted { get; set; }
+    public int MaximumCustomer { get; set; }
+    public bool IsActive { get; set; }
     
     public virtual UnitGroup UnitGroup { get; set; } // Navigation property
 }
