@@ -10,7 +10,15 @@ public sealed class AddUnitCommandHandler(IUnitRepository repository)
 {
     public async Task<BaseResponse<bool>> Handle(AddUnitCommand request, CancellationToken ct)
     {
-        var entity = new StayHub.Domain.Entity.PMM.Unit { Name = request.Name, BasePrice = request.BasePrice, UnitGroupId = request.UnitGroupId, MaximumCustomer = request.MaximumCustomer, IsActive = request.IsActive };
+        var entity = new StayHub.Domain.Entity.PMM.Unit
+        {
+            Name = request.Name,
+            BasePrice = request.BasePrice,
+            UnitGroupId = request.UnitGroupId,
+            MaximumCustomer = request.MaximumCustomer,
+            IsActive = request.IsActive,
+            Status = UnitStatus.AVAILABLE
+        };
         await repository.AddAsync(entity);
         return Success(true);
     }
