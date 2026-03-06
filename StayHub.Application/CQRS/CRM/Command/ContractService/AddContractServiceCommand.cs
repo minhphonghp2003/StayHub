@@ -2,7 +2,7 @@ using MediatR;
 using Shared.Response;
 using StayHub.Application.Interfaces.Repository.CRM;
 namespace StayHub.Application.CQRS.CRM.Command.ContractService;
-public record AddContractServiceCommand(int ContractId, int ServiceId, string Value) : IRequest<BaseResponse<bool>>;
+public record AddContractServiceCommand(int ContractId, int ServiceId, int Quantity) : IRequest<BaseResponse<bool>>;
 public sealed class AddContractServiceCommandHandler(IContractServiceRepository repository) : BaseResponseHandler, IRequestHandler<AddContractServiceCommand, BaseResponse<bool>> 
 {
     public async Task<BaseResponse<bool>> Handle(AddContractServiceCommand request, CancellationToken ct) 
@@ -11,7 +11,7 @@ public sealed class AddContractServiceCommandHandler(IContractServiceRepository 
         { 
             ContractId = request.ContractId,
             ServiceId = request.ServiceId,
-            Value = request.Value
+            Quantity = request.Quantity
         };
         await repository.AddAsync(entity);
         return Success(true);

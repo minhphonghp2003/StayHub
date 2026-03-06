@@ -14,7 +14,7 @@ public sealed class GetContractServiceByIdQueryHandler(IContractServiceRepositor
             Id = x.Id, 
             ContractId = x.ContractId,
             ServiceId = x.ServiceId,
-            Value = x.Value
+            Quantity = x.Quantity,
         });
         return result == null ? Failure<ContractServiceDTO>("Not found", HttpStatusCode.BadRequest) : Success(result);
     }

@@ -19,7 +19,7 @@ public sealed class GetAllContractServiceQueryHandler(IContractServiceRepository
                 Id = x.Id, 
                 ContractId = x.ContractId,
                 ServiceId = x.ServiceId,
-                Value = x.Value
+                Quantity = x.Quantity,
             }
         );
         return SuccessPaginated(result.ToList(), count, request.pageNumber ?? 1, size);

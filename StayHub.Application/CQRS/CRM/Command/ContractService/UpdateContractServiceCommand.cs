@@ -10,7 +10,7 @@ public class UpdateContractServiceCommand : IRequest<BaseResponse<ContractServic
     [JsonIgnore] public int Id { get; set; }
     public int ContractId { get; set; }
     public int ServiceId { get; set; }
-    public string Value { get; set; }
+    public int Quantity { get; set; }
 }
 public sealed class UpdateContractServiceCommandHandler(IContractServiceRepository repository) : BaseResponseHandler, IRequestHandler<UpdateContractServiceCommand, BaseResponse<ContractServiceDTO>> 
 {
@@ -21,7 +21,7 @@ public sealed class UpdateContractServiceCommandHandler(IContractServiceReposito
         
         entity.ContractId = request.ContractId;
         entity.ServiceId = request.ServiceId;
-        entity.Value = request.Value;
+        entity.Quantity = request.Quantity;
 
         repository.Update(entity);
         return Success(new ContractServiceDTO 
@@ -29,7 +29,8 @@ public sealed class UpdateContractServiceCommandHandler(IContractServiceReposito
             Id = entity.Id, 
             ContractId = entity.ContractId,
             ServiceId = entity.ServiceId,
-            Value = entity.Value
+            Quantity = request.Quantity,
+            
         });
     }
 }
