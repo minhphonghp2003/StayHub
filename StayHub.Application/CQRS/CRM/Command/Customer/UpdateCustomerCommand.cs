@@ -10,6 +10,7 @@ public class UpdateCustomerCommand : IRequest<BaseResponse<CustomerDTO>>
     [JsonIgnore] public int Id { get; set; }
     public string Name { get; set; }
     public string Phone { get; set; }
+    public int PropertyId { get; set; }
     public string? Email { get; set; }
     public string? CCCD { get; set; }
     public int? GenderId { get; set; }
@@ -30,6 +31,7 @@ public sealed class UpdateCustomerCommandHandler(ICustomerRepository repository)
         
         entity.Name = request.Name;
         entity.Phone = request.Phone;
+        entity.PropertyId = request.PropertyId;
         entity.Email = request.Email;
         entity.CCCD = request.CCCD;
         entity.GenderId = request.GenderId;
