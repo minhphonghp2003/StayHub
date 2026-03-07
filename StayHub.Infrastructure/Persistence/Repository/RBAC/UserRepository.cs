@@ -40,17 +40,17 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
                               );
         }
 
-        public async Task<(List<UserDTO>,int)> GetUserOfRole(int roleId, int pageNumber, int pageSize)
+        public async Task<(List<UserDTO>, int)> GetUserOfRole(int roleId, int pageNumber, int pageSize)
         {
             return (await GetManyPagedAsync(pageNumber: pageNumber,
                               pageSize: pageSize, filter: e => e.UserRoles.Any(j => j.RoleId == roleId), selector: (e, i) => new UserDTO
-            {
-                Id = e.Id,
-                Username = e.Username,
-                Fullname = e.Profile.Fullname,
-                Phone = e.Profile.Phone,
-                Image= e.Profile.Image,
-            },include:e=>e.Include(j=>j.Profile)));
+                              {
+                                  Id = e.Id,
+                                  Username = e.Username,
+                                  Fullname = e.Profile.Fullname,
+                                  Phone = e.Profile.Phone,
+                                  Image = e.Profile.Image,
+                              }, include: e => e.Include(j => j.Profile)));
         }
 
         public async Task<bool> SetActivated(int id, bool activated)
@@ -84,12 +84,12 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
                     Name = ur.Role.Name,
                     Code = ur.Role.Code,
                     Description = ur.Role.Description,
-                    
+
                 }).ToList()
-                
-            },include: e => e.Include(j => j.Profile));
+
+            }, include: e => e.Include(j => j.Profile));
             return profile;
-            
+
 
 
         }
@@ -97,7 +97,15 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
         public Task<bool> IsSystemUser(int userId)
         {
             var systemRoles = Enum.GetNames(typeof(SystemRole)).ToList();
-            return _dbSet.AnyAsync(e => e.Id == userId && e.UserRoles.Any(ur => systemRoles.Contains(ur.Role.Code) ));
+            return _dbSet.AnyAsync(e => e.Id == userId && e.UserRoles.Any(ur => systemRoles.Contains(ur.Role.Code)));
+        }
+
+        public async Task<bool> HasAccessToResource(int userId, int? propertyId, int? unitId)
+        {
+            if (propertyId == null && unitId == null) return false;
+            return await _dbSet.AnyAsync(e => e.Id == userId && e.Properties.Any(p => (propertyId != null && p.Id == propertyId)
+            || (unitId != null && p.UnitGroups.Any(ug => ug.Units.Any(u => u.Id == unitId)
+            ))));
         }
     }
 

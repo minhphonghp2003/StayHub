@@ -12,5 +12,6 @@ namespace StayHub.Application.Interfaces.Repository.RBAC
         Task<bool> SetActivated(int id, bool activated);
         Task<ProfileDTO> GetProfile(int userId);
         Task<bool> IsSystemUser(int userId);
+        Task<bool> HasAccessToResource(int userId, int? propertyId, int? unitId);
     }
 }

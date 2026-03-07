@@ -21,7 +21,6 @@ public sealed class UpdateUnitGroupCommandHandler(IUnitGroupRepository repositor
         var entity = await repository.FindOneEntityAsync(e => e.Id == request.Id);
         if (entity == null) return Failure<UnitGroupDTO>("Not found", HttpStatusCode.BadRequest);
         entity.Name = request.Name ?? entity.Name;
-        entity.PropertyId = request.PropertyId;
         repository.Update(entity);
         return Success(new UnitGroupDTO { Id = entity.Id, Name = entity.Name });
     }

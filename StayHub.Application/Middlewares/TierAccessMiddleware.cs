@@ -14,12 +14,9 @@ public class TierAccessMiddleware
         _next = next;
     }
 
-    public async Task InvokeAsync(HttpContext context, IPropertyRepository propertyRepository,IUserRepository userRepository)
+    public async Task InvokeAsync(HttpContext context, IPropertyRepository propertyRepository, IUserRepository userRepository)
     {
-        var (method, action) = context.GetRouteInfo();
-        var routeData = context.GetRouteData();
-        var propertyIdValue = routeData.Values["propertyId"]?.ToString();
-        var unitIdValue = routeData.Values["unitId"]?.ToString();
+
         var currentUser = context.User;
         int.TryParse(currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value, out int userId);
         if (await userRepository.IsSystemUser(userId))
@@ -27,17 +24,20 @@ public class TierAccessMiddleware
             await _next(context);
             return;
         }
+        var (method, action) = context.GetRouteInfo();
+        var routeData = context.GetRouteData();
+        var (propertyIdValue, unitIdValue) = await context.GetPropertyAndUnitFromReq();
         var hasProperty = int.TryParse(propertyIdValue, out var propertyId);
         var hasUnit = int.TryParse(unitIdValue, out var unitId);
         var (userHasAccess, subscriptionActive, actionAllowed) =
-            await propertyRepository.CheckTierAllowancesAsync(userId,  method, action,
+            await propertyRepository.CheckTierAllowancesAsync(userId, method, action,
                 hasProperty ? propertyId : null, hasUnit ? unitId : null);
         // check for user association
         if (!userHasAccess)
         {
             context.Response.StatusCode = StatusCodes.Status403Forbidden;
             await context.Response.WriteAsJsonAsync(new
-                { error = "Access denied: User not associated with this property" });
+            { error = "Access denied: User not associated with this property" });
             return;
         }
 

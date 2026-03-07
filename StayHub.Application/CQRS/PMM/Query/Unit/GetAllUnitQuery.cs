@@ -7,13 +7,7 @@ using StayHub.Application.DTO.PMM;
 using StayHub.Application.Interfaces.Repository.PMM;
 namespace StayHub.Application.CQRS.PMM.Query.Unit;
 
-//public UnitStatus Status { get; set; }
-//public decimal BasePrice { get; set; }
-//public int MaximumCustomer { get; set; }
-//public bool IsActive { get; set; }
-
-//public UnitGroupDTO UnitGroup { get; set; }
-public record GetAllUnitQuery(int? pageNumber, int? pageSize, string? searchKey) : IRequest<Response<UnitDTO>>;
+public record GetAllUnitQuery(int propertyId, int? pageNumber, int? pageSize, string? searchKey) : IRequest<Response<UnitDTO>>;
 public sealed class GetAllUnitQueryHandler(IUnitRepository repository, IConfiguration config)
     : BaseResponseHandler, IRequestHandler<GetAllUnitQuery, Response<UnitDTO>>
 {
@@ -23,8 +17,8 @@ public sealed class GetAllUnitQueryHandler(IUnitRepository repository, IConfigur
         var (result, count) = await repository.GetManyPagedAsync(
             pageNumber: request.pageNumber ?? 1,
             pageSize: size,
-            filter: x => request.searchKey == null || x.Name.Contains(request.searchKey),
-            include:x=>x.Include(j=>j.UnitGroup),
+            filter: x => x.UnitGroup.PropertyId == request.propertyId && request.searchKey == null || x.Name.Contains(request.searchKey),
+            include: x => x.Include(j => j.UnitGroup),
             selector: (x, i) => new UnitDTO
             {
                 Id = x.Id,
@@ -38,7 +32,7 @@ public sealed class GetAllUnitQueryHandler(IUnitRepository repository, IConfigur
                     Id = x.Id,
                     Name = x.Name,
 
-                } 
+                }
             }
         );
         return SuccessPaginated(result.ToList(), count, request.pageNumber ?? 1, size);

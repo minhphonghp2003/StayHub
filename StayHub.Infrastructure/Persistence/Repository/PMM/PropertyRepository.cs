@@ -54,6 +54,15 @@ public class PropertyRepository(AppDbContext context, IRoleRepository roleReposi
         {
             return (true, true, true);
         }
+        if (propertyId != null && unitId != null)
+        {
+            var _property = await FindOneAsync(filter:e=>e.Id==propertyId&& e.UnitGroups.Any(g => g.Units.Any(u=>u.Id==unitId)),selector:e=>e,include:null);
+            if (_property == null)
+            {
+                return (false, false, false);
+            }
+        }
+
         var property = await FindOneAsync(
             filter: e => e.Users.Any(u => u.Id == userId) && ((propertyId.HasValue && e.Id == propertyId) ||
                                                               (unitId.HasValue && e.UnitGroups.Any(ug =>

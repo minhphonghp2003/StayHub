@@ -7,9 +7,9 @@ public class UnitController : BaseController
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id) => Ok(await Mediator.Send(new GetUnitByIdQuery(id)));
 
-    [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] int? pageNumber, [FromQuery] int? pageSize, [FromQuery] string? search) 
-        => Ok(await Mediator.Send(new GetAllUnitQuery(pageNumber, pageSize, search)));
+    [HttpGet("{propertyId}")]
+    public async Task<IActionResult> GetAll(int propertyId, [FromQuery] int? pageNumber, [FromQuery] int? pageSize, [FromQuery] string? search) 
+        => Ok(await Mediator.Send(new GetAllUnitQuery(propertyId, pageNumber, pageSize, search)));
 
     [HttpPost]
     public async Task<IActionResult> Create(AddUnitCommand request) => GenerateResponse(await Mediator.Send(request));

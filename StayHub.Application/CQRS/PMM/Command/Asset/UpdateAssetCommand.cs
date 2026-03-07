@@ -29,7 +29,6 @@ public sealed class UpdateAssetCommandHandler(IAssetRepository repository) : Bas
         entity.Quantity = request.Quantity;
         entity.Price = request.Price;
         entity.TypeId = request.TypeId;
-        entity.PropertyId = request.PropertyId;
         entity.UnitId = request.UnitId;
         entity.Note = request.Note;
         entity.Image = request.Image;

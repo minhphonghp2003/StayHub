@@ -6,7 +6,7 @@ using StayHub.Application.Interfaces.Repository.PMM;
 using Microsoft.EntityFrameworkCore;
 namespace StayHub.Application.CQRS.PMM.Query.Service;
 
-public record GetAllServiceQuery(int? pageNumber, int? pageSize, string? searchKey) : IRequest<Response<ServiceDTO>>;
+public record GetAllServiceQuery(int propertyId, int? pageNumber, int? pageSize, string? searchKey) : IRequest<Response<ServiceDTO>>;
 public sealed class GetAllServiceQueryHandler(IServiceRepository repository, IConfiguration config) : BaseResponseHandler, IRequestHandler<GetAllServiceQuery, Response<ServiceDTO>>
 {
     public async Task<Response<ServiceDTO>> Handle(GetAllServiceQuery request, CancellationToken ct)
@@ -15,7 +15,7 @@ public sealed class GetAllServiceQueryHandler(IServiceRepository repository, ICo
         var (result, count) = await repository.GetManyPagedAsync(
             pageNumber: request.pageNumber ?? 1,
             pageSize: size,
-            filter: x => request.searchKey == null || x.Name.Contains(request.searchKey),
+            filter: x => x.PropertyId == request.propertyId && request.searchKey == null || x.Name.Contains(request.searchKey),
             include: x => x.Include(j => j.UnitType),
             selector: (x, i) => new ServiceDTO
             {

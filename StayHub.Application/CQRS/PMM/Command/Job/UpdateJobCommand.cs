@@ -22,7 +22,6 @@ public sealed class UpdateJobCommandHandler(IJobRepository repository) : BaseRes
         if (entity == null) return Failure<JobDTO>("Not found", HttpStatusCode.BadRequest);
         
         entity.Name = request.Name;
-        entity.PropertyId = request.PropertyId;
         entity.UnitId = request.UnitId;
         entity.Description = request.Description;
         entity.IsActive = request.IsActive;
