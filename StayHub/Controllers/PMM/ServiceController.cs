@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using StayHub.Application.CQRS.PMM.Command.Service;
+using StayHub.Application.CQRS.PMM.Command.Unit;
 using StayHub.Application.CQRS.PMM.Query.Service;
 namespace StayHub.API.Controllers.PMM;
 public class ServiceController : BaseController 
@@ -13,6 +14,11 @@ public class ServiceController : BaseController
 
     [HttpPost]
     public async Task<IActionResult> Create(AddServiceCommand request) => GenerateResponse(await Mediator.Send(request));
+    [HttpPatch("activate/{serviceId}")]
+    public async Task<IActionResult> SetActivate(int serviceId, bool isActivate)
+    {
+        return GenerateResponse(await Mediator.Send(new SetServiceActivationCommand(serviceId, isActivate)));
+    }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, UpdateServiceCommand request) 

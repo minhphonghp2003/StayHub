@@ -18,17 +18,11 @@ public sealed class GetUnitByIdQueryHandler(IUnitRepository repository, IHttpCon
         {
             Id = x.Id,
             Name = x.Name,
-            Status = x.Status,
+            Status = x.Status.ToString(),
             BasePrice = x.BasePrice,
             MaximumCustomer = x.MaximumCustomer,
             IsActive = x.IsActive,
-            UnitGroup = new UnitGroupDTO
-            {
-                Id = x.Id,
-                Name = x.Name,
-
-            }
-
+            UnitGroupId = x.UnitGroupId 
         });
         return result == null ? Failure<UnitDTO>("Not found", HttpStatusCode.BadRequest) : Success(result);
     }

@@ -22,6 +22,7 @@ public sealed class GetAllServiceQueryHandler(IServiceRepository repository, ICo
                 Id = x.Id,
                 Name = x.Name,
                 PropertyId = x.PropertyId,
+                UnitTypeId = x.UnitTypeId,
                 UnitType = new DTO.Catalog.CategoryItemDTO
                 {
                     Name = x.UnitType.Name,
@@ -32,6 +33,6 @@ public sealed class GetAllServiceQueryHandler(IServiceRepository repository, ICo
                 Description = x.Description
             }
         );
-        return SuccessPaginated(result.ToList(), count, request.pageNumber ?? 1, size);
+        return SuccessPaginated(result.ToList(), count,size, request.pageNumber ?? 1);
     }
 }

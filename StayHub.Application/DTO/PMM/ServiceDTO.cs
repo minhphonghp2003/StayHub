@@ -5,6 +5,7 @@ public class ServiceDTO : BaseDTO
 { 
     public string Name { get; set; }
     public int PropertyId { get; set; }
+    public int UnitTypeId { get; set; }
     public CategoryItemDTO UnitType { get; set; }
     public bool IsActive { get; set; }
     public string? Description { get; set; }

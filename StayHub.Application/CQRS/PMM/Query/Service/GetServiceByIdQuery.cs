@@ -19,6 +19,7 @@ public sealed class GetServiceByIdQueryHandler(IServiceRepository repository, IH
             Name = x.Name,
             PropertyId = x.PropertyId,
             IsActive = x.IsActive,
+            UnitTypeId = x.UnitTypeId,
             UnitType = new DTO.Catalog.CategoryItemDTO
             {
                 Name = x.UnitType.Name,

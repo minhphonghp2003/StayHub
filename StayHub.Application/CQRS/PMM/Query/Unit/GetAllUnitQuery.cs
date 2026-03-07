@@ -23,18 +23,19 @@ public sealed class GetAllUnitQueryHandler(IUnitRepository repository, IConfigur
             {
                 Id = x.Id,
                 Name = x.Name,
-                Status = x.Status,
+                Status = x.Status.ToString(),
                 BasePrice = x.BasePrice,
                 MaximumCustomer = x.MaximumCustomer,
                 IsActive = x.IsActive,
+                UnitGroupId = x.UnitGroupId,
                 UnitGroup = new UnitGroupDTO
                 {
-                    Id = x.Id,
-                    Name = x.Name,
+                    Id = x.UnitGroup.Id,
+                    Name = x.UnitGroup.Name,
 
                 }
             }
         );
-        return SuccessPaginated(result.ToList(), count, request.pageNumber ?? 1, size);
+        return SuccessPaginated(result.ToList(), count,size, request.pageNumber ?? 1);
     }
 }

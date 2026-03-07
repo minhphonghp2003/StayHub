@@ -6,6 +6,8 @@ public class AssetDTO : BaseDTO
     public string Name { get; set; }
     public int Quantity { get; set; }
     public int? Price { get; set; }
+    public int TypeId { get; set; }
+
     public CategoryItemDTO Type { get; set; }
     public int PropertyId { get; set; }
     public int? UnitId { get; set; }

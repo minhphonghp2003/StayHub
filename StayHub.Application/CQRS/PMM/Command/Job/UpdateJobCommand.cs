@@ -12,7 +12,6 @@ public class UpdateJobCommand : IRequest<BaseResponse<JobDTO>>
     public int PropertyId { get; set; }
     public int? UnitId { get; set; }
     public string Description { get; set; }
-    public bool IsActive { get; set; }
 }
 public sealed class UpdateJobCommandHandler(IJobRepository repository) : BaseResponseHandler, IRequestHandler<UpdateJobCommand, BaseResponse<JobDTO>> 
 {
@@ -24,7 +23,6 @@ public sealed class UpdateJobCommandHandler(IJobRepository repository) : BaseRes
         entity.Name = request.Name;
         entity.UnitId = request.UnitId;
         entity.Description = request.Description;
-        entity.IsActive = request.IsActive;
 
         repository.Update(entity);
         return Success(new JobDTO 

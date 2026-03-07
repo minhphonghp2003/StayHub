@@ -22,11 +22,7 @@ public sealed class GetJobByIdQueryHandler(IJobRepository repository,IHttpContex
                 Id = x.Property.Id,
                 Name = x.Property.Name,
             },
-            Unit = new UnitDTO
-            {
-                Id = x.Unit.Id,
-                Name = x.Unit.Name,
-            },
+           
             Description = x.Description,
             IsActive = x.IsActive
         });

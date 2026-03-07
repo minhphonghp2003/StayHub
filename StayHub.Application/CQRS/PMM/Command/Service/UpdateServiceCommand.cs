@@ -12,7 +12,6 @@ public class UpdateServiceCommand : IRequest<BaseResponse<ServiceDTO>>
     public int UnitTypeId { get; set; }
     public long Price { get; set; }
     public int PropertyId { get; set; }
-    public bool IsActive { get; set; }
     public string? Description { get; set; }
 }
 public sealed class UpdateServiceCommandHandler(IServiceRepository repository) : BaseResponseHandler, IRequestHandler<UpdateServiceCommand, BaseResponse<ServiceDTO>> 
@@ -23,7 +22,6 @@ public sealed class UpdateServiceCommandHandler(IServiceRepository repository) :
         if (entity == null) return Failure<ServiceDTO>("Not found", HttpStatusCode.BadRequest);
         
         entity.Name = request.Name;
-        entity.IsActive = request.IsActive;
         entity.Description = request.Description;
         entity.Price = request.Price;
         entity.UnitTypeId = request.UnitTypeId;

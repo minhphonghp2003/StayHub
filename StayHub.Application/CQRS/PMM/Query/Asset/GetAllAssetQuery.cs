@@ -24,6 +24,7 @@ public sealed class GetAllAssetQueryHandler(IAssetRepository repository, IConfig
                 Name = x.Name,
                 Quantity = x.Quantity,
                 Price = x.Price,
+                TypeId = x.TypeId,
                 Type = new CategoryItemDTO
                 {
                     Name = x.Type.Name,
@@ -35,6 +36,6 @@ public sealed class GetAllAssetQueryHandler(IAssetRepository repository, IConfig
                 Image = x.Image
             }
         );
-        return SuccessPaginated(result.ToList(), count, request.pageNumber ?? 1, size);
+        return SuccessPaginated(result.ToList(), count, size, request.pageNumber ?? 1);
     }
 }

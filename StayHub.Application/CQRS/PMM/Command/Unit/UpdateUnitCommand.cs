@@ -14,7 +14,6 @@ public class UpdateUnitCommand : IRequest<BaseResponse<UnitDTO>>
     public int UnitGroupId { get; set; }
     public decimal BasePrice { get; set; }
     public int MaximumCustomer { get; set; }
-    public bool IsActive { get; set; }
 
 }
 public sealed class UpdateUnitCommandHandler(IUnitRepository repository,IUnitGroupRepository unitGroupRepository, IHttpContextAccessor httpContextAccessor) 
@@ -32,7 +31,6 @@ public sealed class UpdateUnitCommandHandler(IUnitRepository repository,IUnitGro
         entity.UnitGroupId = request.UnitGroupId;
         entity.BasePrice = request.BasePrice;
         entity.MaximumCustomer = request.MaximumCustomer;
-        entity.IsActive = request.IsActive;
         repository.Update(entity);
         return Success(new UnitDTO { Id = entity.Id, Name = entity.Name });
     }

@@ -25,15 +25,15 @@ public sealed class GetAllJobQueryHandler(IJobRepository repository, IConfigurat
                     Id =x.Property.Id,
                     Name = x.Property.Name,
                 },
-                Unit = new UnitDTO
+                Unit =x.Unit!=null? new UnitDTO
                 {
                     Id=x.Unit.Id,
                     Name = x.Unit.Name,
-                },
+                }:null,
                 Description = x.Description,
                 IsActive = x.IsActive
             }
         );
-        return SuccessPaginated(result.ToList(), count, request.pageNumber ?? 1, size);
+        return SuccessPaginated(result.ToList(), count,size, request.pageNumber ?? 1);
     }
 }

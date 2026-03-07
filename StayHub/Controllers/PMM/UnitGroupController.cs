@@ -10,6 +10,9 @@ public class UnitGroupController : BaseController
     [HttpGet("all/{propertyId}")]
     public async Task<IActionResult> GetAll(int propertyId, [FromQuery] int? pageNumber, [FromQuery] int? pageSize, [FromQuery] string? search) 
         => Ok(await Mediator.Send(new GetAllUnitGroupQuery( propertyId,pageNumber, pageSize, search)));
+    [HttpGet("no-paging/{propertyId}")]
+    public async Task<IActionResult> GetAllNopaging(int propertyId)
+         => Ok(await Mediator.Send(new GetAllUnitGroupNoPagingQuery(propertyId)));
 
     [HttpPost]
     public async Task<IActionResult> Create(AddUnitGroupCommand request) => GenerateResponse(await Mediator.Send(request));
