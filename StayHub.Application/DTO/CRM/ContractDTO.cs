@@ -1,8 +1,12 @@
 using Shared.Common;
+using StayHub.Application.DTO.PMM;
 namespace StayHub.Application.DTO.CRM;
 public class ContractDTO : BaseDTO 
 { 
-    public int RoomId { get; set; }
+    public int UnitId { get; set; }
+    public UnitDTO Unit { get; set; }
+    public CustomerDTO Customer { get; set; }
+    public String Status { get; set; }
     public long Price { get; set; }
     public long Deposit { get; set; }
     public long? DepositRemain { get; set; }
