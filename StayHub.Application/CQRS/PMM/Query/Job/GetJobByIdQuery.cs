@@ -17,11 +17,13 @@ public sealed class GetJobByIdQueryHandler(IJobRepository repository,IHttpContex
         {
             Id = x.Id,
             Name = x.Name,
+            
             Property = new PropertyDTO
             {
                 Id = x.Property.Id,
                 Name = x.Property.Name,
             },
+            UnitId = x.UnitId,
            
             Description = x.Description,
             IsActive = x.IsActive
