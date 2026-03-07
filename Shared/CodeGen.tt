@@ -231,7 +231,7 @@ public sealed class GetAll{E}QueryHandler(I{E}Repository repository, IConfigurat
 {string.Join(",\n", props.Select(p => $"                {p.Name} = x.{p.Name}"))}
             }}
         );
-        return SuccessPaginated(result.ToList(), count, request.pageNumber ?? 1, size);
+        return SuccessPaginated(result.ToList(), count,size, request.pageNumber ?? 1);
     }}
 }}";
 

@@ -84,7 +84,7 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
 
         public async Task<List<MenuGroupDTO>> GetUserMenu(bool isSystemuser, int userId, int? propertyId)
         {
-            var flatMenus = await GetManyEntityAsync(e => e.IsActive == true && e.Path!=null && e.MenuActions.All(ma =>
+            var flatMenus = await GetManyEntityAsync(e => e.IsActive == true && e.MenuActions.All(ma =>
                 ma.Action.AllowAnonymous || (
                     (!ma.Action.RoleActions.Any() ||
                      ma.Action.RoleActions.Any(ra =>

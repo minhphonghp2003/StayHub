@@ -1,14 +1,14 @@
 ﻿GENERATION LOG FOR: Notification
 --------------------------------------------------
-[CREATED] Notification.cs
-[CREATED] NotificationDTO.cs
-[CREATED] INotificationRepository.cs
-[CREATED] NotificationRepository.cs
-[CREATED] NotificationConfiguration.cs
-[CREATED] NotificationController.cs
-[CREATED] AddNotificationCommand.cs
-[CREATED] UpdateNotificationCommand.cs
-[CREATED] DeleteNotificationCommand.cs
-[CREATED] GetNotificationByIdQuery.cs
-[CREATED] GetAllNotificationQuery.cs
+[SKIPPED] Notification.cs
+[SKIPPED] NotificationDTO.cs
+[SKIPPED] INotificationRepository.cs
+[SKIPPED] NotificationRepository.cs
+[SKIPPED] NotificationConfiguration.cs
+[SKIPPED] NotificationController.cs
+[SKIPPED] AddNotificationCommand.cs
+[SKIPPED] UpdateNotificationCommand.cs
+[SKIPPED] DeleteNotificationCommand.cs
+[SKIPPED] GetNotificationByIdQuery.cs
+[SKIPPED] GetAllNotificationQuery.cs
 

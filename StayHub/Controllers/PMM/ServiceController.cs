@@ -7,7 +7,7 @@ public class ServiceController : BaseController
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id) => Ok(await Mediator.Send(new GetServiceByIdQuery(id)));
 
-    [HttpGet("{propertyId}")]
+    [HttpGet("all/{propertyId}")]
     public async Task<IActionResult> GetAll( int propertyId, [FromQuery] int? pageNumber, [FromQuery] int? pageSize, [FromQuery] string? search) 
         => Ok(await Mediator.Send(new GetAllServiceQuery(propertyId, pageNumber, pageSize, search)));
 

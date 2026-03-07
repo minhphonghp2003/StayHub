@@ -17,6 +17,6 @@ public sealed class GetAllUnitGroupQueryHandler(IUnitGroupRepository repository,
             filter: x => x.PropertyId == request.propertyId && request.searchKey == null || x.Name.Contains(request.searchKey),
             selector: (x, i) => new UnitGroupDTO { Id = x.Id, Name = x.Name }
         );
-        return SuccessPaginated(result.ToList(), count, request.pageNumber ?? 1, size);
+        return SuccessPaginated(result.ToList(),count, size, request.pageNumber ?? 1);
     }
 }
