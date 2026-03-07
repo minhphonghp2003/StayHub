@@ -4,15 +4,17 @@ using System.Net;
 using StayHub.Application.DTO.PMM;
 using StayHub.Application.Interfaces.Repository.PMM;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using StayHub.Application.Extension;
 namespace StayHub.Application.CQRS.PMM.Query.Unit;
 
 public record GetUnitByIdQuery(int Id) : IRequest<BaseResponse<UnitDTO>>;
-public sealed class GetUnitByIdQueryHandler(IUnitRepository repository)
+public sealed class GetUnitByIdQueryHandler(IUnitRepository repository, IHttpContextAccessor httpContextAccessor)
     : BaseResponseHandler, IRequestHandler<GetUnitByIdQuery, BaseResponse<UnitDTO>>
 {
     public async Task<BaseResponse<UnitDTO>> Handle(GetUnitByIdQuery request, CancellationToken ct)
     {
-        var result = await repository.FindOneAsync(x => x.Id == request.Id, include: x => x.Include(j => j.UnitGroup),selector: (x) => new UnitDTO
+        var result = await repository.FindOneAsync(x => x.Id == request.Id && x.UnitGroup.Property.Users.Any(u => u.Id == httpContextAccessor.HttpContext.GetUserId()), include: x => x.Include(j => j.UnitGroup), selector: (x) => new UnitDTO
         {
             Id = x.Id,
             Name = x.Name,
