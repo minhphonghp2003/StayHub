@@ -7,9 +7,9 @@ public class VehicleController : BaseController
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id) => Ok(await Mediator.Send(new GetVehicleByIdQuery(id)));
 
-    [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] int? pageNumber, [FromQuery] int? pageSize, [FromQuery] string? search) 
-        => Ok(await Mediator.Send(new GetAllVehicleQuery(pageNumber, pageSize, search)));
+    [HttpGet("all/{propertyId}")]
+    public async Task<IActionResult> GetAll(int propertyId, [FromQuery] int? pageNumber, [FromQuery] int? pageSize, [FromQuery] string? search) 
+        => Ok(await Mediator.Send(new GetAllVehicleQuery(propertyId, pageNumber, pageSize, search)));
 
     [HttpPost]
     public async Task<IActionResult> Create(AddVehicleCommand request) => GenerateResponse(await Mediator.Send(request));
