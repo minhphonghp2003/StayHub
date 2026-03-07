@@ -32,6 +32,6 @@ public sealed class GetAllContractQueryHandler(IContractRepository repository, I
                 TemplateId = x.TemplateId
             }
         );
-        return SuccessPaginated(result.ToList(), count, request.pageNumber ?? 1, size);
+        return SuccessPaginated(result.ToList(), count,size, request.pageNumber ?? 1);
     }
 }

@@ -30,6 +30,6 @@ public sealed class GetAllVehicleQueryHandler(IVehicleRepository repository, ICo
                 Image = x.Image
             }
         );
-        return SuccessPaginated(result.ToList(), count, request.pageNumber ?? 1, size);
+        return SuccessPaginated(result.ToList(), count,size, request.pageNumber ?? 1);
     }
 }
