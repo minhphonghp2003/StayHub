@@ -10,6 +10,9 @@ public class CustomerController : BaseController
     [HttpGet("all/{propertyId}")]
     public async Task<IActionResult> GetAll(int propertyId, [FromQuery] int? pageNumber, [FromQuery] int? pageSize, [FromQuery] string? search) 
         => Ok(await Mediator.Send(new GetAllCustomerQuery(propertyId, pageNumber, pageSize, search)));
+    [HttpGet("no-paging/{propertyId}")]
+    public async Task<IActionResult> GetAllNoPaging(int propertyId)
+          => Ok(await Mediator.Send(new GetAllCustomerNoPagingQuery(propertyId)));
 
     [HttpPost]
     public async Task<IActionResult> Create(AddCustomerCommand request) => GenerateResponse(await Mediator.Send(request));

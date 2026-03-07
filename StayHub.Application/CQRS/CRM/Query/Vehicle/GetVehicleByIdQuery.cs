@@ -10,9 +10,14 @@ public sealed class GetVehicleByIdQueryHandler(IVehicleRepository repository) : 
     public async Task<BaseResponse<VehicleDTO>> Handle(GetVehicleByIdQuery request, CancellationToken ct) 
     {
         var result = await repository.FindOneAsync(x => x.Id == request.Id, (x) => new VehicleDTO 
-        { 
-            Id = x.Id, 
+        {
+            Id = x.Id,
             CustomerId = x.CustomerId,
+            Customer = new CustomerDTO
+            {
+                Id = x.Customer.Id,
+                Name = x.Customer.Name,
+            },
             Name = x.Name,
             LicensePlate = x.LicensePlate,
             Image = x.Image
