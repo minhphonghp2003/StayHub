@@ -25,31 +25,31 @@ public sealed class GetAllCustomerQueryHandler(ICustomerRepository repository, I
                 Email = x.Email,
                 CCCD = x.CCCD,
                 GenderId = x.GenderId,
-                Gender = new DTO.Catalog.CategoryItemDTO
+                Gender = x.Gender == null ? null : new DTO.Catalog.CategoryItemDTO
                 {
                     Id = x.Gender.Id,
                     Name = x.Gender.Name
 
                 },
                 ProvinceId = x.ProvinceId,
-                Province = new DTO.Catalog.ProvinceDTO
+                Province = x.Province == null ? null : new DTO.Catalog.ProvinceDTO
                 {
                     Id = x.Province.Id,
                     Name = x.Province.Name,
                 },
 
                 WardId = x.WardId,
-                Ward = new DTO.Catalog.WardDTO
+                Ward = x.Ward == null ? null : new DTO.Catalog.WardDTO
                 {
                     Id = x.Ward.Id,
                     Name = x.Ward.Name,
                 },
                 UnitId = x.UnitId,
-                Unit = new DTO.PMM.UnitDTO
+                Unit = x.Unit != null ? new DTO.PMM.UnitDTO
                 {
                     Id = x.Unit.Id,
                     Name = x.Unit.Name,
-                },
+                } : null,
                 DateOfBirth = x.DateOfBirth,
                 Address = x.Address,
                 Image = x.Image,
