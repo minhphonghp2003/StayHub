@@ -16,7 +16,6 @@ public class UpdateCustomerCommand : IRequest<BaseResponse<CustomerDTO>>
     public int? GenderId { get; set; }
     public int? ProvinceId { get; set; }
     public int? WardId { get; set; }
-    public int? UnitId { get; set; }
     public DateTime? DateOfBirth { get; set; }
     public string? Address { get; set; }
     public string? Image { get; set; }
@@ -37,7 +36,6 @@ public sealed class UpdateCustomerCommandHandler(ICustomerRepository repository)
         entity.GenderId = request.GenderId;
         entity.ProvinceId = request.ProvinceId;
         entity.WardId = request.WardId;
-        entity.UnitId = request.UnitId;
         entity.DateOfBirth = request.DateOfBirth;
         entity.Address = request.Address;
         entity.Image = request.Image;

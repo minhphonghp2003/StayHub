@@ -4,11 +4,16 @@ using StayHub.Application.Interfaces.Repository.CRM;
 namespace StayHub.Application.CQRS.CRM.Command.Customer;
 
 public record AddCustomerCommand(string Name, string Phone,int PropertyId, string? Email, string? CCCD, int? GenderId, int? ProvinceId, int? WardId,
-    int? UnitId, DateTime? DateOfBirth, string? Address, string? Image, string? Job) : IRequest<BaseResponse<bool>>;
+     DateTime? DateOfBirth, string? Address, string? Image, string? Job) : IRequest<BaseResponse<bool>>;
 public sealed class AddCustomerCommandHandler(ICustomerRepository repository) : BaseResponseHandler, IRequestHandler<AddCustomerCommand, BaseResponse<bool>>
 {
     public async Task<BaseResponse<bool>> Handle(AddCustomerCommand request, CancellationToken ct)
     {
+        var existed = await repository.FindOneEntityAsync(filter: e => e.Phone == request.Phone && e.PropertyId==request.PropertyId);
+        if (existed != null)
+        {
+            return Failure<bool>("Customer existed",System.Net.HttpStatusCode.BadRequest);
+        }
         var entity = new StayHub.Domain.Entity.CRM.Customer
         {
             Name = request.Name,
@@ -19,11 +24,11 @@ public sealed class AddCustomerCommandHandler(ICustomerRepository repository) : 
             GenderId = request.GenderId,
             ProvinceId = request.ProvinceId,
             WardId = request.WardId,
-            UnitId = request.UnitId,
             DateOfBirth = request.DateOfBirth,
             Address = request.Address,
             Image = request.Image,
-            Job = request.Job
+            Job = request.Job,
+            IsRepresentative =false
         };
         await repository.AddAsync(entity);
         return Success(true);

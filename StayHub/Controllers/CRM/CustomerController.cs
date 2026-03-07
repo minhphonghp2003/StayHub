@@ -7,9 +7,9 @@ public class CustomerController : BaseController
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id) => Ok(await Mediator.Send(new GetCustomerByIdQuery(id)));
 
-    [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] int? pageNumber, [FromQuery] int? pageSize, [FromQuery] string? search) 
-        => Ok(await Mediator.Send(new GetAllCustomerQuery(pageNumber, pageSize, search)));
+    [HttpGet("all/{propertyId}")]
+    public async Task<IActionResult> GetAll(int propertyId, [FromQuery] int? pageNumber, [FromQuery] int? pageSize, [FromQuery] string? search) 
+        => Ok(await Mediator.Send(new GetAllCustomerQuery(propertyId, pageNumber, pageSize, search)));
 
     [HttpPost]
     public async Task<IActionResult> Create(AddCustomerCommand request) => GenerateResponse(await Mediator.Send(request));
