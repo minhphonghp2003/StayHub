@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using StayHub.Application.CQRS.CRM.Query.Customer;
 using StayHub.Application.CQRS.PMM.Command.Asset;
 using StayHub.Application.CQRS.PMM.Query.Asset;
 namespace StayHub.API.Controllers.PMM;
@@ -10,6 +11,9 @@ public class AssetController : BaseController
     [HttpGet("all/{propertyId}")]
     public async Task<IActionResult> GetAll(int propertyId, [FromQuery] int? pageNumber, [FromQuery] int? pageSize, [FromQuery] string? search) 
         => Ok(await Mediator.Send(new GetAllAssetQuery(propertyId, pageNumber, pageSize, search)));
+    [HttpGet("no-paging/{propertyId}")]
+    public async Task<IActionResult> GetAllNoPaging(int propertyId)
+            => Ok(await Mediator.Send(new GetAllAssetNoPagingQuery(propertyId)));
 
     [HttpPost]
     public async Task<IActionResult> Create(AddAssetCommand request) => GenerateResponse(await Mediator.Send(request));

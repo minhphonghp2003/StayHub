@@ -40,8 +40,8 @@ public sealed class AddContractCommandHandler(IContractRepository repository, IC
 
         foreach (var customer in customers)
         {
-            // Set global representative flag (Safe since 1 customer : 1 contract)
             customer.IsRepresentative = (customer.Id == request.representativeId);
+            customer.UnitId = request.UnitId;   
         }
         entity.Customers = customers;
 

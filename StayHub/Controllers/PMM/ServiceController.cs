@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using StayHub.Application.CQRS.CRM.Query.Customer;
 using StayHub.Application.CQRS.PMM.Command.Service;
 using StayHub.Application.CQRS.PMM.Command.Unit;
 using StayHub.Application.CQRS.PMM.Query.Service;
@@ -11,6 +12,10 @@ public class ServiceController : BaseController
     [HttpGet("all/{propertyId}")]
     public async Task<IActionResult> GetAll( int propertyId, [FromQuery] int? pageNumber, [FromQuery] int? pageSize, [FromQuery] string? search) 
         => Ok(await Mediator.Send(new GetAllServiceQuery(propertyId, pageNumber, pageSize, search)));
+
+    [HttpGet("no-paging/{propertyId}")]
+    public async Task<IActionResult> GetAllNoPaging(int propertyId)
+        => Ok(await Mediator.Send(new GetAllServiceNoPagingQuery(propertyId)));
 
     [HttpPost]
     public async Task<IActionResult> Create(AddServiceCommand request) => GenerateResponse(await Mediator.Send(request));
