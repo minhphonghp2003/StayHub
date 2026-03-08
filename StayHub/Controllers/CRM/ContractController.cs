@@ -11,6 +11,8 @@ public class ContractController : BaseController
     public async Task<IActionResult> GetAll(int propertyId, [FromQuery] int? pageNumber, [FromQuery] int? pageSize, [FromQuery] string? search) 
         => Ok(await Mediator.Send(new GetAllContractQuery(propertyId    , pageNumber, pageSize, search)));
 
+    [HttpPost("change-room/contract/{contractId}/unit/{unitId}")]
+    public async Task<IActionResult> ChangeRoom(int contractId, int unitId) => GenerateResponse(await Mediator.Send(new ChangeRoomCommand(contractId,unitId)));
     [HttpPost]
     public async Task<IActionResult> Create(AddContractCommand request) => GenerateResponse(await Mediator.Send(request));
 

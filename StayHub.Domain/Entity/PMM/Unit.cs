@@ -11,6 +11,6 @@ public class Unit : BaseEntity
     public decimal BasePrice { get; set; }
     public int MaximumCustomer { get; set; }
     public bool IsActive { get; set; }
-    
+
     public virtual UnitGroup UnitGroup { get; set; } // Navigation property
 }
