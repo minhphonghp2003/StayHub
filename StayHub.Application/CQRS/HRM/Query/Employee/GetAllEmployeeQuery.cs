@@ -40,6 +40,7 @@ public sealed class GetAllEmployeeQueryHandler(
                 Email = x.Profile.Email,
                 Phone = x.Profile.Phone,
                 Image = x.Profile.Image,
+                UpdatedAt = x.UpdatedAt
             },
             include: e => e.Include(j => j.Profile),
             pageNumber: request.pageNumber ?? 1,
