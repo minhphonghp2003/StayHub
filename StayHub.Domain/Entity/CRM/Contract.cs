@@ -26,6 +26,7 @@ public class Contract : BaseEntity
     public string? Attachment { get; set; }
     public int? TemplateId { get; set; }
     public int? SaleId { get; set; }
+    public DateTime?  LeavingDate { get; set; }
     // Nav
     public virtual List<Customer> Customers { get; set; }
     public virtual List<ContractService>? ContractServices { get; set; }

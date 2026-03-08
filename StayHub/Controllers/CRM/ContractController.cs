@@ -15,7 +15,13 @@ public class ContractController : BaseController
     [HttpPost("change-room/contract/{contractId}/unit/{unitId}")]
     public async Task<IActionResult> ChangeRoom(int contractId, int unitId) => GenerateResponse(await Mediator.Send(new ChangeRoomCommand(contractId, unitId)));
     [HttpPost("renew")]
-    public async Task<IActionResult> Renew(int contractId, RenewContractCommand command)
+    public async Task<IActionResult> Renew( RenewContractCommand command)
+    {
+
+        return GenerateResponse(await Mediator.Send(command));
+    }
+    [HttpPost("register-leaving")]
+    public async Task<IActionResult> RequestLeave( RegisterLeavingCommand command)
     {
 
         return GenerateResponse(await Mediator.Send(command));
