@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Shared.Common;
 using StayHub.Domain.Entity.Catalog;
 using StayHub.Domain.Entity.PMM;
@@ -31,5 +32,6 @@ public class Contract : BaseEntity
     public virtual List<ContractAsset>? ContractAssets { get; set; }
     public virtual CategoryItem PaymentPeriod { get; set; }
     public virtual Unit Unit { get; set; }
+    [DeleteBehavior(DeleteBehavior.SetNull)]
     public virtual User? Sale { get; set; }
 }

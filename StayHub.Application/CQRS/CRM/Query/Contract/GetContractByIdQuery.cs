@@ -20,15 +20,27 @@ public sealed class GetContractByIdQueryHandler(IContractRepository repository) 
                 Id = x.Unit.Id,
                 Name = x.Unit.Name,
             },
-            Customer = x.Customers.Where(e => e.IsRepresentative == true).Select(e => new CustomerDTO
+            Customer = x.Customers.Select(e => new CustomerDTO
             {
                 Id = e.Id,
                 Name = e.Name,
-            }).First(),
+                IsRepresentative = e.IsRepresentative,
+            }).ToList(),
             Status = x.Status.ToString(),
             Price = x.Price,
             Deposit = x.Deposit,
+            Assets = x.ContractAssets == null ? null : x.ContractAssets.Select(e => new ContractAssetDTO
+            {
+                AssetId = e.AssetId,
+                Quantity = e.Quantity,
+            }).ToList(),
+            Services = x.ContractServices == null ? null : x.ContractServices.Select(e => new ContractServiceDTO
+            {
+                ServiceId = e.ServiceId,
+                Quantity = e.Quantity,
+            }).ToList(),
             DepositRemain = x.DepositRemain,
+            VehicleNumber =x.VehicleNumber,
             DepositRemainEndDate = x.DepositRemainEndDate,
             StartDate = x.StartDate,
             EndDate = x.EndDate,
@@ -37,6 +49,7 @@ public sealed class GetContractByIdQueryHandler(IContractRepository repository) 
             Attachment = x.Attachment,
             Code = x.Code,
             IsSigned = x.IsSigned,
+            SaleId = x.SaleId
         });
         return result == null ? Failure<ContractDTO>("Not found", HttpStatusCode.BadRequest) : Success(result);
     }

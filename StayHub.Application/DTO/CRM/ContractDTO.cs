@@ -5,7 +5,11 @@ public class ContractDTO : BaseDTO
 { 
     public int UnitId { get; set; }
     public UnitDTO Unit { get; set; }
-    public CustomerDTO Customer { get; set; }
+    public int VehicleNumber { get; set; }
+
+    public List<CustomerDTO>? Customer { get; set; }
+    public List<ContractAssetDTO>? Assets { get; set; }
+    public List<ContractServiceDTO>? Services { get; set; }
     public String Status { get; set; }
     public long Price { get; set; }
     public long Deposit { get; set; }
@@ -19,4 +23,5 @@ public class ContractDTO : BaseDTO
     public string Code { get; set; }
     public bool IsSigned { get; set; }
     public int? TemplateId { get; set; }
+    public int? SaleId { get; set; }
 }

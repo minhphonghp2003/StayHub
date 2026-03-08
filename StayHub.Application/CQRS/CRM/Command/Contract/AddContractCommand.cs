@@ -1,4 +1,4 @@
-using MediatR;
+﻿using MediatR;
 using Shared.Common;
 using Shared.Response;
 using StayHub.Application.DTO.CRM;
@@ -13,6 +13,14 @@ public sealed class AddContractCommandHandler(IContractRepository repository, IC
     //TODO  add service, add asset
     public async Task<BaseResponse<bool>> Handle(AddContractCommand request, CancellationToken ct)
     {
+        if((await repository.FindOneAsync(e=>e.UnitId==request.UnitId,selector:e=>e)) != null)
+        {
+            return Failure<bool>("Phòng không có sẵn",System.Net.HttpStatusCode.BadRequest);
+        }
+        if(request.customerIds.Count ==0 ||  !request.customerIds.Contains(request.representativeId))
+        {
+            return Failure<bool>("Cần phải có khách hàng đại diện",System.Net.HttpStatusCode.BadRequest);
+        }
         var entity = new StayHub.Domain.Entity.CRM.Contract
         {
             UnitId = request.UnitId,
@@ -35,49 +43,51 @@ public sealed class AddContractCommandHandler(IContractRepository repository, IC
 
         // 1. Process Customers (Filter unassigned customers only)
         var customers = (await customerRepository.GetManyEntityAsync(
-            filter: e => request.customerIds.Contains(e.Id) && e.UnitId == null
+            filter: e => request.customerIds.Contains(e.Id) && e.ContractId == null
         )).ToList();
 
         foreach (var customer in customers)
         {
             customer.IsRepresentative = (customer.Id == request.representativeId);
-            customer.UnitId = request.UnitId;   
+            customer.ContractId = entity.Id;   
         }
         entity.Customers = customers;
 
         // 2. Process Services (Optimized Lookup)
         if (request.services?.Any() == true)
         {
-            var requestedServiceIds = request.services.Select(s => s.Id).ToHashSet();
+            var requestedServiceIds = request.services.Select(s => s.ServiceId).ToHashSet();
             var validServiceIds = (await serviceRepository.GetManyAsync(
                 filter: e => requestedServiceIds.Contains(e.Id),
                 selector: (e, i) => e.Id
             )).ToHashSet();
 
             entity.ContractServices = request.services
-                .Where(s => validServiceIds.Contains(s.Id))
+                .Where(s => validServiceIds.Contains(s.ServiceId))
                 .Select(s => new ContractService
                 {
-                    ServiceId = s.Id,
+                    ServiceId = s.ServiceId,
                     Quantity = s.Quantity,
+                    ContractId = entity.Id
                 }).ToList();
         }
 
         // 3. Process Assets (Optimized Lookup)
         if (request.assets?.Any() == true)
         {
-            var requestedAssetIds = request.assets.Select(a => a.Id).ToHashSet();
+            var requestedAssetIds = request.assets.Select(a => a.AssetId).ToHashSet();
             var validAssetIds = (await assetRepository.GetManyAsync(
                 filter: e => requestedAssetIds.Contains(e.Id),
                 selector: (e, i) => e.Id
             )).ToHashSet();
 
             entity.ContractAssets = request.assets
-                .Where(a => validAssetIds.Contains(a.Id))
+                .Where(a => validAssetIds.Contains(a.AssetId))
                 .Select(a => new ContractAsset
                 {
-                    AssetId = a.Id,
+                    AssetId = a.AssetId,
                     Quantity = a.Quantity,
+                    ContractId = entity.Id
                 }).ToList();
         }
 

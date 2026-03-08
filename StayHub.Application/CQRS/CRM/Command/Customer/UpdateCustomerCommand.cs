@@ -52,7 +52,7 @@ public sealed class UpdateCustomerCommandHandler(ICustomerRepository repository)
             GenderId = entity.GenderId,
             ProvinceId = entity.ProvinceId,
             WardId = entity.WardId,
-            UnitId = entity.UnitId,
+            UnitId = entity.ContractId,
             DateOfBirth = entity.DateOfBirth,
             Address = entity.Address,
             Image = entity.Image,

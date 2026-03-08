@@ -10,7 +10,7 @@ public sealed class DeleteContractCommandHandler(IContractRepository repository,
 {
     public async Task<BaseResponse<bool>> Handle(DeleteContractCommand request, CancellationToken ct)
     {
-        await repository.DeleteWhere(e => e.Unit.UnitGroup.Property.Users.Any(u => u.Id == httpContextAccessor.HttpContext.GetUserId()));
+        await repository.DeleteWhere(e =>e.Id==request.Id&& e.Unit.UnitGroup.Property.Users.Any(u => u.Id == httpContextAccessor.HttpContext.GetUserId()));
         return Success(true);
     }
 }

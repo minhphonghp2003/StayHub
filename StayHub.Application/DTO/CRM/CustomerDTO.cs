@@ -16,6 +16,7 @@ public class CustomerDTO : BaseDTO
     public WardDTO? Ward { get; set; }
     public int? UnitId { get; set; }
     public UnitDTO? Unit { get; set; }
+    public bool IsRepresentative { get; set; }
     public DateTime? DateOfBirth { get; set; }
     public string? Address { get; set; }
     public string? Image { get; set; }

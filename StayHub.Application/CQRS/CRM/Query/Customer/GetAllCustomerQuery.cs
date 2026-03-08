@@ -16,7 +16,7 @@ public sealed class GetAllCustomerQueryHandler(ICustomerRepository repository, I
             pageNumber: request.pageNumber ?? 1,
             pageSize: size,
             filter: x => x.PropertyId == request.propertyId && request.searchKey == null || x.Name.Contains(request.searchKey),
-            include: x => x.Include(j => j.Gender).Include(j => j.Province).Include(j => j.Ward).Include(j => j.Unit),
+            include: x => x.Include(j => j.Gender).Include(j => j.Province).Include(j => j.Ward).Include(j => j.Contract).ThenInclude(j=>j.Unit),
             selector: (x, i) => new CustomerDTO
             {
                 Id = x.Id,
@@ -44,11 +44,10 @@ public sealed class GetAllCustomerQueryHandler(ICustomerRepository repository, I
                     Id = x.Ward.Id,
                     Name = x.Ward.Name,
                 },
-                UnitId = x.UnitId,
-                Unit = x.Unit != null ? new DTO.PMM.UnitDTO
+                Unit = x.Contract != null ? new DTO.PMM.UnitDTO
                 {
-                    Id = x.Unit.Id,
-                    Name = x.Unit.Name,
+                    Id = x.Contract.Unit.Id,
+                    Name = x.Contract.Unit.Name,
                 } : null,
                 DateOfBirth = x.DateOfBirth,
                 Address = x.Address,

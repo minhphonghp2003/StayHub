@@ -1,4 +1,4 @@
-using MediatR;
+﻿using MediatR;
 using Shared.Response;
 using StayHub.Application.DTO.CRM;
 using StayHub.Application.Interfaces.Repository.CRM;
@@ -32,6 +32,10 @@ public sealed class UpdateContractCommandHandler(IContractRepository repository,
 {
     public async Task<BaseResponse<ContractDTO>> Handle(UpdateContractCommand request, CancellationToken ct)
     {
+              if (request.customerIds.Count == 0 || !request.customerIds.Contains(request.representativeId))
+        {
+            return Failure<ContractDTO>("Cần phải có khách hàng đại diện", System.Net.HttpStatusCode.BadRequest);
+        }
         // 1. Fetch the entity with its collections (Ensure your Repo/EF includes these)
         var entity = await repository.FindOneEntityAsync(e => e.Id == request.Id);
         if (entity == null) return Failure<ContractDTO>("Contract not found", HttpStatusCode.NotFound);
@@ -70,7 +74,7 @@ public sealed class UpdateContractCommandHandler(IContractRepository repository,
 
             if (newCustomerIds.Any())
             {
-                var newCustomers = await customerRepository.GetManyEntityAsync(c => newCustomerIds.Contains(c.Id));
+                var newCustomers = await customerRepository.GetManyEntityAsync(c =>c.ContractId==null&& newCustomerIds.Contains(c.Id));
                 entity.Customers.AddRange(newCustomers);
             }
 
@@ -83,12 +87,12 @@ public sealed class UpdateContractCommandHandler(IContractRepository repository,
         if (request.services != null)
         {
             // Remove existing services that are not in the new request
-            var requestedServiceIds = request.services.Select(s => s.Id).ToHashSet();
+            var requestedServiceIds = request.services.Select(s => s.ServiceId).ToHashSet();
             entity.ContractServices.RemoveAll(s => !requestedServiceIds.Contains(s.ServiceId));
 
             foreach (var serviceDto in request.services)
             {
-                var existingService = entity.ContractServices.FirstOrDefault(s => s.ServiceId == serviceDto.Id);
+                var existingService = entity.ContractServices.FirstOrDefault(s => s.ServiceId == serviceDto.ServiceId);
                 if (existingService != null)
                 {
                     existingService.Quantity = serviceDto.Quantity;
@@ -97,7 +101,7 @@ public sealed class UpdateContractCommandHandler(IContractRepository repository,
                 {
                     entity.ContractServices.Add(new ContractService
                     {
-                        ServiceId = serviceDto.Id,
+                        ServiceId = serviceDto.ServiceId,
                         Quantity = serviceDto.Quantity
                     });
                 }
@@ -108,12 +112,12 @@ public sealed class UpdateContractCommandHandler(IContractRepository repository,
         if (request.assets != null)
         {
             // Remove existing assets that are not in the new request
-            var requestedAssetIds = request.assets.Select(a => a.Id).ToHashSet();
+            var requestedAssetIds = request.assets.Select(a => a.AssetId).ToHashSet();
             entity.ContractAssets.RemoveAll(a => !requestedAssetIds.Contains(a.AssetId));
 
             foreach (var assetDto in request.assets)
             {
-                var existingAsset = entity.ContractAssets.FirstOrDefault(a => a.AssetId == assetDto.Id);
+                var existingAsset = entity.ContractAssets.FirstOrDefault(a => a.AssetId == assetDto.AssetId);
                 if (existingAsset != null)
                 {
                     existingAsset.Quantity = assetDto.Quantity;
@@ -122,7 +126,7 @@ public sealed class UpdateContractCommandHandler(IContractRepository repository,
                 {
                     entity.ContractAssets.Add(new ContractAsset
                     {
-                        AssetId = assetDto.Id,
+                        AssetId = assetDto.AssetId,
                         Quantity = assetDto.Quantity
                     });
                 }

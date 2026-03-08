@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Shared.Common;
 using Shared.Response;
 using StayHub.Application.DTO.HRM;
 using StayHub.Application.DTO.PMM;
@@ -20,8 +21,9 @@ namespace StayHub.Application.CQRS.HRM.Query.Employee
     {
         public async Task<BaseResponse<List<UserDTO>>> Handle(GetAllEmployeeNoPagingQuery request, CancellationToken ct)
         {
+            var systemRoles = Enum.GetNames(typeof(SystemRole)).ToList();
             var result = await repository.GetManyAsync(
-                filter: x => x.Properties.Any(p => p.Id == request.propertyId),
+                filter: x => !x.UserRoles.Any(ur => systemRoles.Contains(ur.Role.Code)) && x.Properties.Any(p => p.Id == request.propertyId),
                 include: x => x.Include(e => e.Profile),
                 selector: (x, i) => new UserDTO
                 {

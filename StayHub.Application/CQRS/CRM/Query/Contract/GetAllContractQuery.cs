@@ -30,7 +30,7 @@ public sealed class GetAllContractQueryHandler(IContractRepository repository, I
                 {
                     Id = e.Id,
                     Name = e.Name,
-                }).First(),
+                }).ToList(),
                 Status = x.Status.ToString(),
                 Price = x.Price,
                 Deposit = x.Deposit,

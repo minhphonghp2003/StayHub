@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Shared.Common;
 using StayHub.Domain.Entity.Catalog;
 using StayHub.Domain.Entity.PMM;
@@ -11,7 +12,6 @@ public class Customer : BaseEntity
     public string Phone { get; set; }
     public int PropertyId { get; set; }
     public bool IsRepresentative { get; set; }
-    public int? UnitId { get; set; }
     public int? ContractId { get; set; }
     // Basic info
     public string? Email { get; set; }
@@ -26,12 +26,16 @@ public class Customer : BaseEntity
     public int? UserId { get; set; }
 
     //Nav
+    [DeleteBehavior(DeleteBehavior.SetNull)]
     public virtual User? User { get; set; }
     public virtual Property Property { get; set; }
-    public virtual Unit? Unit { get; set; }
+    [DeleteBehavior(DeleteBehavior.SetNull)]
     public virtual Contract? Contract { get; set; }
+    [DeleteBehavior(DeleteBehavior.SetNull)]
     public virtual CategoryItem? Gender { get; set; }
+    [DeleteBehavior(DeleteBehavior.SetNull)]
     public virtual Province? Province { get; set; }
+    [DeleteBehavior(DeleteBehavior.SetNull)]
     public virtual Ward? Ward { get; set; }
 
     public virtual List<Vehicle>? Vehicles { get; set; }
