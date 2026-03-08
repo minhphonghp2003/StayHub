@@ -26,6 +26,12 @@ public class ContractController : BaseController
 
         return GenerateResponse(await Mediator.Send(command));
     }
+    [HttpPost("transfer")]
+    public async Task<IActionResult> Transfer(TransferContractCommand command)
+    {
+
+        return GenerateResponse(await Mediator.Send(command));
+    }
     [HttpPost]
     public async Task<IActionResult> Create(AddContractCommand request) => GenerateResponse(await Mediator.Send(request));
 
