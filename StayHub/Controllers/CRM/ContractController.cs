@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Shared.Common;
 using StayHub.Application.CQRS.CRM.Command.Contract;
 using StayHub.Application.CQRS.CRM.Query.Contract;
 namespace StayHub.API.Controllers.CRM;
@@ -9,8 +10,8 @@ public class ContractController : BaseController
     public async Task<IActionResult> GetById(int id) => Ok(await Mediator.Send(new GetContractByIdQuery(id)));
 
     [HttpGet("all/{propertyId}")]
-    public async Task<IActionResult> GetAll(int propertyId, [FromQuery] int? pageNumber, [FromQuery] int? pageSize, [FromQuery] string? search)
-        => Ok(await Mediator.Send(new GetAllContractQuery(propertyId, pageNumber, pageSize, search)));
+    public async Task<IActionResult> GetAll(int propertyId,ContractStatus status, [FromQuery] int? pageNumber, [FromQuery] int? pageSize, [FromQuery] string? search)
+        => Ok(await Mediator.Send(new GetAllContractQuery(propertyId,status, pageNumber, pageSize, search)));
 
     [HttpPost("change-room/contract/{contractId}/unit/{unitId}")]
     public async Task<IActionResult> ChangeRoom(int contractId, int unitId) => GenerateResponse(await Mediator.Send(new ChangeRoomCommand(contractId, unitId)));

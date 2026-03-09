@@ -6,7 +6,7 @@ using StayHub.Application.Interfaces.Repository.CRM;
 using Microsoft.EntityFrameworkCore;
 namespace StayHub.Application.CQRS.CRM.Query.Customer;
 
-public record GetAllCustomerQuery(int propertyId, int? pageNumber, int? pageSize, string? searchKey) : IRequest<Response<CustomerDTO>>;
+public record GetAllCustomerQuery(int propertyId, bool? isWalkIn, int? pageNumber, int? pageSize, string? searchKey) : IRequest<Response<CustomerDTO>>;
 public sealed class GetAllCustomerQueryHandler(ICustomerRepository repository, IConfiguration config) : BaseResponseHandler, IRequestHandler<GetAllCustomerQuery, Response<CustomerDTO>>
 {
     public async Task<Response<CustomerDTO>> Handle(GetAllCustomerQuery request, CancellationToken ct)
@@ -15,8 +15,8 @@ public sealed class GetAllCustomerQueryHandler(ICustomerRepository repository, I
         var (result, count) = await repository.GetManyPagedAsync(
             pageNumber: request.pageNumber ?? 1,
             pageSize: size,
-            filter: x => x.PropertyId == request.propertyId && request.searchKey == null || x.Name.Contains(request.searchKey),
-            include: x => x.Include(j => j.Gender).Include(j => j.Province).Include(j => j.Ward).Include(j => j.Contract).ThenInclude(j=>j.Unit),
+            filter: x => x.PropertyId == request.propertyId && request.searchKey == null || x.Name.ToLower().Contains(request.searchKey.ToLower()) || (request.isWalkIn == true && x.ContractId == null),
+            include: x => x.Include(j => j.Gender).Include(j => j.Province).Include(j => j.Ward).Include(j => j.Contract).ThenInclude(j => j.Unit),
             selector: (x, i) => new CustomerDTO
             {
                 Id = x.Id,

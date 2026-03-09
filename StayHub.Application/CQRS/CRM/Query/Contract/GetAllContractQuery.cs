@@ -4,9 +4,10 @@ using Microsoft.Extensions.Configuration;
 using StayHub.Application.DTO.CRM;
 using StayHub.Application.Interfaces.Repository.CRM;
 using Microsoft.EntityFrameworkCore;
+using Shared.Common;
 namespace StayHub.Application.CQRS.CRM.Query.Contract;
 
-public record GetAllContractQuery(int propertyId, int? pageNumber, int? pageSize, string? searchKey) : IRequest<Response<ContractDTO>>;
+public record GetAllContractQuery(int propertyId, ContractStatus? status, int? pageNumber, int? pageSize, string? searchKey) : IRequest<Response<ContractDTO>>;
 public sealed class GetAllContractQueryHandler(IContractRepository repository, IConfiguration config) : BaseResponseHandler, IRequestHandler<GetAllContractQuery, Response<ContractDTO>>
 {
     public async Task<Response<ContractDTO>> Handle(GetAllContractQuery request, CancellationToken ct)
@@ -15,8 +16,11 @@ public sealed class GetAllContractQueryHandler(IContractRepository repository, I
         var (result, count) = await repository.GetManyPagedAsync(
             pageNumber: request.pageNumber ?? 1,
             pageSize: size,
-            filter: x => x.Unit.UnitGroup.PropertyId==request.propertyId&& request.searchKey == null,
-            include:e=>e.Include(j=>j.Unit).Include(j=>j.Customers),
+            filter: x => x.Unit.UnitGroup.PropertyId == request.propertyId && request.searchKey == null
+            || x.Unit.Name.ToLower().Contains(request.searchKey.ToLower())
+            || x.Code.ToLower().Contains(request.searchKey.ToLower())
+            || x.Status == request.status,
+            include: e => e.Include(j => j.Unit).Include(j => j.Customers),
             selector: (x, i) => new ContractDTO
             {
                 Id = x.Id,

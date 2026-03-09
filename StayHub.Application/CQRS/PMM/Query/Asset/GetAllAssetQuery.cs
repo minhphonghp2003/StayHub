@@ -16,7 +16,7 @@ public sealed class GetAllAssetQueryHandler(IAssetRepository repository, IConfig
         var (result, count) = await repository.GetManyPagedAsync(
             pageNumber: request.pageNumber ?? 1,
             pageSize: size,
-            filter: x => x.PropertyId == request.propertyId && request.searchKey == null || x.Name.Contains(request.searchKey),
+            filter: x => x.PropertyId == request.propertyId && request.searchKey == null || x.Name.ToLower().Contains(request.searchKey.ToLower()) || x.Type.Name.ToLower().Contains(request.searchKey.ToLower()),
             include: x => x.Include(e => e.Type),
             selector: (x, i) => new AssetDTO
             {

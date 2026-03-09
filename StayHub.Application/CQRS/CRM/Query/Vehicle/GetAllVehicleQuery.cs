@@ -5,20 +5,21 @@ using StayHub.Application.DTO.CRM;
 using StayHub.Application.Interfaces.Repository.CRM;
 using Microsoft.EntityFrameworkCore;
 namespace StayHub.Application.CQRS.CRM.Query.Vehicle;
+
 public record GetAllVehicleQuery(int propertyId, int? pageNumber, int? pageSize, string? searchKey) : IRequest<Response<VehicleDTO>>;
-public sealed class GetAllVehicleQueryHandler(IVehicleRepository repository, IConfiguration config) : BaseResponseHandler, IRequestHandler<GetAllVehicleQuery, Response<VehicleDTO>> 
+public sealed class GetAllVehicleQueryHandler(IVehicleRepository repository, IConfiguration config) : BaseResponseHandler, IRequestHandler<GetAllVehicleQuery, Response<VehicleDTO>>
 {
-    public async Task<Response<VehicleDTO>> Handle(GetAllVehicleQuery request, CancellationToken ct) 
+    public async Task<Response<VehicleDTO>> Handle(GetAllVehicleQuery request, CancellationToken ct)
     {
         var size = request.pageSize ?? config.GetValue<int>("PageSize");
         var (result, count) = await repository.GetManyPagedAsync(
             pageNumber: request.pageNumber ?? 1,
             pageSize: size,
-            filter: x =>x.Customer.PropertyId==request.propertyId&&  request.searchKey == null || x.Name.Contains(request.searchKey) || x.Customer.Name.Contains(request.searchKey)|| x.Customer.Phone.Contains(request.searchKey),
-            include: x=>x.Include(j=>j.Customer),
-            selector: (x, i) => new VehicleDTO 
-            { 
-                Id = x.Id, 
+            filter: x => x.Customer.PropertyId == request.propertyId && request.searchKey == null || x.Name.ToLower().Contains(request.searchKey.ToLower()) || x.Customer.Name.ToLower().Contains(request.searchKey.ToLower()) || x.Customer.Phone.Contains(request.searchKey) || x.LicensePlate.ToLower().Contains(request.searchKey.ToLower()),
+            include: x => x.Include(j => j.Customer),
+            selector: (x, i) => new VehicleDTO
+            {
+                Id = x.Id,
                 CustomerId = x.CustomerId,
                 Customer = new CustomerDTO
                 {
@@ -30,6 +31,6 @@ public sealed class GetAllVehicleQueryHandler(IVehicleRepository repository, ICo
                 Image = x.Image
             }
         );
-        return SuccessPaginated(result.ToList(), count,size, request.pageNumber ?? 1);
+        return SuccessPaginated(result.ToList(), count, size, request.pageNumber ?? 1);
     }
 }

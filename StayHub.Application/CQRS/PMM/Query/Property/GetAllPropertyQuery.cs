@@ -19,7 +19,7 @@ public sealed class GetAllPropertyQueryHandler(IPropertyRepository repository,IC
         var (result,count) = await repository.GetManyPagedAsync(
             pageNumber: request.pageNumber ?? 1,
             pageSize: pageSize,
-            filter: x => request.searchKey == null || x.Name.Contains(request.searchKey),
+            filter: x => request.searchKey == null || x.Name.ToLower().Contains(request.searchKey.ToLower()),
             selector: (x, i) => new  PropertyDTO
             {
                 Id = x.Id,
