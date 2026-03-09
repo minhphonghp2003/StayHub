@@ -8,12 +8,22 @@ using StayHub.Domain.Entity.CRM;
 namespace StayHub.Application.CQRS.CRM.Command.Contract;
 
 public record AddContractCommand(List<int> customerIds, List<int>? services, List<ContractAssetDTO>? assets, int representativeId, int UnitId, long Price, long Deposit, long? DepositRemain, DateTime? DepositRemainEndDate, DateTime StartDate, DateTime EndDate, int PaymentPeriodId, string? Note, string? Attachment, bool IsSigned, int? TemplateId, int VehicleNumber, int? SaleId) : IRequest<BaseResponse<bool>>;
-public sealed class AddContractCommandHandler(IContractRepository repository, ICustomerRepository customerRepository, IServiceRepository serviceRepository, IAssetRepository assetRepository) : BaseResponseHandler, IRequestHandler<AddContractCommand, BaseResponse<bool>>
+public sealed class AddContractCommandHandler(IContractRepository repository,IUnitRepository unitRepository, ICustomerRepository customerRepository, IServiceRepository serviceRepository, IAssetRepository assetRepository) : BaseResponseHandler, IRequestHandler<AddContractCommand, BaseResponse<bool>>
 {
-    //TODO  add service, add asset
     public async Task<BaseResponse<bool>> Handle(AddContractCommand request, CancellationToken ct)
     {
-        if ((await repository.FindOneAsync(e => e.UnitId == request.UnitId, selector: e => e)) != null)
+        var unit = await unitRepository.GetEntityByIdAsync(request.UnitId);
+        if(unit == null || unit.IsActive == false)
+        {
+
+            return Failure<bool>("Không tìm thấy phòng", System.Net.HttpStatusCode.BadRequest);
+        }
+        if (unit.MaximumCustomer < request.customerIds.Count())
+        {
+
+            return Failure<bool>("Vượt quá số khách thuê giới hạn", System.Net.HttpStatusCode.BadRequest);
+        }
+        if ((await repository.FindOneAsync(e => e.UnitId == request.UnitId , selector: e => e)) != null)
         {
             return Failure<bool>("Phòng không có sẵn", System.Net.HttpStatusCode.BadRequest);
         }
@@ -21,6 +31,7 @@ public sealed class AddContractCommandHandler(IContractRepository repository, IC
         {
             return Failure<bool>("Cần phải có khách hàng đại diện", System.Net.HttpStatusCode.BadRequest);
         }
+        
         var entity = new StayHub.Domain.Entity.CRM.Contract
         {
             UnitId = request.UnitId,
