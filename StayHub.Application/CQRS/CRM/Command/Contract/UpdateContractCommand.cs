@@ -2,6 +2,7 @@
 using Shared.Response;
 using StayHub.Application.DTO.CRM;
 using StayHub.Application.Interfaces.Repository.CRM;
+using StayHub.Application.Interfaces.Repository.PMM;
 using StayHub.Domain.Entity.CRM;
 using System.Net;
 using System.Text.Json.Serialization;
@@ -23,21 +24,21 @@ public class UpdateContractCommand : IRequest<BaseResponse<ContractDTO>>
     public string Code { get; set; }
     public bool IsSigned { get; set; }
     public int? TemplateId { get; set; }
-    public List<ContractServiceDTO>? services { get; set; }
+    public List<int>? services { get; set; }
     public List<ContractAssetDTO>? assets { get; set; }
     public List<int> customerIds { get; set; }
     public int representativeId { get; set; }
 }
-public sealed class UpdateContractCommandHandler(IContractRepository repository, ICustomerRepository customerRepository) : BaseResponseHandler, IRequestHandler<UpdateContractCommand, BaseResponse<ContractDTO>>
+public sealed class UpdateContractCommandHandler(IContractRepository repository,IServiceRepository serviceRepository, ICustomerRepository customerRepository) : BaseResponseHandler, IRequestHandler<UpdateContractCommand, BaseResponse<ContractDTO>>
 {
     public async Task<BaseResponse<ContractDTO>> Handle(UpdateContractCommand request, CancellationToken ct)
     {
-              if (request.customerIds.Count == 0 || !request.customerIds.Contains(request.representativeId))
+        if (request.customerIds.Count == 0 || !request.customerIds.Contains(request.representativeId))
         {
             return Failure<ContractDTO>("Cần phải có khách hàng đại diện", System.Net.HttpStatusCode.BadRequest);
         }
         // 1. Fetch the entity with its collections (Ensure your Repo/EF includes these)
-        var entity = await repository.FindOneEntityAsync(e => e.Id == request.Id);
+        var entity = await repository.FindOneEntityAsync(e => e.Id == request.Id,trackChange:true);
         if (entity == null) return Failure<ContractDTO>("Contract not found", HttpStatusCode.NotFound);
 
         // 2. Update Basic Properties
@@ -74,7 +75,7 @@ public sealed class UpdateContractCommandHandler(IContractRepository repository,
 
             if (newCustomerIds.Any())
             {
-                var newCustomers = await customerRepository.GetManyEntityAsync(c =>c.ContractId==null&& newCustomerIds.Contains(c.Id));
+                var newCustomers = await customerRepository.GetManyEntityAsync(c => c.ContractId == null && newCustomerIds.Contains(c.Id));
                 entity.Customers.AddRange(newCustomers);
             }
 
@@ -86,28 +87,23 @@ public sealed class UpdateContractCommandHandler(IContractRepository repository,
         // 3. Sync Services (Add, Update, Remove)
         if (request.services != null)
         {
-            // Remove existing services that are not in the new request
-            var requestedServiceIds = request.services.Select(s => s.ServiceId).ToHashSet();
-            entity.ContractServices.RemoveAll(s => !requestedServiceIds.Contains(s.ServiceId));
+            // 1. Remove services that are NOT in the request
+            var requestedServiceIds = request.services.ToHashSet();
+            var existingServiceIds = entity.Services.Select(s => s.Id).ToHashSet();
+            var idsToAdd = request.services.Where(id => !existingServiceIds.Contains(id)).ToList();
+            entity.Services.RemoveAll(s => !requestedServiceIds.Contains(s.Id));
 
-            foreach (var serviceDto in request.services)
+            // 2. Find which IDs from the request are NOT already linked to the entity
+
+            if (idsToAdd.Any())
             {
-                var existingService = entity.ContractServices.FirstOrDefault(s => s.ServiceId == serviceDto.ServiceId);
-                if (existingService != null)
-                {
-                    existingService.Quantity = serviceDto.Quantity;
-                }
-                else
-                {
-                    entity.ContractServices.Add(new ContractService
-                    {
-                        ServiceId = serviceDto.ServiceId,
-                        Quantity = serviceDto.Quantity
-                    });
-                }
+                // 3. Fetch actual entities from DB to avoid identity/tracking issues
+                var servicesToAdd = await serviceRepository.GetManyEntityAsync(s => idsToAdd.Contains(s.Id));
+
+                // 4. Use AddRange to bulk insert the links
+                entity.Services.AddRange(servicesToAdd);
             }
         }
-
         // 4. Sync Assets (Add, Update, Remove)
         if (request.assets != null)
         {
@@ -133,7 +129,7 @@ public sealed class UpdateContractCommandHandler(IContractRepository repository,
             }
         }
 
-        repository.Update(entity);
+        await repository.SaveAsync();
         return Success(new ContractDTO
         {
             Id = entity.Id,

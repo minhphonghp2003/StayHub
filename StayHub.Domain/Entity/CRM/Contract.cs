@@ -29,7 +29,7 @@ public class Contract : BaseEntity
     public DateTime?  LeavingDate { get; set; }
     // Nav
     public virtual List<Customer> Customers { get; set; }
-    public virtual List<ContractService>? ContractServices { get; set; }
+    public virtual List<Service>? Services { get; set; }
     public virtual List<ContractAsset>? ContractAssets { get; set; }
     public virtual CategoryItem PaymentPeriod { get; set; }
     public virtual Unit Unit { get; set; }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using StayHub.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using StayHub.Infrastructure.Persistence;
 namespace StayHub.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260308145527_servicercontract")]
+    partial class servicercontract
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,21 +41,6 @@ namespace StayHub.Infrastructure.Migrations
                     b.HasIndex("TiersId");
 
                     b.ToTable("ActionTier");
-                });
-
-            modelBuilder.Entity("ContractService", b =>
-                {
-                    b.Property<int>("ContractsId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ServicesId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("ContractsId", "ServicesId");
-
-                    b.HasIndex("ServicesId");
-
-                    b.ToTable("ContractService");
                 });
 
             modelBuilder.Entity("PropertyUser", b =>
@@ -177,6 +165,38 @@ namespace StayHub.Infrastructure.Migrations
                     b.HasIndex("ContractId");
 
                     b.ToTable("ContractAsset");
+                });
+
+            modelBuilder.Entity("StayHub.Domain.Entity.CRM.ContractService", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ContractId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ServiceId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContractId");
+
+                    b.HasIndex("ServiceId");
+
+                    b.ToTable("ContractService");
                 });
 
             modelBuilder.Entity("StayHub.Domain.Entity.CRM.Customer", b =>
@@ -634,6 +654,9 @@ namespace StayHub.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("ContractId")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -660,6 +683,8 @@ namespace StayHub.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ContractId");
 
                     b.HasIndex("PropertyId");
 
@@ -1166,21 +1191,6 @@ namespace StayHub.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ContractService", b =>
-                {
-                    b.HasOne("StayHub.Domain.Entity.CRM.Contract", null)
-                        .WithMany()
-                        .HasForeignKey("ContractsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("StayHub.Domain.Entity.PMM.Service", null)
-                        .WithMany()
-                        .HasForeignKey("ServicesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("PropertyUser", b =>
                 {
                     b.HasOne("StayHub.Domain.Entity.PMM.Property", null)
@@ -1235,6 +1245,25 @@ namespace StayHub.Infrastructure.Migrations
                         .HasForeignKey("ContractId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("StayHub.Domain.Entity.CRM.ContractService", b =>
+                {
+                    b.HasOne("StayHub.Domain.Entity.CRM.Contract", "Contract")
+                        .WithMany()
+                        .HasForeignKey("ContractId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StayHub.Domain.Entity.PMM.Service", "Service")
+                        .WithMany("ContractServices")
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Contract");
+
+                    b.Navigation("Service");
                 });
 
             modelBuilder.Entity("StayHub.Domain.Entity.CRM.Customer", b =>
@@ -1400,6 +1429,10 @@ namespace StayHub.Infrastructure.Migrations
 
             modelBuilder.Entity("StayHub.Domain.Entity.PMM.Service", b =>
                 {
+                    b.HasOne("StayHub.Domain.Entity.CRM.Contract", null)
+                        .WithMany("Services")
+                        .HasForeignKey("ContractId");
+
                     b.HasOne("StayHub.Domain.Entity.PMM.Property", "Property")
                         .WithMany("Services")
                         .HasForeignKey("PropertyId")
@@ -1545,6 +1578,8 @@ namespace StayHub.Infrastructure.Migrations
                     b.Navigation("ContractAssets");
 
                     b.Navigation("Customers");
+
+                    b.Navigation("Services");
                 });
 
             modelBuilder.Entity("StayHub.Domain.Entity.CRM.Customer", b =>
@@ -1571,6 +1606,11 @@ namespace StayHub.Infrastructure.Migrations
                     b.Navigation("Services");
 
                     b.Navigation("UnitGroups");
+                });
+
+            modelBuilder.Entity("StayHub.Domain.Entity.PMM.Service", b =>
+                {
+                    b.Navigation("ContractServices");
                 });
 
             modelBuilder.Entity("StayHub.Domain.Entity.PMM.UnitGroup", b =>

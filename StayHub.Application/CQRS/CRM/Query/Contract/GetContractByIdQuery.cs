@@ -4,6 +4,7 @@ using System.Net;
 using StayHub.Application.DTO.CRM;
 using StayHub.Application.Interfaces.Repository.CRM;
 using Microsoft.EntityFrameworkCore;
+using StayHub.Application.DTO.PMM;
 namespace StayHub.Application.CQRS.CRM.Query.Contract;
 
 public record GetContractByIdQuery(int Id) : IRequest<BaseResponse<ContractDTO>>;
@@ -11,7 +12,7 @@ public sealed class GetContractByIdQueryHandler(IContractRepository repository) 
 {
     public async Task<BaseResponse<ContractDTO>> Handle(GetContractByIdQuery request, CancellationToken ct)
     {
-        var result = await repository.FindOneAsync(x => x.Id == request.Id, include: e => e.Include(j => j.Unit).Include(j => j.Customers), selector: (x) => new ContractDTO
+        var result = await repository.FindOneAsync(x => x.Id == request.Id, include: e => e.Include(j => j.Unit).Include(j => j.Customers).Include(j=>j.Services), selector: (x) => new ContractDTO
         {
             Id = x.Id,
             UnitId = x.UnitId,
@@ -34,10 +35,10 @@ public sealed class GetContractByIdQueryHandler(IContractRepository repository) 
                 AssetId = e.AssetId,
                 Quantity = e.Quantity,
             }).ToList(),
-            Services = x.ContractServices == null ? null : x.ContractServices.Select(e => new ContractServiceDTO
+            Services = x.Services == null ? null : x.Services.Select(e => new  ServiceDTO
             {
-                ServiceId = e.ServiceId,
-                Quantity = e.Quantity,
+                Id=e.Id,
+                Name  =e.Name   
             }).ToList(),
             DepositRemain = x.DepositRemain,
             VehicleNumber =x.VehicleNumber,

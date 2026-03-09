@@ -7,19 +7,19 @@ using StayHub.Application.Interfaces.Repository.PMM;
 using StayHub.Domain.Entity.CRM;
 namespace StayHub.Application.CQRS.CRM.Command.Contract;
 
-public record AddContractCommand(List<int> customerIds, List<ContractServiceDTO>? services, List<ContractAssetDTO>? assets, int representativeId, int UnitId, long Price, long Deposit, long? DepositRemain, DateTime? DepositRemainEndDate, DateTime StartDate, DateTime EndDate, int PaymentPeriodId, string? Note, string? Attachment, bool IsSigned, int? TemplateId, int VehicleNumber, int? SaleId) : IRequest<BaseResponse<bool>>;
+public record AddContractCommand(List<int> customerIds, List<int>? services, List<ContractAssetDTO>? assets, int representativeId, int UnitId, long Price, long Deposit, long? DepositRemain, DateTime? DepositRemainEndDate, DateTime StartDate, DateTime EndDate, int PaymentPeriodId, string? Note, string? Attachment, bool IsSigned, int? TemplateId, int VehicleNumber, int? SaleId) : IRequest<BaseResponse<bool>>;
 public sealed class AddContractCommandHandler(IContractRepository repository, ICustomerRepository customerRepository, IServiceRepository serviceRepository, IAssetRepository assetRepository) : BaseResponseHandler, IRequestHandler<AddContractCommand, BaseResponse<bool>>
 {
     //TODO  add service, add asset
     public async Task<BaseResponse<bool>> Handle(AddContractCommand request, CancellationToken ct)
     {
-        if((await repository.FindOneAsync(e=>e.UnitId==request.UnitId,selector:e=>e)) != null)
+        if ((await repository.FindOneAsync(e => e.UnitId == request.UnitId, selector: e => e)) != null)
         {
-            return Failure<bool>("Phòng không có sẵn",System.Net.HttpStatusCode.BadRequest);
+            return Failure<bool>("Phòng không có sẵn", System.Net.HttpStatusCode.BadRequest);
         }
-        if(request.customerIds.Count ==0 ||  !request.customerIds.Contains(request.representativeId))
+        if (request.customerIds.Count == 0 || !request.customerIds.Contains(request.representativeId))
         {
-            return Failure<bool>("Cần phải có khách hàng đại diện",System.Net.HttpStatusCode.BadRequest);
+            return Failure<bool>("Cần phải có khách hàng đại diện", System.Net.HttpStatusCode.BadRequest);
         }
         var entity = new StayHub.Domain.Entity.CRM.Contract
         {
@@ -49,27 +49,16 @@ public sealed class AddContractCommandHandler(IContractRepository repository, IC
         foreach (var customer in customers)
         {
             customer.IsRepresentative = (customer.Id == request.representativeId);
-            customer.ContractId = entity.Id;   
         }
         entity.Customers = customers;
 
         // 2. Process Services (Optimized Lookup)
         if (request.services?.Any() == true)
         {
-            var requestedServiceIds = request.services.Select(s => s.ServiceId).ToHashSet();
-            var validServiceIds = (await serviceRepository.GetManyAsync(
-                filter: e => requestedServiceIds.Contains(e.Id),
-                selector: (e, i) => e.Id
+            var validService = (await serviceRepository.GetManyEntityAsync(
+                filter: e => e.Property.UnitGroups.Any(ug => ug.Units.Any(u => u.Id == request.UnitId)) && request.services.Contains(e.Id)
             )).ToHashSet();
-
-            entity.ContractServices = request.services
-                .Where(s => validServiceIds.Contains(s.ServiceId))
-                .Select(s => new ContractService
-                {
-                    ServiceId = s.ServiceId,
-                    Quantity = s.Quantity,
-                    ContractId = entity.Id
-                }).ToList();
+            entity.Services = validService.ToList();
         }
 
         // 3. Process Assets (Optimized Lookup)
@@ -87,7 +76,6 @@ public sealed class AddContractCommandHandler(IContractRepository repository, IC
                 {
                     AssetId = a.AssetId,
                     Quantity = a.Quantity,
-                    ContractId = entity.Id
                 }).ToList();
         }
 

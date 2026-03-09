@@ -23,7 +23,7 @@ namespace StayHub.Application.CQRS.CRM.Command.Contract
             }
             var propertyId = contract?.Unit.UnitGroup.PropertyId;
             int? propertyOfNewUnit = (await unitRepository.GetEntityByIdAsync(request.unitId))?.UnitGroup.PropertyId;
-            if (propertyOfNewUnit == null || propertyId == null || propertyOfNewUnit != propertyId)
+            if (propertyOfNewUnit == null || propertyId == null || propertyOfNewUnit != propertyId || contract.UnitId==request.unitId)
             {
                 return Failure<bool>("Chuyển phòng không thành công", System.Net.HttpStatusCode.BadRequest);
             }

@@ -9,7 +9,7 @@ public class ContractDTO : BaseDTO
 
     public List<CustomerDTO>? Customer { get; set; }
     public List<ContractAssetDTO>? Assets { get; set; }
-    public List<ContractServiceDTO>? Services { get; set; }
+    public List<ServiceDTO>? Services { get; set; }
     public String Status { get; set; }
     public long Price { get; set; }
     public long Deposit { get; set; }
