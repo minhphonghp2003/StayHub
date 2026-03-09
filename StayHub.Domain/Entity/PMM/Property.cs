@@ -14,6 +14,8 @@ public class Property: BaseEntity
     public string? Address { get; set; }
     public int TypeId { get; set; }
     public string? Image { get; set; }
+    public DateTime? DefaultPaymentDate { get; set; }
+    public long?  DefaultBasePrice { get; set; }
     // Subscription Details
     public DateTime? StartSubscriptionDate { get; set; }
     public DateTime? EndSubscriptionDate { get; set; }
