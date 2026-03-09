@@ -16,10 +16,14 @@ namespace StayHub.Application.CQRS.PMM.Query.Unit
     {
         public async Task<BaseResponse<List<UnitDTO>>> Handle(GetAllUnitNoPagingQuery request, CancellationToken ct)
         {
-            var result = await repository.GetManyAsync(filter: e => e.UnitGroup.PropertyId == request.propertyId, selector: (e, i) => new UnitDTO
+            var result = await repository.GetManyAsync(filter: e => e.UnitGroup.PropertyId == request.propertyId && e.IsActive == true, selector: (e, i) => new UnitDTO
             {
                 Id = e.Id,
-                Name = e.Name
+                Name = e.Name,
+                BasePrice = e.BasePrice,
+                MaximumCustomer = e.MaximumCustomer,
+                Status = e.Status.ToString()
+
             });
             return Success(result.ToList());
         }

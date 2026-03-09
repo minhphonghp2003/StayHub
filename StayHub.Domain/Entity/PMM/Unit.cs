@@ -13,4 +13,5 @@ public class Unit : BaseEntity
     public bool IsActive { get; set; }
 
     public virtual UnitGroup UnitGroup { get; set; } // Navigation property
+    
 }
