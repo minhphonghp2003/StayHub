@@ -35,7 +35,7 @@ namespace StayHub.Infrastructure.Persistence.Repository.RBAC
             var (items, count) = await GetManyPagedAsync(
                 pageNumber: pageNumber,
                 pageSize: pageSize,
-                orderBy: e => e.OrderBy((j) => j.Order),
+                orderBy: e => e.OrderBy((j) => j.CreatedAt),
                 filter: e =>
                     (string.IsNullOrEmpty(search) || (e.Name.ToLower().Contains(search.ToLower() ?? "") ||
                                                       e.Name.ToLower() == search.ToLower())) &&
