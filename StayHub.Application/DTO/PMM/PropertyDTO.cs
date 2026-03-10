@@ -13,7 +13,7 @@ public class PropertyDTO : BaseDTO
     // Subscription Details
     public DateTime? StartSubscriptionDate { get; set; }
     public DateTime? EndSubscriptionDate { get; set; }
-    public CategoryItemDTO SubscriptionStatus { get; set; }
+    public CategoryItemDTO? SubscriptionStatus { get; set; }
     public DateTime? LastPaymentDate { get; set; }
     public CategoryItemDTO? Tier {  get; set; }
     public int? WardId { get; set; }

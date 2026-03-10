@@ -15,7 +15,7 @@ public sealed class GetAllServiceQueryHandler(IServiceRepository repository, ICo
         var (result, count) = await repository.GetManyPagedAsync(
             pageNumber: request.pageNumber ?? 1,
             pageSize: size,
-            filter: x => x.PropertyId == request.propertyId && request.searchKey == null || x.Name.ToLower().Contains(request.searchKey.ToLower()),
+            filter: x => x.PropertyId == request.propertyId &&( request.searchKey == null || x.Name.ToLower().Contains(request.searchKey.ToLower())),
             include: x => x.Include(j => j.UnitType),
             selector: (x, i) => new ServiceDTO
             {

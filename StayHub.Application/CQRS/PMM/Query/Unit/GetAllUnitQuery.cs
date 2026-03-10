@@ -17,7 +17,7 @@ public sealed class GetAllUnitQueryHandler(IUnitRepository repository, IConfigur
         var (result, count) = await repository.GetManyPagedAsync(
             pageNumber: request.pageNumber ?? 1,
             pageSize: size,
-            filter: x => x.UnitGroup.PropertyId == request.propertyId && request.searchKey == null || x.Name.ToLower().Contains(request.searchKey.ToLower()),
+            filter: x => x.UnitGroup.PropertyId == request.propertyId &&( request.searchKey == null || x.Name.ToLower().Contains(request.searchKey.ToLower())),
             include: x => x.Include(j => j.UnitGroup),
             selector: (x, i) => new UnitDTO
             {

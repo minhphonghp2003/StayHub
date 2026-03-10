@@ -14,7 +14,7 @@ public sealed class GetAllJobQueryHandler(IJobRepository repository, IConfigurat
         var (result, count) = await repository.GetManyPagedAsync(
             pageNumber: request.pageNumber ?? 1,
             pageSize: size,
-            filter: x => x.PropertyId == request.propertyId && request.searchKey == null || x.Name.Contains(request.searchKey),
+            filter: x => x.PropertyId == request.propertyId && ( request.searchKey == null || x.Name.Contains(request.searchKey)),
             include:x=>x.Include(j=>j.Property  ).Include(j=>j.Unit),
             selector: (x, i) => new JobDTO 
             { 

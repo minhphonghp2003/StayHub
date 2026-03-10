@@ -29,7 +29,7 @@ public sealed class GetAllPropertyQueryHandler(IPropertyRepository repository,IC
                 Image = x.Image,    
                 StartSubscriptionDate = x.StartSubscriptionDate,    
                 EndSubscriptionDate = x.EndSubscriptionDate,
-                SubscriptionStatus = x.SubscriptionStatusId.HasValue ? new CategoryItemDTO { Id = x.SubscriptionStatusId.Value, Name = x.SubscriptionStatus.Name } : null,
+                SubscriptionStatus = x.SubscriptionStatus!=null ? new CategoryItemDTO { Id = x.SubscriptionStatus.Id, Name = x.SubscriptionStatus.Name } : null,
                 LastPaymentDate = x.LastPaymentDate,
                 Tier =x.Tier!=null? new CategoryItemDTO { Id = x.Tier.Id, Name = x.Tier.Name }:null,
                 UpdatedAt = x.UpdatedAt

@@ -10,7 +10,7 @@ public class ContractController : BaseController
     public async Task<IActionResult> GetById(int id) => Ok(await Mediator.Send(new GetContractByIdQuery(id)));
 
     [HttpGet("all/{propertyId}")]
-    public async Task<IActionResult> GetAll(int propertyId,ContractStatus status, [FromQuery] int? pageNumber, [FromQuery] int? pageSize, [FromQuery] string? search)
+    public async Task<IActionResult> GetAll(int propertyId,ContractStatus? status, [FromQuery] int? pageNumber, [FromQuery] int? pageSize, [FromQuery] string? search)
         => Ok(await Mediator.Send(new GetAllContractQuery(propertyId,status, pageNumber, pageSize, search)));
 
     [HttpPost("change-room/contract/{contractId}/unit/{unitId}")]

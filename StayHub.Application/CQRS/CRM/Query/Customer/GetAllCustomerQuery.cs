@@ -15,7 +15,7 @@ public sealed class GetAllCustomerQueryHandler(ICustomerRepository repository, I
         var (result, count) = await repository.GetManyPagedAsync(
             pageNumber: request.pageNumber ?? 1,
             pageSize: size,
-            filter: x => x.PropertyId == request.propertyId && request.searchKey == null || x.Name.ToLower().Contains(request.searchKey.ToLower()) || (request.isWalkIn == true && x.ContractId == null),
+            filter: x => x.PropertyId == request.propertyId && (request.searchKey == null || x.Name.ToLower().Contains((request.searchKey).ToLower()) || (request.isWalkIn == true && x.ContractId == null)),
             include: x => x.Include(j => j.Gender).Include(j => j.Province).Include(j => j.Ward).Include(j => j.Contract).ThenInclude(j => j.Unit),
             selector: (x, i) => new CustomerDTO
             {

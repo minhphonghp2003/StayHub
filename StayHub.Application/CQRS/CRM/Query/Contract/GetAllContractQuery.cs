@@ -16,10 +16,10 @@ public sealed class GetAllContractQueryHandler(IContractRepository repository, I
         var (result, count) = await repository.GetManyPagedAsync(
             pageNumber: request.pageNumber ?? 1,
             pageSize: size,
-            filter: x => x.Unit.UnitGroup.PropertyId == request.propertyId && request.searchKey == null
-            || x.Unit.Name.ToLower().Contains(request.searchKey.ToLower())
-            || x.Code.ToLower().Contains(request.searchKey.ToLower())
-            || x.Status == request.status,
+            filter: x => x.Unit.UnitGroup.PropertyId == request.propertyId && ( request.status == null || x.Status == request.status) && (request.searchKey == null
+            || x.Unit.Name.ToLower().Contains((request.searchKey).ToLower())
+            || x.Code.ToLower().Contains((request.searchKey).ToLower()))
+            ,
             include: e => e.Include(j => j.Unit).Include(j => j.Customers),
             selector: (x, i) => new ContractDTO
             {

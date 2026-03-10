@@ -15,7 +15,7 @@ public sealed class GetAllVehicleQueryHandler(IVehicleRepository repository, ICo
         var (result, count) = await repository.GetManyPagedAsync(
             pageNumber: request.pageNumber ?? 1,
             pageSize: size,
-            filter: x => x.Customer.PropertyId == request.propertyId && request.searchKey == null || x.Name.ToLower().Contains(request.searchKey.ToLower()) || x.Customer.Name.ToLower().Contains(request.searchKey.ToLower()) || x.Customer.Phone.Contains(request.searchKey) || x.LicensePlate.ToLower().Contains(request.searchKey.ToLower()),
+            filter: x => x.Customer.PropertyId == request.propertyId && (request.searchKey == null || x.Name.ToLower().Contains((request.searchKey ?? "").ToLower()) || x.Customer.Name.ToLower().Contains((request.searchKey ?? "").ToLower()) || x.Customer.Phone.Contains(request.searchKey ?? "") || x.LicensePlate.ToLower().Contains((request.searchKey ?? "").ToLower())),
             include: x => x.Include(j => j.Customer),
             selector: (x, i) => new VehicleDTO
             {
