@@ -224,7 +224,7 @@ public sealed class GetAll{E}QueryHandler(I{E}Repository repository, IConfigurat
         var (result, count) = await repository.GetManyPagedAsync(
             pageNumber: request.pageNumber ?? 1,
             pageSize: size,
-            filter: x => request.searchKey == null || x.Name.Contains(request.searchKey),
+            filter: x => (request.searchKey == null || x.Name.ToLower().Contains(request.searchKey.ToLower())),
             selector: (x, i) => new {E}DTO 
             {{ 
                 Id = x.Id, 
