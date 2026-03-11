@@ -20,7 +20,7 @@ namespace StayHub.Application.CQRS.PMM.Command.Property
             var property = await repository.GetEntityByIdAsync(request.propertyId);
             property.DefaultPaymentDate = request.paymentDate ?? property.DefaultPaymentDate;
             property.DefaultBasePrice = request.basePrice ?? property.DefaultBasePrice;
-            await repository.SaveAsync();
+            repository.Update(property);
             return Success(true);
         }
     }

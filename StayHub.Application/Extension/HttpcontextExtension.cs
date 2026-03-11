@@ -97,5 +97,39 @@ namespace StayHub.Application.Extension
 
             return (propertyId, unitId);
         }
+        public static async Task<string?> GetStubFromRequest(this HttpContext context,string stub)
+        {
+            // 1. Try to get from Route Data (e.g., /api/property/123)
+            string? value = context.GetRouteValue(stub)?.ToString();
+
+            // 2. Fallback to Query String (e.g., /api/search?propertyId=123)
+            value ??= context.Request.Query[stub].FirstOrDefault();
+
+            // 3. Fallback to Request Body if still null and it's a POST/PUT/PATCH
+            if (value==null && context.Request.ContentLength > 0)
+            {
+                context.Request.EnableBuffering();
+
+                using (var reader = new StreamReader(context.Request.Body, leaveOpen: true))
+                {
+                    var body = await reader.ReadToEndAsync();
+                    context.Request.Body.Position = 0; // Reset for Controller
+
+                    if (!string.IsNullOrWhiteSpace(body))
+                    {
+                        try
+                        {
+                            using var jsonDoc = JsonDocument.Parse(body);
+                            var root = jsonDoc.RootElement;
+
+                            value ??= root.TryGetProperty(stub, out var p) ? p.ToString() : null;
+                        }
+                        catch (JsonException) { /* Handle or log malformed JSON */ }
+                    }
+                }
+            }
+
+            return value;
+        }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using StayHub.Application;
+using StayHub.Application.Security;
+using StayHub.Domain.Entity.PMM;
 using StayHub.Infrastructure;
 
 namespace StayHub
@@ -13,9 +15,17 @@ namespace StayHub
                 options.AddPolicy("AllowAllOrigin",
                 builder =>
                 {
-                    builder.WithOrigins(["http://localhost:3000", "http://192.168.88.188:3000","http://192.168.1.2:3000","http://192.168.1.4:3000"]) // Allow all Origins
+                    builder.WithOrigins(["http://localhost:3000", "http://192.168.88.188:3000", "http://192.168.1.2:3000", "http://192.168.1.4:3000"]) // Allow all Origins
                             .AllowAnyHeader()  // Allow all headers (like Content-Type)
                             .AllowAnyMethod().AllowCredentials(); // Allow all HTTP methods (GET, POST, etc.)
+                });
+            });
+            service.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireContractAccess", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.Requirements.Add(new ContractAccessingRequirement());
                 });
             });
             service.AddHttpContextAccessor();

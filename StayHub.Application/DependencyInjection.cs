@@ -17,15 +17,11 @@ namespace StayHub.Application
             service.AddScoped<IJwtService, JwtService>();
             service.AddScoped<IAuthService, AuthService>();
             service.AddSingleton<HashService, HashService>();
-            service.AddSingleton<Base64Service,Base64Service>();
+            service.AddSingleton<Base64Service, Base64Service>();
             service.AddMediatR(cfg =>
             {
                 cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
             });
-            //service.AddMailtrapClient(options =>
-            //{
-            //    options.ApiToken = configuration.GetSection("Email:ApiToken").Value;
-            //});
             return service;
         }
     }
