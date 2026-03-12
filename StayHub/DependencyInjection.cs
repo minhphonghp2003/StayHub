@@ -20,6 +20,7 @@ namespace StayHub
                             .AllowAnyMethod().AllowCredentials(); // Allow all HTTP methods (GET, POST, etc.)
                 });
             });
+            service.AddHttpContextAccessor();
             service.AddAuthorization(options =>
             {
                 options.AddPolicy("RequireContractAccess", policy =>
@@ -28,7 +29,6 @@ namespace StayHub
                     policy.Requirements.Add(new ContractAccessingRequirement());
                 });
             });
-            service.AddHttpContextAccessor();
 
             return service;
         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StayHub.Application.Interfaces.Repository.Catalog;
@@ -6,12 +7,14 @@ using StayHub.Application.Interfaces.Repository.CRM;
 using StayHub.Application.Interfaces.Repository.PMM;
 using StayHub.Application.Interfaces.Repository.RBAC;
 using StayHub.Application.Interfaces.Repository.TMS;
+using StayHub.Domain.Entity.PMM;
 using StayHub.Infrastructure.Persistence;
 using StayHub.Infrastructure.Persistence.Repository.Catalog;
 using StayHub.Infrastructure.Persistence.Repository.CRM;
 using StayHub.Infrastructure.Persistence.Repository.PMM;
 using StayHub.Infrastructure.Persistence.Repository.RBAC;
 using StayHub.Infrastructure.Persistence.Repository.TMS;
+using StayHub.Infrastructure.Security;
 
 namespace StayHub.Infrastructure
 {
@@ -22,6 +25,7 @@ namespace StayHub.Infrastructure
             service.AddDbContext<AppDbContext>(options =>
             options.UseLazyLoadingProxies()
                 .UseNpgsql(configuration.GetConnectionString("RemoteConnection")));
+            service.AddScoped<IAuthorizationHandler,ContractAccessingHandler>();
             service.AddScoped<IUserRepository, UserRepository>();
             service.AddScoped<ITokenRepository, TokenRepository>();
             service.AddScoped<IRoleRepository, RoleRepository>();

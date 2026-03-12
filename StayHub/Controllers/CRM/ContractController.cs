@@ -12,7 +12,6 @@ public class ContractController : BaseController
     [HttpGet("{contractId}")]
     public async Task<IActionResult> GetById(int contractId) => Ok(await Mediator.Send(new GetContractByIdQuery(contractId)));
 
-    [Authorize(Policy = "RequireContractAccess")]
     [HttpGet("all/{propertyId}")]
     public async Task<IActionResult> GetAll(int propertyId,ContractStatus? status, [FromQuery] int? pageNumber, [FromQuery] int? pageSize, [FromQuery] string? search)
         => Ok(await Mediator.Send(new GetAllContractQuery(propertyId,status, pageNumber, pageSize, search)));
