@@ -22,7 +22,7 @@ var Properties = new List<PropertyDefinition> {
     new("DateTime", "FromDate"),
     new("DateTime", "ToDate"),
     new("string?", "Note"),
-    new("long", "Discount"),
+    new("long?", "Discount"),
     
 };
 
