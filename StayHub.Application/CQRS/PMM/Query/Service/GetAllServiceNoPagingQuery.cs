@@ -19,11 +19,16 @@ namespace StayHub.Application.CQRS.PMM.Query.Service
         {
             var result = await repository.GetManyAsync(
                 filter: x => x.PropertyId == request.propertyId,
+                include:x=>x.Include(j=>j.UnitType),
                 selector: (x, i) => new ServiceDTO
                 {
                     Id = x.Id,
                     Name = x.Name,
                     Price = x.Price,
+                    UnitType =  new DTO.Catalog.CategoryItemDTO
+                    {
+                        Name = x.UnitType.Name,
+                    } 
                 }
             );
             return Success(result.ToList());
