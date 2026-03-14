@@ -7,22 +7,22 @@
 <#@ output extension=".txt" #>
 <#
     // 1. SETTINGS
-    string Module = "PMM"; 
-    string EntityName = "Notification"; 
+    string Module = "FMS"; 
+    string EntityName = "Invoice"; 
     string Namespace = "StayHub";
 
     // 2. DEFINE PROPERTIES HERE
     //Users, Status
 var Properties = new List<PropertyDefinition> {
-    new("string", "Title"),
-    new("string", "Body"),
-    new("int?", "PayloadId"),
-    new("string?", "PayloadType"),
-    new("string?", "Icon"),
-    new("string?", "Avatar"),
-    new("bool", "IsRead"),
-    new("int?", "UnitId"),
-    new("int", "OwnerId"),
+    new("int", "UnitId"),
+    new("int", "ReasonId"),
+    new("DateTime", "Month"),
+    new("DateTime", "IssueDate"),
+    new("DateTime", "DueDate"),
+    new("DateTime", "FromDate"),
+    new("DateTime", "ToDate"),
+    new("string?", "Note"),
+    new("long", "Discount"),
     
 };
 

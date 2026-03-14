@@ -1,14 +1,14 @@
-﻿GENERATION LOG FOR: Notification
+﻿GENERATION LOG FOR: Invoice
 --------------------------------------------------
-[SKIPPED] Notification.cs
-[SKIPPED] NotificationDTO.cs
-[SKIPPED] INotificationRepository.cs
-[SKIPPED] NotificationRepository.cs
-[SKIPPED] NotificationConfiguration.cs
-[SKIPPED] NotificationController.cs
-[SKIPPED] AddNotificationCommand.cs
-[SKIPPED] UpdateNotificationCommand.cs
-[SKIPPED] DeleteNotificationCommand.cs
-[SKIPPED] GetNotificationByIdQuery.cs
-[SKIPPED] GetAllNotificationQuery.cs
+[CREATED] Invoice.cs
+[CREATED] InvoiceDTO.cs
+[CREATED] IInvoiceRepository.cs
+[CREATED] InvoiceRepository.cs
+[CREATED] InvoiceConfiguration.cs
+[CREATED] InvoiceController.cs
+[CREATED] AddInvoiceCommand.cs
+[CREATED] UpdateInvoiceCommand.cs
+[CREATED] DeleteInvoiceCommand.cs
+[CREATED] GetInvoiceByIdQuery.cs
+[CREATED] GetAllInvoiceQuery.cs
 
