@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using StayHub.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using StayHub.Infrastructure.Persistence;
 namespace StayHub.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260315032438_invoiceservcie")]
+    partial class invoiceservcie
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -458,8 +461,8 @@ namespace StayHub.Infrastructure.Migrations
                     b.Property<int>("ReasonId")
                         .HasColumnType("integer");
 
-                    b.Property<double>("RemainAmount")
-                        .HasColumnType("double precision");
+                    b.Property<long>("RemainAmount")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("ToDate")
                         .HasColumnType("timestamp with time zone");
@@ -493,8 +496,8 @@ namespace StayHub.Infrastructure.Migrations
                     b.Property<int>("InvoiceId")
                         .HasColumnType("integer");
 
-                    b.Property<double>("Quantity")
-                        .HasColumnType("double precision");
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
 
                     b.Property<int>("ServiceId")
                         .HasColumnType("integer");

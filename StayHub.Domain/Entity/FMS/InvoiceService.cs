@@ -12,7 +12,7 @@ namespace StayHub.Domain.Entity.FMS
     {
         public int InvoiceId { get; set; }
         public int ServiceId { get; set; }
-        public long Amount { get; set; }
+        public double Quantity { get; set; }
         public virtual Invoice Invoice { get; set; }
         public virtual Service Service { get; set; }
     }
