@@ -5,7 +5,8 @@ using System.Text.Json.Serialization;
 using StayHub.Application.DTO.FMS;
 using StayHub.Application.Interfaces.Repository.FMS;
 namespace StayHub.Application.CQRS.FMS.Command.Invoice;
-public class UpdateInvoiceCommand : IRequest<BaseResponse<InvoiceDTO>> 
+
+public class UpdateInvoiceCommand : IRequest<BaseResponse<InvoiceDTO>>
 {
     [JsonIgnore] public int Id { get; set; }
     public int UnitId { get; set; }
@@ -18,13 +19,19 @@ public class UpdateInvoiceCommand : IRequest<BaseResponse<InvoiceDTO>>
     public string? Note { get; set; }
     public long? Discount { get; set; }
 }
-public sealed class UpdateInvoiceCommandHandler(IInvoiceRepository repository) : BaseResponseHandler, IRequestHandler<UpdateInvoiceCommand, BaseResponse<InvoiceDTO>> 
+public sealed class UpdateInvoiceCommandHandler(IInvoiceRepository repository) : BaseResponseHandler, IRequestHandler<UpdateInvoiceCommand, BaseResponse<InvoiceDTO>>
 {
-    public async Task<BaseResponse<InvoiceDTO>> Handle(UpdateInvoiceCommand request, CancellationToken ct) 
+    public async Task<BaseResponse<InvoiceDTO>> Handle(UpdateInvoiceCommand request, CancellationToken ct)
     {
         var entity = await repository.FindOneEntityAsync(e => e.Id == request.Id);
-        if (entity == null) return Failure<InvoiceDTO>("Not found", HttpStatusCode.BadRequest);
-        
+
+        if (entity == null)
+            return Failure<InvoiceDTO>("Not found", HttpStatusCode.BadRequest);
+        if (entity.Status != Shared.Common.InvoiceStatus.Pending)
+        {
+            return Failure<InvoiceDTO>("Cannot edit now", HttpStatusCode.BadRequest);
+        }
+
         entity.UnitId = request.UnitId;
         entity.ReasonId = request.ReasonId;
         entity.Month = request.Month;
@@ -36,9 +43,9 @@ public sealed class UpdateInvoiceCommandHandler(IInvoiceRepository repository) :
         entity.Discount = request.Discount;
 
         repository.Update(entity);
-        return Success(new InvoiceDTO 
-        { 
-            Id = entity.Id, 
+        return Success(new InvoiceDTO
+        {
+            Id = entity.Id,
             UnitId = entity.UnitId,
             ReasonId = entity.ReasonId,
             Month = entity.Month,

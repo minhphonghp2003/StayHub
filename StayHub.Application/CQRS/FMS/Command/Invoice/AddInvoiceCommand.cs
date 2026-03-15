@@ -40,6 +40,7 @@ public sealed class AddInvoiceCommandHandler(IInvoiceRepository repository, ISer
                 ServiceId = e.ServiceId,
                 Quantity = e.Quantity,
             }).ToList(),
+            Status = Shared.Common.InvoiceStatus.Pending
         };
         await repository.AddAsync(entity);
         return Success(true);

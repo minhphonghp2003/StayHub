@@ -15,6 +15,7 @@ public class Invoice : BaseEntity
     public string? Note { get; set; }
     public long? Discount { get; set; }
     public double RemainAmount { get; set; }
+    public InvoiceStatus Status { get; set; }
     //Nav 
     public virtual Unit Unit { get; set; }
     public virtual CategoryItem Reason { get; set; }
