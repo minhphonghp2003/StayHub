@@ -55,6 +55,7 @@ namespace StayHub.Infrastructure
             service.AddScoped<IContractAssetRepository, ContractAssetRepository>();
             service.AddScoped<IVehicleRepository, VehicleRepository>();
             service.AddScoped<IInvoiceRepository, InvoiceRepository>();
+            service.AddScoped<IInOutComeRepository, InOutComeRepository>();
             return service;
         }
     }

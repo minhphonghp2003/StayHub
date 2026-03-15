@@ -15,6 +15,7 @@ namespace StayHub.Infrastructure.Persistence.ModelBuilderDI
         {
 
             modelbuilder.ApplyConfiguration(new InvoiceConfiguration());
+            modelbuilder.ApplyConfiguration(new InOutComeConfiguration());
             return modelbuilder;
         }
     }

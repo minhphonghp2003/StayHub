@@ -1,14 +1,14 @@
-﻿GENERATION LOG FOR: Invoice
+﻿GENERATION LOG FOR: InOutCome
 --------------------------------------------------
-[CREATED] Invoice.cs
-[CREATED] InvoiceDTO.cs
-[CREATED] IInvoiceRepository.cs
-[CREATED] InvoiceRepository.cs
-[CREATED] InvoiceConfiguration.cs
-[CREATED] InvoiceController.cs
-[CREATED] AddInvoiceCommand.cs
-[CREATED] UpdateInvoiceCommand.cs
-[CREATED] DeleteInvoiceCommand.cs
-[CREATED] GetInvoiceByIdQuery.cs
-[CREATED] GetAllInvoiceQuery.cs
+[CREATED] InOutCome.cs
+[CREATED] InOutComeDTO.cs
+[CREATED] IInOutComeRepository.cs
+[CREATED] InOutComeRepository.cs
+[CREATED] InOutComeConfiguration.cs
+[CREATED] InOutComeController.cs
+[CREATED] AddInOutComeCommand.cs
+[CREATED] UpdateInOutComeCommand.cs
+[CREATED] DeleteInOutComeCommand.cs
+[CREATED] GetInOutComeByIdQuery.cs
+[CREATED] GetAllInOutComeQuery.cs
 
