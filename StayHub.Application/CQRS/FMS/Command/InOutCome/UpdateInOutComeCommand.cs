@@ -9,7 +9,7 @@ public class UpdateInOutComeCommand : IRequest<BaseResponse<InOutComeDTO>>
 {
     [JsonIgnore] public int Id { get; set; }
     public long Amount { get; set; }
-    public int PaymentMethod { get; set; }
+    public int PaymentMethodId { get; set; }
     public string Payer { get; set; }
     public string Description { get; set; }
     public int TypeId { get; set; }
@@ -26,7 +26,7 @@ public sealed class UpdateInOutComeCommandHandler(IInOutComeRepository repositor
         if (entity == null) return Failure<InOutComeDTO>("Not found", HttpStatusCode.BadRequest);
         
         entity.Amount = request.Amount;
-        entity.PaymentMethod = request.PaymentMethod;
+        entity.PaymentMethodId = request.PaymentMethodId;
         entity.Payer = request.Payer;
         entity.Description = request.Description;
         entity.TypeId = request.TypeId;
@@ -40,7 +40,7 @@ public sealed class UpdateInOutComeCommandHandler(IInOutComeRepository repositor
         { 
             Id = entity.Id, 
             Amount = entity.Amount,
-            PaymentMethod = entity.PaymentMethod,
+            PaymentMethod = entity.PaymentMethodId,
             Payer = entity.Payer,
             Description = entity.Description,
             TypeId = entity.TypeId,
