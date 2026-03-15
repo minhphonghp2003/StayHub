@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Shared.Common;
 using StayHub.Application.CQRS.CRM.Command.Contract;
 using StayHub.Application.CQRS.CRM.Query.Contract;
+using StayHub.Application.CQRS.CRM.Query.Customer;
 namespace StayHub.API.Controllers.CRM;
 
 public class ContractController : BaseController
@@ -13,15 +14,21 @@ public class ContractController : BaseController
     public async Task<IActionResult> GetById(int contractId) => Ok(await Mediator.Send(new GetContractByIdQuery(contractId)));
 
     [HttpGet("all/{propertyId}")]
-    public async Task<IActionResult> GetAll(int propertyId,ContractStatus? status, [FromQuery] int? pageNumber, [FromQuery] int? pageSize, [FromQuery] string? search)
-        => Ok(await Mediator.Send(new GetAllContractQuery(propertyId,status, pageNumber, pageSize, search)));
+    public async Task<IActionResult> GetAll(int propertyId, ContractStatus? status, [FromQuery] int? pageNumber, [FromQuery] int? pageSize, [FromQuery] string? search)
+        => Ok(await Mediator.Send(new GetAllContractQuery(propertyId, status, pageNumber, pageSize, search)));
 
+    [Authorize(Policy = "RequireContractAccess")]
     [HttpPost("change-room/contract/{contractId}/unit/{unitId}")]
     public async Task<IActionResult> ChangeRoom(int contractId, int unitId) => GenerateResponse(await Mediator.Send(new ChangeRoomCommand(contractId, unitId)));
 
     [Authorize(Policy = "RequireContractAccess")]
+    [HttpGet("no-paging/{propertyId}")]
+    public async Task<IActionResult> GetAllNoPaging(int propertyId)
+            => Ok(await Mediator.Send(new GetAllContractNoPagingQuery(propertyId)));
+
+    [Authorize(Policy = "RequireContractAccess")]
     [HttpPost("renew")]
-    public async Task<IActionResult> Renew( RenewContractCommand command)
+    public async Task<IActionResult> Renew(RenewContractCommand command)
     {
 
         return GenerateResponse(await Mediator.Send(command));
@@ -29,7 +36,7 @@ public class ContractController : BaseController
 
     [Authorize(Policy = "RequireContractAccess")]
     [HttpPost("register-leaving")]
-    public async Task<IActionResult> RequestLeave( RegisterLeavingCommand command)
+    public async Task<IActionResult> RequestLeave(RegisterLeavingCommand command)
     {
 
         return GenerateResponse(await Mediator.Send(command));
