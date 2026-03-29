@@ -7,23 +7,15 @@
 <#@ output extension=".txt" #>
 <#
     // 1. SETTINGS
-    string Module = "FMS"; 
-    string EntityName = "InOutCome"; 
+    string Module = "Background"; 
+    string EntityName = "DownloadedContent"; 
     string Namespace = "StayHub";
 
     // 2. DEFINE PROPERTIES HERE
     //Users, Status
 var Properties = new List<PropertyDefinition> {
-    new("long", "Amount"),
-    new("int", "PaymentMethod"),
-    new("string", "Payer"),
-    new("string", "Description"),
-    new("int", "TypeId"),
-    new("DateTime", "Date"),
-    new("int?", "ContractId"),
-    new("bool", "IsRepeatMonthly"),
-    new("bool", "IsOutCome"),
-    
+    new("string", "Name"),
+    new("string", "Url"),
 };
 
     // 3. PATH RESOLUTION

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StayHub.Application.Interfaces.Repository.Background;
 using StayHub.Application.Interfaces.Repository.Catalog;
 using StayHub.Application.Interfaces.Repository.CRM;
 using StayHub.Application.Interfaces.Repository.FMS;
@@ -10,6 +11,7 @@ using StayHub.Application.Interfaces.Repository.RBAC;
 using StayHub.Application.Interfaces.Repository.TMS;
 using StayHub.Domain.Entity.PMM;
 using StayHub.Infrastructure.Persistence;
+using StayHub.Infrastructure.Persistence.Repository.Background;
 using StayHub.Infrastructure.Persistence.Repository.Catalog;
 using StayHub.Infrastructure.Persistence.Repository.CRM;
 using StayHub.Infrastructure.Persistence.Repository.FMS;
@@ -56,6 +58,7 @@ namespace StayHub.Infrastructure
             service.AddScoped<IVehicleRepository, VehicleRepository>();
             service.AddScoped<IInvoiceRepository, InvoiceRepository>();
             service.AddScoped<IInOutComeRepository, InOutComeRepository>();
+            service.AddScoped<IDownloadedContentRepository, DownloadedContentRepository>();
             return service;
         }
     }

@@ -1,14 +1,14 @@
-﻿GENERATION LOG FOR: InOutCome
+﻿GENERATION LOG FOR: DownloadedContent
 --------------------------------------------------
-[CREATED] InOutCome.cs
-[CREATED] InOutComeDTO.cs
-[CREATED] IInOutComeRepository.cs
-[CREATED] InOutComeRepository.cs
-[CREATED] InOutComeConfiguration.cs
-[CREATED] InOutComeController.cs
-[CREATED] AddInOutComeCommand.cs
-[CREATED] UpdateInOutComeCommand.cs
-[CREATED] DeleteInOutComeCommand.cs
-[CREATED] GetInOutComeByIdQuery.cs
-[CREATED] GetAllInOutComeQuery.cs
+[CREATED] DownloadedContent.cs
+[CREATED] DownloadedContentDTO.cs
+[CREATED] IDownloadedContentRepository.cs
+[CREATED] DownloadedContentRepository.cs
+[CREATED] DownloadedContentConfiguration.cs
+[CREATED] DownloadedContentController.cs
+[CREATED] AddDownloadedContentCommand.cs
+[CREATED] UpdateDownloadedContentCommand.cs
+[CREATED] DeleteDownloadedContentCommand.cs
+[CREATED] GetDownloadedContentByIdQuery.cs
+[CREATED] GetAllDownloadedContentQuery.cs
 
