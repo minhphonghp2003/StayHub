@@ -1,12 +1,11 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Shared.Services;
 using StayHub.Application.Interfaces.Services;
 using StayHub.Application.Middlewares;
 using StayHub.Application.Services;
-using Shared.Services;
 using System.Reflection;
-
 namespace StayHub.Application
 {
     public static class DependencyInjection
@@ -18,7 +17,7 @@ namespace StayHub.Application
             service.AddScoped<IAuthService, AuthService>();
             service.AddSingleton<HashService, HashService>();
             service.AddSingleton<Base64Service, Base64Service>();
-            service.AddMediatR(cfg =>
+                     service.AddMediatR(cfg =>
             {
                 cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
             });

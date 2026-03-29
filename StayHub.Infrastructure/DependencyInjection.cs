@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using StayHub.Application.Interfaces.Repository.Background;
 using StayHub.Application.Interfaces.Repository.Catalog;
 using StayHub.Application.Interfaces.Repository.CRM;
@@ -9,6 +10,7 @@ using StayHub.Application.Interfaces.Repository.FMS;
 using StayHub.Application.Interfaces.Repository.PMM;
 using StayHub.Application.Interfaces.Repository.RBAC;
 using StayHub.Application.Interfaces.Repository.TMS;
+using StayHub.Application.Services;
 using StayHub.Domain.Entity.PMM;
 using StayHub.Infrastructure.Persistence;
 using StayHub.Infrastructure.Persistence.Repository.Background;
@@ -19,6 +21,7 @@ using StayHub.Infrastructure.Persistence.Repository.PMM;
 using StayHub.Infrastructure.Persistence.Repository.RBAC;
 using StayHub.Infrastructure.Persistence.Repository.TMS;
 using StayHub.Infrastructure.Security;
+using StayHub.Infrastructure.Services;
 
 namespace StayHub.Infrastructure
 {
@@ -29,6 +32,8 @@ namespace StayHub.Infrastructure
             service.AddDbContext<AppDbContext>(options =>
             options.UseLazyLoadingProxies()
                 .UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+            service.AddSingleton<IProducerService, ProducerService>();
+            service.AddHostedService<DownloadContentBGService>();
             service.AddScoped<IAuthorizationHandler,ContractAccessingHandler>();
             service.AddScoped<IUserRepository, UserRepository>();
             service.AddScoped<ITokenRepository, TokenRepository>();
