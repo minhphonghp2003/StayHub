@@ -3,13 +3,15 @@ using Shared.Response;
 using Microsoft.Extensions.Configuration;
 using StayHub.Application.DTO.Background;
 using StayHub.Application.Interfaces.Repository.Background;
+using StayHub.Application.Services;
+using StayHub.Domain.Entity.Background;
 namespace StayHub.Application.CQRS.Background.Query.DownloadedContent;
 public record GetAllDownloadedContentQuery(int? pageNumber, int? pageSize, string? searchKey) : IRequest<Response<DownloadedContentDTO>>;
-public sealed class GetAllDownloadedContentQueryHandler(IDownloadedContentRepository repository, IConfiguration config) : BaseResponseHandler, IRequestHandler<GetAllDownloadedContentQuery, Response<DownloadedContentDTO>> 
+public sealed class GetAllDownloadedContentQueryHandler(IDownloadedContentRepository repository, IRedisCacheService redisCacheService, IConfiguration config) : BaseResponseHandler, IRequestHandler<GetAllDownloadedContentQuery, Response<DownloadedContentDTO>> 
 {
     public async Task<Response<DownloadedContentDTO>> Handle(GetAllDownloadedContentQuery request, CancellationToken ct) 
     {
-        var size = request.pageSize ?? config.GetValue<int>("PageSize");
+              var size = request.pageSize ?? config.GetValue<int>("PageSize");
         var (result, count) = await repository.GetManyPagedAsync(
             pageNumber: request.pageNumber ?? 1,
             pageSize: size,

@@ -11,7 +11,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace StayHub.Application.CQRS.Background.Command.DownloadedContent;
 
 public record AddDownloadedContentCommand(string Name, string Url) : IRequest<BaseResponse<bool>>;
-public class AddDownloadedContentCommandHandler(IDownloadedContentRepository repository, IProducerService service, IConfiguration configuration) : BaseResponseHandler, IRequestHandler<AddDownloadedContentCommand, BaseResponse<bool>>
+public class AddDownloadedContentCommandHandler(IDownloadedContentRepository repository, IProducerService service,IRedisCacheService redisCacheService, IConfiguration configuration) : BaseResponseHandler, IRequestHandler<AddDownloadedContentCommand, BaseResponse<bool>>
 {
     public async Task<BaseResponse<bool>> Handle(AddDownloadedContentCommand request, CancellationToken ct)
     {
@@ -21,6 +21,7 @@ public class AddDownloadedContentCommandHandler(IDownloadedContentRepository rep
             Url = request.Url
         };
         await repository.AddAsync(entity);
+        await redisCacheService.SetAsync("downloadContent", entity);
         string jsonString = JsonSerializer.Serialize(entity);
         await service.SendEvent("download-content", new Message<int, string> { Key = entity.Id, Value = jsonString });
         return Success(true);
