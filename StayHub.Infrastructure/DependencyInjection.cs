@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using StackExchange.Redis;
 using StayHub.Application.Interfaces.Repository.Background;
 using StayHub.Application.Interfaces.Repository.Catalog;
 using StayHub.Application.Interfaces.Repository.CRM;
@@ -32,6 +33,9 @@ namespace StayHub.Infrastructure
             service.AddDbContext<AppDbContext>(options =>
             options.UseLazyLoadingProxies()
                 .UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+            var redisConnectionString = configuration.GetConnectionString("RedisConnection");
+            service.AddSingleton<IConnectionMultiplexer>(c =>
+                ConnectionMultiplexer.Connect(redisConnectionString));
             service.AddSingleton<IProducerService, ProducerService>();
             service.AddHostedService<DownloadContentBGService>();
             service.AddScoped<IAuthorizationHandler,ContractAccessingHandler>();
