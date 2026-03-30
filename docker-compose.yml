@@ -1,0 +1,83 @@
+﻿version: "3.9"
+
+services:
+  # -------------------- KAFKA --------------------
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: phongkafka
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+    environment:
+      KAFKA_KRAFT_MODE: "true"
+      KAFKA_PROCESS_ROLES: controller,broker
+      KAFKA_NODE_ID: 1
+      KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka:9094"
+
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_INTERNAL://0.0.0.0:9093,CONTROLLER://0.0.0.0:9094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://kafka:9093
+
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_LOG_RETENTION_HOURS: 168
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+
+      CLUSTER_ID: "Mk3OEYBSD34fcwNTJENDM2Qk"
+    volumes:
+      - D:/Developer/DockerImgs/Volumes/Kafka:/var/lib/kafka/data
+    networks:
+      - backend
+
+  # -------------------- KAFKA UI --------------------
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    ports:
+      - "8080:8080"
+    restart: always
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local-kafka
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9093
+      KAFKA_CLUSTERS_0_PROPERTIES_SECURITY_PROTOCOL: PLAINTEXT
+    depends_on:
+      - kafka
+    networks:
+      - backend
+
+  # -------------------- POSTGRES --------------------
+  postgres:
+    image: postgres:latest
+    container_name: stayhub-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: StayHubDB
+      POSTGRES_USER: stayhubAD
+      POSTGRES_PASSWORD: stayhubPASS
+    ports:
+      - "5432:5432"
+    volumes:
+      - D:\Developer\DockerImgs\Volumes\Postgresql\postgresql:/var/lib/postgresql
+    networks:
+      - backend
+
+  # -------------------- REDIS --------------------
+  redis:
+    image: redis:latest
+    container_name: stayhub-redis
+    command: redis-server --requirepass 111111
+    ports:
+      - "6379:6379"
+    volumes:
+      - D:/Developer/DockerImgs/Volumes/Redis:/data
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
