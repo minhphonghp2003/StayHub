@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StayHub.Infrastructure", "S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{853310C8-FA20-4E02-9E42-E7FADDCF01D9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CoreService", "CoreService", "{1113A11A-63EA-4497-ADF0-386F62059AEC}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,13 +42,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{6D1FAC25-76D2-46DA-BDAF-B47CEC6F3F06} = {1113A11A-63EA-4497-ADF0-386F62059AEC}
-		{C04F5BAA-C5CB-4DC3-BF81-3AEA854E6B5F} = {1113A11A-63EA-4497-ADF0-386F62059AEC}
-		{B1F02AB0-B8C3-416D-8945-E83093DD1E01} = {1113A11A-63EA-4497-ADF0-386F62059AEC}
-		{BFE31944-86D8-4159-B564-AEC9E3F3285E} = {1113A11A-63EA-4497-ADF0-386F62059AEC}
-		{853310C8-FA20-4E02-9E42-E7FADDCF01D9} = {1113A11A-63EA-4497-ADF0-386F62059AEC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B41C78FE-7DD0-4CCB-B4B3-DDA7B643F1F4}
