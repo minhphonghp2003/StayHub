@@ -9,6 +9,6 @@ namespace StayHub.Application.Services
 {
     public interface IProducerService
     {
-        Task SendEvent(string topic, Message<int,string> message);
+        Task SendExportFileCommand(int id, string name);
     }
 }

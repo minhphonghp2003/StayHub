@@ -1,6 +1,8 @@
 ﻿using Confluent.Kafka;
+using MassTransit;
 using Microsoft.Extensions.Configuration;
 using StayHub.Application.Services;
+using StayHub.Infrastructure.ProducerCommand;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,16 +13,20 @@ namespace StayHub.Infrastructure.Services
 {
     public class ProducerService : IProducerService
     {
-        private readonly IProducer<int, string> _producer;
-        public ProducerService(IConfiguration configuration)
+        private readonly ITopicProducer<ExportFileCommand> _producer;
+
+        public ProducerService(IConfiguration configuration, ITopicProducer<ExportFileCommand> producer)
         {
 
-            var config = new ProducerConfig { BootstrapServers = configuration.GetValue<string>("Kafka:BootstrapServers")};
-            _producer = new ProducerBuilder<int, string>(config).Build();
+            _producer = producer;
         }
-        public async Task SendEvent(string topic, Message<int,string> message)
+        public async Task SendExportFileCommand(int id, string name)
         {
-            await _producer.ProduceAsync(topic, message);
+            await _producer.Produce(new ExportFileCommand
+            {
+                Id = id,
+                Name = name
+            });
         }
     }
 }

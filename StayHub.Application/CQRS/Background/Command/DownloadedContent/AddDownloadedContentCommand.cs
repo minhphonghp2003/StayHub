@@ -23,7 +23,7 @@ public class AddDownloadedContentCommandHandler(IDownloadedContentRepository rep
         await repository.AddAsync(entity);
         await redisCacheService.SetAsync("downloadContent", entity);
         string jsonString = JsonSerializer.Serialize(entity);
-        await service.SendEvent("download-content", new Message<int, string> { Key = entity.Id, Value = jsonString });
+        await service.SendExportFileCommand(entity.Id,entity.Name);
         return Success(true);
     }
 }

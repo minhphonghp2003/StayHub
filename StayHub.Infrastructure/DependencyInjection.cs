@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +22,7 @@ using StayHub.Infrastructure.Persistence.Repository.FMS;
 using StayHub.Infrastructure.Persistence.Repository.PMM;
 using StayHub.Infrastructure.Persistence.Repository.RBAC;
 using StayHub.Infrastructure.Persistence.Repository.TMS;
+using StayHub.Infrastructure.ProducerCommand;
 using StayHub.Infrastructure.Security;
 using StayHub.Infrastructure.Services;
 
@@ -30,13 +32,27 @@ namespace StayHub.Infrastructure
     {
         public static IServiceCollection AddInfrastructureDI(this IServiceCollection service, IConfiguration configuration)
         {
+            service.AddMassTransit(x =>
+            {
+                const string topicName = "export-file";
+                const string kafkaBrokerServers = "localhost:9092";
+
+                x.UsingInMemory((context, cfg) => { cfg.ConfigureEndpoints(context); });
+
+                x.AddRider(rider =>
+                {
+                    rider.AddProducer<ExportFileCommand>(topicName);
+                    rider.UsingKafka((context, k) => { k.Host(kafkaBrokerServers); });
+                });
+            });
             service.AddDbContext<AppDbContext>(options =>
             options.UseLazyLoadingProxies()
                 .UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
             var redisConnectionString = configuration.GetConnectionString("RedisConnection");
+
             service.AddSingleton<IConnectionMultiplexer>(c =>
                 ConnectionMultiplexer.Connect(redisConnectionString));
-            service.AddSingleton<IProducerService, ProducerService>();
+            service.AddScoped<IProducerService, ProducerService>();
             service.AddSingleton<IRedisCacheService, RedisCacheService>();
             service.AddScoped<IAuthorizationHandler,ContractAccessingHandler>();
             service.AddScoped<IUserRepository, UserRepository>();
