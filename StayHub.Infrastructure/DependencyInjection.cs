@@ -38,7 +38,6 @@ namespace StayHub.Infrastructure
                 ConnectionMultiplexer.Connect(redisConnectionString));
             service.AddSingleton<IProducerService, ProducerService>();
             service.AddSingleton<IRedisCacheService, RedisCacheService>();
-            service.AddHostedService<DownloadContentBGService>();
             service.AddScoped<IAuthorizationHandler,ContractAccessingHandler>();
             service.AddScoped<IUserRepository, UserRepository>();
             service.AddScoped<ITokenRepository, TokenRepository>();
