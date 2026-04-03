@@ -27,7 +27,7 @@ namespace File.Infrastructure
                 x.AddRider(rider =>
                 {
                     rider.AddConsumer<ExportFileConsumer>();
-                    rider.AddProducer<FileExportedEvent>(FileExportedEvent.TopicName);
+                    rider.AddProducer<int, FileExportedEvent>(FileExportedEvent.TopicName);
 
                     rider.UsingKafka((context, k) =>
                     {

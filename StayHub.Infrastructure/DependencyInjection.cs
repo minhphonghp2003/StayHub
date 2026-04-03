@@ -39,7 +39,7 @@ namespace StayHub.Infrastructure
 
                 x.AddRider(rider =>
                 {
-                    rider.AddProducer<ExportFileCommand>(ExportFileCommand.TopicName);
+                    rider.AddProducer<int, ExportFileCommand>(ExportFileCommand.TopicName);
                     rider.UsingKafka((context, k) => { k.Host(configuration["Kafka:BootstrapServers"]); });
                 });
             });

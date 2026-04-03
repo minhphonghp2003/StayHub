@@ -10,16 +10,14 @@ using System.Threading.Tasks;
 
 namespace File.Infrastructure.Consumer
 {
-      public class ExportFileConsumer : IConsumer<ExportFileCommand>
+    public class ExportFileConsumer : IConsumer<ExportFileCommand>
     {
 
-        private readonly ITopicProducer<FileExportedEvent> producer;
         private readonly ILogger<FileExportedEvent> logger;
         private readonly ProducerService producerService;
 
-        public ExportFileConsumer(ITopicProducer<FileExportedEvent> producer, ILogger<FileExportedEvent> logger, ProducerService producerService)
+        public ExportFileConsumer(ILogger<FileExportedEvent> logger, ProducerService producerService)
         {
-            this.producer = producer;
             this.logger = logger;
             this.producerService = producerService;
         }
