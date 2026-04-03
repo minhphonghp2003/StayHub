@@ -1,4 +1,5 @@
 using Realtime.API;
+using Realtime.Infrastructure.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,5 +25,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<FileNotificationHub>("/fileNotificationsHub");
 
 app.Run();

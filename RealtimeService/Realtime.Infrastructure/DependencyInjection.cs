@@ -12,6 +12,7 @@ namespace Realtime.Infrastructure
         public static IServiceCollection AddInfraDI(this IServiceCollection service, IConfiguration configuration)
         {
             service.AddAppDI(configuration);
+            service.AddSignalR();
             service.AddMassTransit(x =>
             {
                 x.UsingInMemory((context, cfg) => { cfg.ConfigureEndpoints(context); });
