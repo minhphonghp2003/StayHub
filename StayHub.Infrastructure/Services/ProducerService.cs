@@ -1,8 +1,8 @@
 ﻿using Confluent.Kafka;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
+using Shared.Message;
 using StayHub.Application.Services;
-using StayHub.Infrastructure.ProducerCommand;
 using System;
 using System.Collections.Generic;
 using System.Linq;

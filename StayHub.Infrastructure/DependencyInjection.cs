@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Shared.Message;
 using StackExchange.Redis;
 using StayHub.Application.Interfaces.Repository.Background;
 using StayHub.Application.Interfaces.Repository.Catalog;
@@ -22,7 +23,6 @@ using StayHub.Infrastructure.Persistence.Repository.FMS;
 using StayHub.Infrastructure.Persistence.Repository.PMM;
 using StayHub.Infrastructure.Persistence.Repository.RBAC;
 using StayHub.Infrastructure.Persistence.Repository.TMS;
-using StayHub.Infrastructure.ProducerCommand;
 using StayHub.Infrastructure.Security;
 using StayHub.Infrastructure.Services;
 

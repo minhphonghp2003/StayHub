@@ -1,6 +1,7 @@
 ﻿using File.Infrastructure.Service;
 using MassTransit;
 using Microsoft.Extensions.Logging;
+using Shared.Message;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +10,7 @@ using System.Threading.Tasks;
 
 namespace File.Infrastructure.Consumer
 {
-    record ExportFileCommand
-    {
-        public int Id { get; init; }
-        public string Name { get; init; }
-    }
-    public class ExportFileConsumer : IConsumer<ExportFileCommand>
+      public class ExportFileConsumer : IConsumer<ExportFileCommand>
     {
 
         private readonly ITopicProducer<FileExportedEvent> producer;

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Notification.Application;
 using Notification.Infrastructure.Consumer;
+using Shared.Message;
 
 namespace Notification.Infrastructure
 {

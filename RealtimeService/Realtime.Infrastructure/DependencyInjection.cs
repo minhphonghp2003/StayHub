@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Realtime.Application;
 using Realtime.Infrastructure.Consumer;
+using Shared.Message;
 
 namespace Realtime.Infrastructure
 {

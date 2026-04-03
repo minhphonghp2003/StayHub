@@ -5,6 +5,7 @@ using MassTransit;
 using MassTransit.Transports.Fabric;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Shared.Message;
 using System;
 using System.Collections.Generic;
 using System.Linq;
