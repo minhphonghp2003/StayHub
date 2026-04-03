@@ -18,6 +18,7 @@ namespace File.Infrastructure
         public static IServiceCollection AddInfraDI(this IServiceCollection service, IConfiguration configuration)
         {
             service.AddAppDI(configuration);
+            service.AddScoped<ProducerService>();
             service.AddMassTransit(x =>
             {
                 const string exportFileTopicName = "export-file";

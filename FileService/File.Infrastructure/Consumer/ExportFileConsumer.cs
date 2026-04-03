@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using File.Infrastructure.Service;
+using MassTransit;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -13,13 +14,23 @@ namespace File.Infrastructure.Consumer
         public int Id { get; init; }
         public string Name { get; init; }
     }
-    public class ExportFileConsumer(ILogger<ExportFileConsumer> logger) : IConsumer<ExportFileCommand>
+    public class ExportFileConsumer : IConsumer<ExportFileCommand>
     {
-        Task IConsumer<ExportFileCommand>.Consume(ConsumeContext<ExportFileCommand> context)
+
+        private readonly ITopicProducer<FileExportedEvent> producer;
+        private readonly ILogger<FileExportedEvent> logger;
+        private readonly ProducerService producerService;
+
+        public ExportFileConsumer(ITopicProducer<FileExportedEvent> producer, ILogger<FileExportedEvent> logger, ProducerService producerService)
+        {
+            this.producer = producer;
+            this.logger = logger;
+            this.producerService = producerService;
+        }
+        async Task IConsumer<ExportFileCommand>.Consume(ConsumeContext<ExportFileCommand> context)
         {
             logger.LogInformation("Exporting file with Id: {Id} and Name: {Name}", context.Message.Id, context.Message.Name);
-
-            return Task.CompletedTask;
+            await producerService.PublishExportedFileEvent(context.Message.Id, context.Message.Name, DateTime.UtcNow);
         }
     }
 }
