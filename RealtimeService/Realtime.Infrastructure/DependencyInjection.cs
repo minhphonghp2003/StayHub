@@ -14,8 +14,6 @@ namespace Realtime.Infrastructure
             service.AddAppDI(configuration);
             service.AddMassTransit(x =>
             {
-                const string fileExportedTopic = "file-exported";
-                const string kafkaBrokerServers = "localhost:9092";
                 x.UsingInMemory((context, cfg) => { cfg.ConfigureEndpoints(context); });
 
                 x.AddRider(rider =>
@@ -23,9 +21,9 @@ namespace Realtime.Infrastructure
                     rider.AddConsumer<FileExportedConsumer>();
                     rider.UsingKafka((context, k) =>
                     {
-                        k.Host(kafkaBrokerServers);
+                        k.Host(configuration["Kafka:BootstrapServers"]);
 
-                        k.TopicEndpoint<FileExportedEvent>(fileExportedTopic, "file-export-realtime", e =>
+                        k.TopicEndpoint<FileExportedEvent>(FileExportedEvent.TopicName, "file-export-realtime", e =>
                         {
                             e.ConfigureConsumer<FileExportedConsumer>(context);
                             e.CreateIfMissing();

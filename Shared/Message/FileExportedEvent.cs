@@ -8,6 +8,8 @@ namespace Shared.Message
 {
     public class FileExportedEvent
     {
+
+        public static string TopicName { get; } = "file-exported-event";
         public int Id { get; set; }
         public string FileName { get; set; }
         public DateTime ExportedAt { get; set; }

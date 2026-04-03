@@ -34,15 +34,13 @@ namespace StayHub.Infrastructure
         {
             service.AddMassTransit(x =>
             {
-                const string topicName = "export-file";
-                const string kafkaBrokerServers = "localhost:9092";
 
                 x.UsingInMemory((context, cfg) => { cfg.ConfigureEndpoints(context); });
 
                 x.AddRider(rider =>
                 {
-                    rider.AddProducer<ExportFileCommand>(topicName);
-                    rider.UsingKafka((context, k) => { k.Host(kafkaBrokerServers); });
+                    rider.AddProducer<ExportFileCommand>(ExportFileCommand.TopicName);
+                    rider.UsingKafka((context, k) => { k.Host(configuration["Kafka:BootstrapServers"]); });
                 });
             });
             service.AddDbContext<AppDbContext>(options =>

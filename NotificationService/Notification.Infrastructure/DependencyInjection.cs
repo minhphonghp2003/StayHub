@@ -14,18 +14,16 @@ namespace Notification.Infrastructure
             service.AddAppDI(configuration);
             service.AddMassTransit(x =>
             {
-                const string fileExportedTopic = "file-exported";
-                const string kafkaBrokerServers = "localhost:9092";
-                x.UsingInMemory((context, cfg) => { cfg.ConfigureEndpoints(context); });
+                            x.UsingInMemory((context, cfg) => { cfg.ConfigureEndpoints(context); });
 
                 x.AddRider(rider =>
                 {
                     rider.AddConsumer<FileExportedConsumer>();
                     rider.UsingKafka((context, k) =>
                     {
-                        k.Host(kafkaBrokerServers);
+                        k.Host(configuration["Kafka:BootstrapServers"]);
 
-                        k.TopicEndpoint<FileExportedEvent>(fileExportedTopic, "file-export-noti", e =>
+                        k.TopicEndpoint<FileExportedEvent>(FileExportedEvent.TopicName, "file-export-noti", e =>
                         {
                             e.ConfigureConsumer<FileExportedConsumer>(context);
                             e.CreateIfMissing();

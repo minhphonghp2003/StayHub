@@ -8,6 +8,7 @@ namespace Shared.Message
 {
     public record ExportFileCommand
     {
+        public static string TopicName { get; } = "export-file-command";
         public int Id { get; init; }
         public string Name { get; init; }
     }

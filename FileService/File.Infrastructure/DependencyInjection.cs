@@ -22,21 +22,18 @@ namespace File.Infrastructure
             service.AddScoped<ProducerService>();
             service.AddMassTransit(x =>
             {
-                const string exportFileTopicName = "export-file";
-                const string fileExportedTopic = "file-exported";
-                const string kafkaBrokerServers = "localhost:9092";
-                x.UsingInMemory((context, cfg) => { cfg.ConfigureEndpoints(context); });
+                              x.UsingInMemory((context, cfg) => { cfg.ConfigureEndpoints(context); });
 
                 x.AddRider(rider =>
                 {
                     rider.AddConsumer<ExportFileConsumer>();
-                    rider.AddProducer<FileExportedEvent>(fileExportedTopic);
+                    rider.AddProducer<FileExportedEvent>(FileExportedEvent.TopicName);
 
                     rider.UsingKafka((context, k) =>
                     {
-                        k.Host(kafkaBrokerServers);
+                        k.Host(configuration["Kafka:BootstrapServers"]);
 
-                        k.TopicEndpoint<ExportFileCommand>(exportFileTopicName, "file-export-grp", e =>
+                        k.TopicEndpoint<ExportFileCommand>(ExportFileCommand.TopicName, "file-export-grp", e =>
                         {
                             e.ConfigureConsumer<ExportFileConsumer>(context);
                             e.CreateIfMissing();
