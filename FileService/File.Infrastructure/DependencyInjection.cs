@@ -1,6 +1,8 @@
 ﻿using File.Application;
 using File.Infrastructure.Consumer;
+using File.Infrastructure.Service;
 using MassTransit;
+using MassTransit.Transports.Fabric;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -18,17 +20,21 @@ namespace File.Infrastructure
             service.AddAppDI(configuration);
             service.AddMassTransit(x =>
             {
-                x.UsingInMemory();
+                const string exportFileTopicName = "export-file";
+                const string fileExportedTopic = "file-exported";
+                const string kafkaBrokerServers = "localhost:9092";
+                x.UsingInMemory((context, cfg) => { cfg.ConfigureEndpoints(context); });
 
                 x.AddRider(rider =>
                 {
                     rider.AddConsumer<ExportFileConsumer>();
+                    rider.AddProducer<FileExportedEvent>(fileExportedTopic);
 
                     rider.UsingKafka((context, k) =>
                     {
-                        k.Host("localhost:9092");
+                        k.Host(kafkaBrokerServers);
 
-                        k.TopicEndpoint<ExportFileCommand>("export-file", "file-export-grp", e =>
+                        k.TopicEndpoint<ExportFileCommand>(exportFileTopicName, "file-export-grp", e =>
                         {
                             e.ConfigureConsumer<ExportFileConsumer>(context);
                             e.CreateIfMissing();
