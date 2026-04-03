@@ -13,16 +13,16 @@ namespace StayHub.Infrastructure.Services
 {
     public class ProducerService : IProducerService
     {
-        private readonly ITopicProducer<ExportFileCommand> _producer;
+        private readonly ITopicProducer<int,ExportFileCommand> _producer;
 
-        public ProducerService(IConfiguration configuration, ITopicProducer<ExportFileCommand> producer)
+        public ProducerService(IConfiguration configuration, ITopicProducer<int,ExportFileCommand> producer)
         {
 
             _producer = producer;
         }
         public async Task SendExportFileCommand(int id, string name)
         {
-            await _producer.Produce(new ExportFileCommand
+            await _producer.Produce(id, new ExportFileCommand
             {
                 Id = id,
                 Name = name

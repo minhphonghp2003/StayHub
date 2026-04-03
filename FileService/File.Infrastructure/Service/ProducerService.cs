@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace File.Infrastructure.Service
 {
-       public class ProducerService(ITopicProducer<FileExportedEvent> producer)
+       public class ProducerService(ITopicProducer<int,FileExportedEvent> producer)
     {
         public async Task PublishExportedFileEvent(int id, string fileName, DateTime dateTime)
         {
-            await producer.Produce(new FileExportedEvent
+            await producer.Produce(id, new FileExportedEvent
             {
                 Id = id,
                 FileName = fileName,
