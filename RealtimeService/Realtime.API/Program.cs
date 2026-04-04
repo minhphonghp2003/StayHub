@@ -42,8 +42,6 @@ builder.Services.AddSwaggerGen(c =>
             }
         });
 });
-
-builder.Services.AddAPIDI(builder.Configuration);
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -51,17 +49,18 @@ builder.Services.AddAuthentication(options =>
     .AddJwtBearer(
     options =>
     {
+        options.UseSecurityTokenValidators = true;
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuer = false, // Ensure the token was issued by a trusted issuer
-            //ValidIssuer = builder.Configuration["Jwt:Issuer"], // The expected issuer value from configuration
+            ValidateIssuer = false,
             ValidateAudience = false, // Disable audience validation (can be enabled as needed)
             ValidateLifetime = true, // Ensure the token has not expiredAuthService
             ClockSkew = TimeSpan.Zero,
-            ValidateIssuerSigningKey = true, // Ensure the token's signing key is valid
+            ValidateIssuerSigningKey = false, // Ensure the token's signing key is valid
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
 
         };
+
         options.Events = new JwtBearerEvents
         {
 
@@ -74,12 +73,11 @@ builder.Services.AddAuthentication(options =>
                 {
                     context.Token = authHeader.Substring("Bearer ".Length).Trim();
                 }
-
+                Console.WriteLine($"Token assigned to validator: {context.Token}...");
                 return Task.CompletedTask;
             },
             OnAuthenticationFailed = context =>
             {
-                Console.WriteLine("token: " + context.Request.Query["access_token"]);
                 Console.WriteLine("Header: " + context.Request.Headers["Authorization"].ToString());
                 Console.WriteLine("Authentication failed: " + context.Exception.Message);
                 return Task.CompletedTask;
@@ -87,6 +85,8 @@ builder.Services.AddAuthentication(options =>
         };
     }
 );
+
+builder.Services.AddAPIDI(builder.Configuration);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
