@@ -10,8 +10,9 @@ namespace Realtime.Infrastructure.Hubs
 {
     public interface IFileNotificationClient
     {
-        Task SendFileExportedNotification(int fileId, string fileName);
+        Task SendFileExportedNotification( int fileId, string fileName);
     }
+    [Authorize]
     public class FileNotificationHub: Hub<IFileNotificationClient>
     {
         //public async Task SendFileExportedNotification(string fileId, string fileName)

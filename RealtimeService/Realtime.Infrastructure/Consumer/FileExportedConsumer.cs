@@ -17,7 +17,7 @@ namespace Realtime.Infrastructure.Consumer
         {
             logger.LogInformation("Received File Exported Event: Id: {Id}, FileName: {FileName}, ExportedAt: {ExportedAt}",
                context.Message.Id, context.Message.FileName, context.Message.ExportedAt);
-            await hubContext.Clients.User("9").SendFileExportedNotification(context.Message.Id,context.Message.FileName );
+            await hubContext.Clients.User(context.Message.UserId.ToString()).SendFileExportedNotification( context.Message.Id,context.Message.FileName );
         }
     }
 }

@@ -10,6 +10,8 @@ namespace Shared.Message
     {
 
         public static string TopicName { get; } = "file-exported-event";
+        
+        public int? UserId { get; set; }
         public int Id { get; set; }
         public string FileName { get; set; }
         public DateTime ExportedAt { get; set; }
