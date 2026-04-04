@@ -1,7 +1,9 @@
 using Confluent.Kafka;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Shared.Response;
+using StayHub.Application.Extension;
 using StayHub.Application.Interfaces.Repository.Background;
 using StayHub.Application.Services;
 using System.Text;
@@ -11,7 +13,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace StayHub.Application.CQRS.Background.Command.DownloadedContent;
 
 public record AddDownloadedContentCommand(string Name, string Url) : IRequest<BaseResponse<bool>>;
-public class AddDownloadedContentCommandHandler(IDownloadedContentRepository repository, IProducerService service,IRedisCacheService redisCacheService, IConfiguration configuration) : BaseResponseHandler, IRequestHandler<AddDownloadedContentCommand, BaseResponse<bool>>
+public class AddDownloadedContentCommandHandler(IDownloadedContentRepository repository, IProducerService service,IRedisCacheService redisCacheService, IConfiguration configuration,IHttpContextAccessor httpContext) : BaseResponseHandler, IRequestHandler<AddDownloadedContentCommand, BaseResponse<bool>>
 {
     public async Task<BaseResponse<bool>> Handle(AddDownloadedContentCommand request, CancellationToken ct)
     {
@@ -23,7 +25,7 @@ public class AddDownloadedContentCommandHandler(IDownloadedContentRepository rep
         await repository.AddAsync(entity);
         await redisCacheService.SetAsync("downloadContent", entity);
         string jsonString = JsonSerializer.Serialize(entity);
-        await service.SendExportFileCommand(entity.Id,entity.Name);
+        await service.SendExportFileCommand(httpContext.HttpContext.GetUserId()??0, entity.Id,entity.Name);
         return Success(true);
     }
 }

@@ -3,6 +3,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Realtime.API;
 using Realtime.Infrastructure.Hubs;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -57,7 +59,8 @@ builder.Services.AddAuthentication(options =>
             ValidateLifetime = true, // Ensure the token has not expiredAuthService
             ClockSkew = TimeSpan.Zero,
             ValidateIssuerSigningKey = false, // Ensure the token's signing key is valid
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+            NameClaimType = ClaimTypes.NameIdentifier
 
         };
 
@@ -66,14 +69,16 @@ builder.Services.AddAuthentication(options =>
 
             OnMessageReceived = context =>
             {
-                // Read from Header instead of Query String
-                string authHeader = context.Request.Headers["Authorization"];
+                // 1. Get token from query
+                var accessToken = context.Request.Query["access_token"];
 
-                if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+                // 2. If exists → use it
+                if (!string.IsNullOrEmpty(accessToken))
                 {
-                    context.Token = authHeader.Substring("Bearer ".Length).Trim();
+                    context.Token = accessToken.ToString().Trim();
+
                 }
-                Console.WriteLine($"Token assigned to validator: {context.Token}...");
+
                 return Task.CompletedTask;
             },
             OnAuthenticationFailed = context =>

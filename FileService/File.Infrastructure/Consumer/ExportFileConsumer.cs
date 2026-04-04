@@ -24,7 +24,7 @@ namespace File.Infrastructure.Consumer
         async Task IConsumer<ExportFileCommand>.Consume(ConsumeContext<ExportFileCommand> context)
         {
             logger.LogInformation("Exporting file with Id: {Id} and Name: {Name}", context.Message.Id, context.Message.Name);
-            await producerService.PublishExportedFileEvent(context.Message.Id, context.Message.Name, DateTime.UtcNow);
+            await producerService.PublishExportedFileEvent(context.Message.UserId, context.Message.Id, context.Message.Name, DateTime.UtcNow);
         }
     }
 }

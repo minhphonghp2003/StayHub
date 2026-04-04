@@ -20,10 +20,11 @@ namespace StayHub.Infrastructure.Services
 
             _producer = producer;
         }
-        public async Task SendExportFileCommand(int id, string name)
+        public async Task SendExportFileCommand(int userId, int id, string name)
         {
             await _producer.Produce(id, new ExportFileCommand
             {
+                UserId = userId,
                 Id = id,
                 Name = name
             });

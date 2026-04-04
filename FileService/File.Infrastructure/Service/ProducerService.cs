@@ -11,10 +11,11 @@ namespace File.Infrastructure.Service
 {
        public class ProducerService(ITopicProducer<int,FileExportedEvent> producer)
     {
-        public async Task PublishExportedFileEvent(int id, string fileName, DateTime dateTime)
+        public async Task PublishExportedFileEvent(int UserId, int id, string fileName, DateTime dateTime)
         {
             await producer.Produce(id, new FileExportedEvent
             {
+                UserId = UserId,
                 Id = id,
                 FileName = fileName,
                 ExportedAt = dateTime

@@ -15,6 +15,11 @@ namespace Realtime.Infrastructure.Hubs
     [Authorize]
     public class FileNotificationHub: Hub<IFileNotificationClient>
     {
+        public override Task OnConnectedAsync()
+        {
+            Console.WriteLine("UserIdentifier: " + Context.UserIdentifier);
+            return base.OnConnectedAsync();
+        }
         //public async Task SendFileExportedNotification(string fileId, string fileName)
         //{
         //    await Clients.All.SendAsync("ReceiveFileExportedNotification", fileId, fileName);
