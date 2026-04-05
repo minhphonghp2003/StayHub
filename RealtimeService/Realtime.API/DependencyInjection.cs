@@ -10,6 +10,8 @@ namespace Realtime.API
 
             service.AddAppDI(configuration);
             service.AddInfraDI(configuration);
+
+            service.AddHttpContextAccessor();
             return service;
         }
     }

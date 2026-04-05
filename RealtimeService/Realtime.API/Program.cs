@@ -77,6 +77,7 @@ builder.Services.AddAuthentication(options =>
                     var handler = new JwtSecurityTokenHandler();
                     var jwt = handler.ReadJwtToken(accessToken);
                     Console.WriteLine("=== JWT PAYLOAD ===");
+                    
                     foreach (var claim in jwt.Claims)
                     {
                         Console.WriteLine($"{claim.Type} = {claim.Value}");
@@ -108,7 +109,6 @@ if (app.Environment.IsDevelopment())
 }
 
 //app.UseHttpsRedirection();
-JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 app.UseAuthentication();
 app.UseAuthorization();
 
