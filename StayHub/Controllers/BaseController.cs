@@ -7,7 +7,7 @@ using System.Net;
 
 namespace StayHub.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     [Authorize]
     public class BaseController : ControllerBase
