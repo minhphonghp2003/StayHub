@@ -7,7 +7,7 @@ using Realtime.Infrastructure.Hubs;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -48,6 +48,7 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
     .AddJwtBearer(
     options =>
@@ -56,7 +57,8 @@ builder.Services.AddAuthentication(options =>
         options.UseSecurityTokenValidators = true;
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuer = false,
+            ValidateIssuer = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"], // The expected issuer value from configuration
             ValidateAudience = false, // Disable audience validation (can be enabled as needed)
             ValidateLifetime = true, // Ensure the token has not expiredAuthService
             ClockSkew = TimeSpan.Zero,
@@ -76,24 +78,47 @@ builder.Services.AddAuthentication(options =>
                 {
                     var handler = new JwtSecurityTokenHandler();
                     var jwt = handler.ReadJwtToken(accessToken);
-                    Console.WriteLine("=== JWT PAYLOAD ===");
-                    
+
+                    Console.WriteLine("========== JWT FULL INFO ==========");
+
+                    // 🔐 RAW TOKEN
+                    Console.WriteLine("RAW TOKEN:");
+                    Console.WriteLine(jwt.RawData);
+
+                    // 🧾 HEADER
+                    Console.WriteLine("\n=== HEADER ===");
+                    foreach (var header in jwt.Header)
+                    {
+                        Console.WriteLine($"{header.Key} = {header.Value}");
+                    }
+
+                    // 📦 PAYLOAD (Claims)
+                    Console.WriteLine("\n=== PAYLOAD (CLAIMS) ===");
                     foreach (var claim in jwt.Claims)
                     {
                         Console.WriteLine($"{claim.Type} = {claim.Value}");
                     }
+
+                    // ⏰ STANDARD FIELDS
+                    Console.WriteLine("\n=== STANDARD FIELDS ===");
+                    Console.WriteLine($"Issuer (iss): {jwt.Issuer}");
+                    Console.WriteLine($"Audience (aud): {string.Join(",", jwt.Audiences)}");
+                    Console.WriteLine($"Valid From (nbf): {jwt.ValidFrom}");
+                    Console.WriteLine($"Valid To (exp): {jwt.ValidTo}");
+                    Console.WriteLine($"Id (jti): {jwt.Id}");
+
+                    // 🔑 SIGNATURE INFO
+                    Console.WriteLine("\n=== SIGNATURE ===");
+                    Console.WriteLine($"Algorithm: {jwt.Header.Alg}");
+                    Console.WriteLine($"Has Signature: {jwt.RawSignature != null}");
+
+                    Console.WriteLine("==================================");
                     context.Token = accessToken.ToString().Trim();
 
                 }
 
                 return Task.CompletedTask;
             },
-            OnAuthenticationFailed = context =>
-            {
-                Console.WriteLine("Header: " + context.Request.Headers["Authorization"].ToString());
-                Console.WriteLine("Authentication failed: " + context.Exception.Message);
-                return Task.CompletedTask;
-            }
         };
     }
 );
