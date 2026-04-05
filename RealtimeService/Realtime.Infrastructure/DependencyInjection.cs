@@ -1,8 +1,10 @@
 ﻿using MassTransit;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Realtime.Application;
 using Realtime.Infrastructure.Consumer;
+using Realtime.Infrastructure.Hubs;
 using Shared.Message;
 
 namespace Realtime.Infrastructure
@@ -13,6 +15,8 @@ namespace Realtime.Infrastructure
         {
             service.AddAppDI(configuration);
             service.AddSignalR();
+            service.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
+
             service.AddMassTransit(x =>
             {
                 x.UsingInMemory((context, cfg) => { cfg.ConfigureEndpoints(context); });

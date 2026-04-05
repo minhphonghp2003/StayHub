@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Linq;
 using Realtime.API;
 using Realtime.Infrastructure.Hubs;
 using System.IdentityModel.Tokens.Jwt;
@@ -51,6 +52,7 @@ builder.Services.AddAuthentication(options =>
     .AddJwtBearer(
     options =>
     {
+
         options.UseSecurityTokenValidators = true;
         options.TokenValidationParameters = new TokenValidationParameters
         {
@@ -58,10 +60,8 @@ builder.Services.AddAuthentication(options =>
             ValidateAudience = false, // Disable audience validation (can be enabled as needed)
             ValidateLifetime = true, // Ensure the token has not expiredAuthService
             ClockSkew = TimeSpan.Zero,
-            ValidateIssuerSigningKey = false, // Ensure the token's signing key is valid
+            ValidateIssuerSigningKey = true, // Ensure the token's signing key is valid
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
-            NameClaimType = ClaimTypes.NameIdentifier
-
         };
 
         options.Events = new JwtBearerEvents
@@ -70,11 +70,17 @@ builder.Services.AddAuthentication(options =>
             OnMessageReceived = context =>
             {
                 // 1. Get token from query
-                var accessToken = context.Request.Query["access_token"];
-
+                var accessToken = context.Request.Query["access_token"].ToString();
                 // 2. If exists → use it
                 if (!string.IsNullOrEmpty(accessToken))
                 {
+                    var handler = new JwtSecurityTokenHandler();
+                    var jwt = handler.ReadJwtToken(accessToken);
+                    Console.WriteLine("=== JWT PAYLOAD ===");
+                    foreach (var claim in jwt.Claims)
+                    {
+                        Console.WriteLine($"{claim.Type} = {claim.Value}");
+                    }
                     context.Token = accessToken.ToString().Trim();
 
                 }
