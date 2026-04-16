@@ -5,6 +5,8 @@ using MassTransit;
 using MassTransit.Transports.Fabric;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Minio;
+using File.Infrastructure.Service.File;
 using Shared.Message;
 using System;
 using System.Collections.Generic;
@@ -20,6 +22,13 @@ namespace File.Infrastructure
         {
             service.AddAppDI(configuration);
             service.AddScoped<ProducerService>();
+            service.AddMinio(configureClient => configureClient
+            .WithEndpoint(configuration["Minio:Endpoint"])
+            .WithCredentials(configuration["Minio:AccessKey"], configuration["Minio:SecretKey"])
+            .WithSSL(bool.Parse(configuration["Minio:Secure"]))
+            .Build());
+            // register Minio service implementation
+            service.AddScoped<IMinIOService, MinioService>();
             service.AddMassTransit(x =>
             {
                               x.UsingInMemory((context, cfg) => { cfg.ConfigureEndpoints(context); });
