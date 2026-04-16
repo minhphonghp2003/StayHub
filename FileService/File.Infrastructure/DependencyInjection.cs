@@ -22,6 +22,7 @@ namespace File.Infrastructure
         {
             service.AddAppDI(configuration);
             service.AddScoped<ProducerService>();
+            service.AddSingleton<IMinIOService, MinioService>();
             service.AddMinio(configureClient => configureClient
             .WithEndpoint(configuration["Minio:Endpoint"])
             .WithCredentials(configuration["Minio:AccessKey"], configuration["Minio:SecretKey"])
