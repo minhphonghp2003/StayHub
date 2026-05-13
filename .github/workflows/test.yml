@@ -22,3 +22,24 @@ jobs:
         run: dotnet build --configuration Release --no-restore
       - name: Test
         run: dotnet test --configuration Release --no-restore --verbosity normal
+  deploy-staging:
+    name: Deploy to Staging
+    needs: ci
+    runs-on: ubuntu-latest
+    environment: staging
+
+    steps:
+      - name: Deploy to staging server
+        run: echo "Deploying to STAGING environment..."
+
+  deploy-production:
+    name: Deploy to Production (Manual Approval)
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+
+    environment:
+      name: production   # 🔥 THIS triggers human approval gate
+
+    steps:
+      - name: Deploy to production server
+        run: echo "Deploying to PRODUCTION environment..."
