@@ -17,6 +17,7 @@ namespace StayHub.Infrastructure.Persistence
             modelBuilder.ApplyPMMConfiguration();
             modelBuilder.ApplyCRMConfiguration();
             modelBuilder.ApplyFMSConfiguration();
+            modelBuilder.ApplyBackgroundConfiguration();
         }
         public override int SaveChanges()
         {

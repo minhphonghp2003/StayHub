@@ -40,7 +40,6 @@ public sealed class UpdateInOutComeCommandHandler(IInOutComeRepository repositor
         { 
             Id = entity.Id, 
             Amount = entity.Amount,
-            PaymentMethod = entity.PaymentMethodId,
             Payer = entity.Payer,
             Description = entity.Description,
             TypeId = entity.TypeId,

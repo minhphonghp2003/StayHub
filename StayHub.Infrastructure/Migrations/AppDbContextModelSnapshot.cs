@@ -70,6 +70,33 @@ namespace StayHub.Infrastructure.Migrations
                     b.ToTable("PropertyUser");
                 });
 
+            modelBuilder.Entity("StayHub.Domain.Entity.Background.DownloadedContent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DownloadedContent");
+                });
+
             modelBuilder.Entity("StayHub.Domain.Entity.CRM.Contract", b =>
                 {
                     b.Property<int>("Id")
@@ -426,6 +453,65 @@ namespace StayHub.Infrastructure.Migrations
                     b.ToTable("Ward");
                 });
 
+            modelBuilder.Entity("StayHub.Domain.Entity.FMS.InOutCome", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<long>("Amount")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("ContractId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsOutCome")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsRepeatMonthly")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Payer")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("PaymentMethodId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PropertyId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TypeId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContractId");
+
+                    b.HasIndex("PaymentMethodId");
+
+                    b.HasIndex("PropertyId");
+
+                    b.HasIndex("TypeId");
+
+                    b.ToTable("InOutCome");
+                });
+
             modelBuilder.Entity("StayHub.Domain.Entity.FMS.Invoice", b =>
                 {
                     b.Property<int>("Id")
@@ -460,6 +546,9 @@ namespace StayHub.Infrastructure.Migrations
 
                     b.Property<double>("RemainAmount")
                         .HasColumnType("double precision");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("ToDate")
                         .HasColumnType("timestamp with time zone");
@@ -1405,6 +1494,39 @@ namespace StayHub.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Province");
+                });
+
+            modelBuilder.Entity("StayHub.Domain.Entity.FMS.InOutCome", b =>
+                {
+                    b.HasOne("StayHub.Domain.Entity.CRM.Contract", "Contract")
+                        .WithMany()
+                        .HasForeignKey("ContractId");
+
+                    b.HasOne("StayHub.Domain.Entity.Catalog.CategoryItem", "PaymentMethod")
+                        .WithMany()
+                        .HasForeignKey("PaymentMethodId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StayHub.Domain.Entity.PMM.Property", "Property")
+                        .WithMany()
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StayHub.Domain.Entity.Catalog.CategoryItem", "Type")
+                        .WithMany()
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Contract");
+
+                    b.Navigation("PaymentMethod");
+
+                    b.Navigation("Property");
+
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("StayHub.Domain.Entity.FMS.Invoice", b =>
